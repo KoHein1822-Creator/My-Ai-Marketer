@@ -37,7 +37,7 @@ def get_hybrid_role(niche, mode):
 def generate_content(api_key, dna, mode, niche, topic, target, tone, formula=None):
     try:
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-flash-latest')
         
         role_instruction = get_hybrid_role(niche, mode)
         style_dna = f"Strictly follow this writing style: {dna}" if dna else "Use natural, modern Burmese."
@@ -133,3 +133,4 @@ with col_out:
 
 st.divider()
 st.caption("© 2026 AI Marketer Pro | Built for Professional Burmese Freelancers")
+
