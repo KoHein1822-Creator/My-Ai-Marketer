@@ -5,7 +5,7 @@ import google.generativeai as genai
 def get_ai_response(api_key, prompt):
     try:
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-flash-latest')
         response = model.generate_content(prompt)
         return response.text, None
     except Exception as e:
@@ -68,3 +68,4 @@ with tab2:
 
 with tab3:
     st.info("📊 Dashboard & Export features are coming soon.")
+
