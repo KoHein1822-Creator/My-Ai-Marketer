@@ -1,143 +1,135 @@
 import streamlit as st
 import google.generativeai as genai
-import pandas as pd
-from io import BytesIO
 
 # --- CONFIGURATION ---
-st.set_page_config(page_title="Elite AI Marketer Pro v2", layout="wide", page_icon="💎")
+st.set_page_config(page_title="Elite AI Marketer Pro", layout="wide", page_icon="💎")
 
-# --- ADVANCED CSS ---
+# --- CUSTOM CSS ---
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Pyidaungsu&display=swap');
-    body { font-family: 'Pyidaungsu', sans-serif; background-color: #f1f5f9; }
-    .stButton>button { width: 100%; border-radius: 8px; font-weight: bold; transition: 0.3s; }
-    .main-btn > button { background-color: #4F46E5 !important; color: white !important; height: 3.5em; font-size: 18px !important; }
-    .refine-btn > button { background-color: #f8fafc !important; color: #475569 !important; border: 1px solid #e2e8f0 !important; font-size: 12px !important; }
-    .res-box { padding: 25px; border-radius: 12px; background-color: white; border: 1px solid #e2e8f0; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-    .sidebar-card { padding: 15px; background-color: #1e293b; border-radius: 10px; color: white; margin-bottom: 15px; }
+    .stButton>button { width: 100%; border-radius: 8px; height: 3.2em; background-color: #4F46E5; color: white; border: none; font-weight: bold; }
+    .res-box { padding: 25px; border-radius: 15px; background-color: white; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    .sidebar-label { font-weight: bold; color: #1e293b; margin-bottom: 5px; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- ENGINE FUNCTIONS ---
-def call_gemini(api_key, full_prompt):
+# --- HYBRID PERSONA MAPPING ---
+def get_hybrid_role(niche, mode):
+    # လုပ်ငန်းအလိုက် ကျွမ်းကျင်မှု နှင့် Copywriting Skill ကို ပေါင်းစပ်ခြင်း
+    roles = {
+        "Jewelry": "Senior Luxury Brand Storyteller and Gemology Expert",
+        "Cosmetics": "Professional Beauty Consultant and Consumer Psychology Specialist",
+        "Tech": "Innovation-focused Copywriter and Tech Solutions Expert",
+        "Food": "Mouth-watering Food Stylist and Content Marketer",
+        "Real Estate": "Trust-based Investment Advisor and Lifestyle Strategist",
+        "Online Shop": "High-Conversion E-commerce Specialist and Direct Response Copywriter"
+    }
+    base_role = roles.get(niche, "Senior Marketing Consultant")
+    
+    if mode == "Brand Awareness":
+        return f"Act as a {base_role} focusing on Branding and Storytelling."
+    elif mode == "Sales Conversion":
+        return f"Act as a {base_role} specializing in Sales Psychology and Conversions."
+    else:
+        return f"Act as a {base_role} specializing in Viral Video Scripts and Engagement."
+
+# --- AI CORE ENGINE ---
+def generate_content(api_key, dna, mode, niche, topic, target, tone, formula=None):
     try:
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel('gemini-1.5-flash')
-        response = model.generate_content(full_prompt)
+        
+        role_instruction = get_hybrid_role(niche, mode)
+        style_dna = f"Strictly follow this writing style: {dna}" if dna else "Use natural, modern Burmese."
+        
+        # Dynamic Prompt Building
+        prompt = f"""
+        {role_instruction}
+        
+        TASK: Write a {mode} about {topic}.
+        NICHE: {niche}
+        TARGET AUDIENCE: {target}
+        DESIRED TONE: {tone}
+        {f"FRAMEWORK: Use {formula} structure." if formula else ""}
+        
+        CONSTRAINTS:
+        - Use NATURAL SPOKEN BURMESE (No bookish/formal language).
+        - Start with a massive HOOK.
+        - Style DNA: {style_dna}
+        - Include relevant emojis and a clear Call to Action (CTA).
+        - Use line breaks for readability.
+        """
+        
+        response = model.generate_content(prompt)
         return response.text, None
     except Exception as e:
         return None, str(e)
 
-# --- UI HEADER ---
-st.markdown("## 💎 Elite AI Marketer Pro <span style='font-size: 15px; color: #64748b;'>v2.0 Premium</span>", unsafe_allow_html=True)
+# --- UI LAYOUT ---
+st.title("💎 Elite AI Marketer Pro")
+st.markdown("##### Hybrid Persona & Professional Marketing Engine")
+st.divider()
 
-# --- SIDEBAR CONTROL ---
+# --- SIDEBAR (Settings & DNA) ---
 with st.sidebar:
-    st.markdown("<div class='sidebar-card'>⚙️ <b>SYSTEM ACCESS</b></div>", unsafe_allow_html=True)
-    user_api_key = st.text_input("Gemini API Key", type="password")
-    
+    st.header("⚙️ Configuration")
+    user_key = st.text_input("Gemini API Key", type="password")
     st.divider()
-    st.markdown("<div class='sidebar-card'>🧬 <b>STYLE DNA BANK</b></div>", unsafe_allow_html=True)
-    dna_input = st.text_area("ကိုယ့်ရဲ့ လေသံနမူနာများ (Writing Samples)", height=250, 
-                             placeholder="သင်ရေးဖူးတဲ့ အကောင်းဆုံး Post ၃-၅ ပုဒ် ထည့်ပါ။ AI က သင့်အရည်အချင်းကို ကူးယူပါလိမ့်မယ်။")
-    
-    st.divider()
-    st.info("💡 Tip: DNA ထည့်လေ AI က သင်နဲ့တူလေ ဖြစ်မှာပါ။")
+    st.markdown("<div class='sidebar-label'>🧬 STYLE DNA</div>", unsafe_allow_html=True)
+    user_dna = st.text_area("သင့်ရဲ့ အကောင်းဆုံး Post နမူနာများကို ထည့်ပါ", height=250, 
+                            placeholder="AI က သင့်လေသံကို အတုယူပါလိမ့်မယ်...")
 
-# --- MAIN INTERFACE ---
-col_in, col_out = st.columns([1, 1.2], gap="large")
+# --- MAIN ENGINE ---
+col_in, col_out = st.columns([1, 1.3], gap="large")
 
 with col_in:
-    st.subheader("🛠️ Strategy & Input")
-    with st.container():
-        st.markdown('<div class="res-box">', unsafe_allow_html=True)
-        
-        task = st.selectbox("🎯 ဘာလုပ်ချင်လဲ?", 
-                          ["Social Media Post", "30-Day Content Plan (Excel)", "Short Video Script", "Sales Copywriting"])
-        
-        topic_in = st.text_input("💡 Topic / Product", placeholder="ဥပမာ- ရွှေဖြူဆွဲကြိုး အသစ်ရောက်တာ")
-        
-        c1, c2 = st.columns(2)
-        with c1:
-            niche_in = st.selectbox("🏢 Niche", ["Jewelry", "Beauty", "Fashion", "Real Estate", "Tech", "Food"])
-        with c2:
-            audience_in = st.selectbox("👥 Target", ["General", "Young Adults", "Housewives", "High-end Clients"])
-            
-        tone_in = st.select_slider("🎭 Tone", options=["Casual", "Friendly", "Professional", "Hard Sell"])
-        
-        st.markdown('<div class="main-btn">', unsafe_allow_html=True)
-        generate = st.button("Generate Magic ✨")
-        st.markdown('</div>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+    st.subheader("🛠️ Strategy Input")
+    st.markdown('<div class="res-box">', unsafe_allow_html=True)
+    
+    # Mode Selector
+    mode_in = st.selectbox("🎯 Objective (Mode)", ["Sales Conversion", "Brand Awareness", "Video Script"])
+    
+    # Dynamic Framework Selector (Only for Sales)
+    formula_in = None
+    if mode_in == "Sales Conversion":
+        formula_in = st.radio("Framework", ["AIDA", "PAS", "BAB"], horizontal=True)
+    
+    # Business Details
+    niche_in = st.selectbox("🏢 Niche (လုပ်ငန်းအမျိုးအစား)", ["Jewelry", "Cosmetics", "Tech", "Food", "Real Estate", "Online Shop"])
+    topic_in = st.text_input("💡 Topic / Product Name", placeholder="ဥပမာ- ရွှေဖြူဆွဲကြိုး လက်ရာသစ်")
+    target_in = st.text_input("👥 Target Audience", placeholder="ဥပမာ- လူငယ်စုံတွဲများ")
+    tone_in = st.select_slider("🎭 Tone", options=["Casual", "Friendly", "Professional", "Hard Sell"])
+    
+    if st.button("Generate Magic ✨"):
+        if not user_key or not topic_in:
+            st.error("API Key နှင့် Topic ကို ဖြည့်သွင်းပေးပါ။")
+        else:
+            with st.spinner("Creating your professional content..."):
+                res, err = generate_content(user_key, user_dna, mode_in, niche_in, topic_in, target_in, tone_in, formula_in)
+                if err: st.error(err)
+                else: st.session_state['pro_result'] = res
+    st.markdown('</div>', unsafe_allow_html=True)
 
 with col_out:
-    st.subheader("🚀 Result Engine")
-    
-    if generate:
-        if not user_api_key or not topic_in:
-            st.error("⚠️ API Key နဲ့ Topic ထည့်ပေးဖို့ လိုပါတယ်ဗျာ။")
-        else:
-            with st.spinner("AI is thinking like a Pro..."):
-                # PROMPT BUILDING
-                identity = f"You are a world-class Burmese Marketer. Style DNA: {dna_input if dna_input else 'Engaging and modern'}. "
-                
-                if task == "30-Day Content Plan (Excel)":
-                    prompt = f"{identity} Create a 30-day content calendar for {niche_in} about {topic_in}. Provide ONLY a CSV-formatted table with columns: Date, Topic, Hook, Goal. Language: Burmese."
-                else:
-                    prompt = f"{identity} Write a {task} about {topic_in}. Target: {audience_in}. Tone: {tone_in}. Use natural spoken Burmese, catchy hooks, and emojis."
-                
-                res, err = call_gemini(user_api_key, prompt)
-                if err: st.error(err)
-                else: st.session_state['master_output'] = res
-
-    if 'master_output' in st.session_state:
+    st.subheader("🚀 Output Preview")
+    if 'pro_result' in st.session_state:
         st.markdown('<div class="res-box">', unsafe_allow_html=True)
+        final_draft = st.text_area("AI Copywriter", st.session_state['pro_result'], height=480)
         
-        # DISPLAY LOGIC
-        final_text = st.text_area("AI Final Draft:", st.session_state['master_output'], height=400)
-        
-        # REFINE TOOLS
-        st.markdown("##### ⚡ Quick Refine")
-        r1, r2, r3 = st.columns(3)
-        with r1:
-            st.markdown('<div class="refine-btn">', unsafe_allow_html=True)
-            if st.button("✂️ ပိုတိုပေးပါ"):
-                new_res, _ = call_gemini(user_api_key, f"Make this shorter and punchier: {final_text}")
-                st.session_state['master_output'] = new_res
-                st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
-        with r2:
-            st.markdown('<div class="refine-btn">', unsafe_allow_html=True)
-            if st.button("🤣 ပိုရယ်ရအောင်"):
-                new_res, _ = call_gemini(user_api_key, f"Make this more humorous and witty in Burmese: {final_text}")
-                st.session_state['master_output'] = new_res
-                st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
-        with r3:
-            st.markdown('<div class="refine-btn">', unsafe_allow_html=True)
-            if st.button("🔥 ပိုရောင်းရအောင်"):
-                new_res, _ = call_gemini(user_api_key, f"Add more urgency and strong Call to Action (Hard Sell) in Burmese: {final_text}")
-                st.session_state['master_output'] = new_res
-                st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
-
-        st.divider()
-        
-        # EXPORT TOOLS
-        ex1, ex2 = st.columns(2)
-        with ex1:
-            st.download_button("📥 Download as TXT", final_text, file_name="ai_content.txt")
-        with ex2:
-            # Excel/CSV Export Logic
-            if "Date," in final_text or "Topic," in final_text:
-                st.download_button("📊 Export as CSV/Excel", final_text, file_name="content_plan.csv")
-            else:
-                st.button("📋 Copy to Clipboard (Ctrl+C)")
-        
+        # Utility Buttons
+        c1, c2, c3 = st.columns(3)
+        with c1: st.button("📋 Copy to Clipboard")
+        with c2: st.download_button("📥 Download TXT", final_draft)
+        with c3: 
+            if st.button("✂️ Make Shorter"):
+                # Quick tweak logic
+                with st.spinner("Refining..."):
+                    res, _ = generate_content(user_key, user_dna, mode_in, niche_in, f"Shorten this: {final_draft}", target_in, tone_in, formula_in)
+                    st.session_state['pro_result'] = res
+                    st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
     else:
-        st.info("စောင့်ဆိုင်းနေပါသည်... အချက်အလက်ဖြည့်ပြီး Generate ကိုနှိပ်ပါ။")
+        st.info("အချက်အလက်များ ဖြည့်သွင်းပြီး 'Generate' ကို နှိပ်ပါဗျာ။")
 
 st.divider()
-st.caption("Developed by Gemini for Elite Freelance Marketers | © 2026")
+st.caption("© 2026 AI Marketer Pro | Built for Professional Burmese Freelancers")
