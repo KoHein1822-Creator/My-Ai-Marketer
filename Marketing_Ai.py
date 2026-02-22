@@ -5,7 +5,7 @@ import google.generativeai as genai
 def get_ai_response(api_key, prompt):
     try:
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('model_choice')
+        model = genai.GenerativeModel('gemini-1.5-flash')
         response = model.generate_content(prompt)
         return response.text, None
     except Exception as e:
@@ -15,8 +15,7 @@ def get_ai_response(api_key, prompt):
 st.set_page_config(page_title="Pro Marketer AI", layout="wide")
 st.title("🚀 All-in-One AI Marketing Platform")
 
-with st.sidebar:model_choice = st.selectbox("Select AI Model", 
-        ["gemini-flash-latest","gemini-flash-lite-latest"])
+with st.sidebar:
     st.header("⚙️ Settings")
     user_api_key = st.text_input("Enter your Gemini API Key", type="password")
     client_name = st.text_input("Client Name", "Client A")
