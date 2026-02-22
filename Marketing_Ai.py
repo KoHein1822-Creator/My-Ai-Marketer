@@ -20,7 +20,7 @@ st.title("🚀 All-in-One AI Marketing Platform")
 
 # Sidebar - Settings
 with st.sidebar:
-    model_choice = st.selectbox("Select AI Model", ["gemini-2.5-pro","gemini-flash-latest","gemini-2.5-flash-image"])
+    model_choice = st.selectbox("Select AI Model", ["gemini-flash-lite-latest","gemini-flash-latest"])
     st.header("⚙️ Settings")
     user_api_key = st.text_input("Enter your Gemini API Key", type="password")
     
@@ -77,6 +77,7 @@ with tab3:
     st.subheader("📊 Your Activity Status")
 
     st.info("ဤအပိုင်းတွင် သင်ထုတ်ထားသော စာရင်းများကို Excel ထုတ်ယူနိုင်ရန် နောက်အဆင့်တွင် ထပ်တိုးပါမည်။")
+
 
 
 
