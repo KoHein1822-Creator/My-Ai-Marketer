@@ -7,7 +7,7 @@ from datetime import datetime
 def setup_ai(api_key):
     try:
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel(model_choice)
         # Key မှန်မမှန် စမ်းသပ်ခြင်း
         model.generate_content("test")
         return model, None
@@ -20,6 +20,7 @@ st.title("🚀 All-in-One AI Marketing Platform")
 
 # Sidebar - Settings
 with st.sidebar:
+    model_choice = st.selectbox("Select AI Model", ["gemini-3.1-flash", "gemini-3.1-pro"])
     st.header("⚙️ Settings")
     user_api_key = st.text_input("Enter your Gemini API Key", type="password")
     
@@ -74,4 +75,5 @@ with tab2:
 # --- Tab 3: Simple Dashboard ---
 with tab3:
     st.subheader("📊 Your Activity Status")
+
     st.info("ဤအပိုင်းတွင် သင်ထုတ်ထားသော စာရင်းများကို Excel ထုတ်ယူနိုင်ရန် နောက်အဆင့်တွင် ထပ်တိုးပါမည်။")
