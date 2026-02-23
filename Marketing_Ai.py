@@ -6,7 +6,7 @@ st.set_page_config(page_title="AI Marketer Pro v5.0", layout="wide")
 
 try:
     genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('gemini-flash-lite-latest')
 except:
     st.error("API Key Configuration လိုအပ်နေပါသေးတယ်။")
 
@@ -96,3 +96,4 @@ with col_out:
         st.markdown('</div>', unsafe_allow_html=True)
     else:
         st.markdown('<div style="border: 2px dashed #30363d; padding: 100px; text-align: center; border-radius: 12px; background: #161b22; color: #8b949e;">Configuration အားဖြည့်စွက်ပြီး Execute ကိုနှိပ်ပါ။</div>', unsafe_allow_html=True)
+
