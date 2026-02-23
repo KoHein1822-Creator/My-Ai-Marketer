@@ -3,146 +3,102 @@ import streamlit as st
 # --- PAGE CONFIGURATION ---
 st.set_page_config(page_title="AI Marketer Suite Pro", layout="wide", page_icon="🚀")
 
-# --- CUSTOM CSS (Glassmorphism & Modern UI) ---
+# --- IMPROVED CSS (Better Visibility) ---
 st.markdown("""
     <style>
-    /* Main Background */
-    .stApp { background-color: #f8fafc; }
+    /* တစ်ခုလုံးရဲ့ Background ကို ခပ်မှိန်မှိန် အရောင်ပေးထားပါမယ် (မျက်စိမအေးအောင်) */
+    .stApp {
+        background-color: #f0f2f6;
+    }
     
-    /* Glassmorphism Card */
+    /* Input ကွက်တွေရှိတဲ့ ဘေးဘောင် (Card) */
     .command-card {
-        background: rgba(255, 255, 255, 0.8);
-        border-radius: 15px;
-        padding: 20px;
-        border: 1px solid rgba(226, 232, 240, 1);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 25px;
+        border: 1px solid #d1d5db;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         margin-bottom: 20px;
+        color: #1f2937; /* စာလုံးအရောင်ကို အမည်းရောင် ပေးထားပါတယ် */
     }
-    
-    /* Custom Toggle Style */
-    .stRadio > div { flex-direction: row; gap: 20px; }
-    
-    /* Matrix Tab Styling */
-    .stTabs [data-baseweb="tab-list"] { gap: 10px; }
-    .stTabs [data-baseweb="tab"] {
-        background-color: #f1f5f9;
-        border-radius: 8px 8px 0px 0px;
-        padding: 10px 20px;
+
+    /* Output Section ရဲ့ Background */
+    .output-container {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
     }
-    
-    /* Professional Button */
+
+    /* ခလုတ်အရောင်ကို ပိုတောက်အောင် ပြောင်းထားပါတယ် */
     .stButton>button {
-        width: 100%;
-        border-radius: 10px;
-        height: 3.5em;
-        background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
-        color: white;
-        font-weight: bold;
+        background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+        color: white !important;
         border: none;
-        transition: 0.3s;
+        padding: 10px 20px;
+        font-weight: 600;
     }
-    .stButton>button:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4); }
+    
+    /* Sidebar ကို အရောင်ခွဲထားပါမယ် */
+    [data-testid="stSidebar"] {
+        background-color: #1e293b;
+    }
+    [data-testid="stSidebar"] .stMarkdown, [data-testid="stSidebar"] p {
+        color: #f8fafc;
+    }
     </style>
     """, unsafe_allow_html=True)
 
-# --- SIDEBAR: ASSET & BRAND VAULT ---
+# --- SIDEBAR ---
 with st.sidebar:
     st.title("💎 AI Marketer")
     st.markdown("---")
-    
-    st.subheader("📁 Brand Vault")
-    selected_brand = st.selectbox("Select Brand/Project", ["Personal Brand", "Jewelry Client A", "Tech Startup X", "+ Add New Brand"])
-    
-    with st.expander("🧬 Style DNA Settings"):
-        st.info("အမှတ်တံဆိပ်၏ လေသံနှင့် ရေးဟန်ကို ဤနေရာတွင် စီမံပါ။")
-        st.text_area("Master Copy (DNA)", height=150, placeholder="သင့်ရဲ့ အကောင်းဆုံး Post နမူနာများ...")
-        
-    st.divider()
-    st.subheader("💳 Subscription")
-    st.success("Plan: Elite Agency (3 Months)")
-    st.caption("Expiry: 25 May 2026")
+    selected_brand = st.selectbox("Select Project", ["Jewelry Client A", "Tech Startup X", "+ Add New"])
+    st.info("Elite Agency Plan - Active")
 
-# --- MAIN LAYOUT ---
-# Header Area
-col_title, col_mode = st.columns([2, 1])
-with col_title:
-    st.title("Command Center")
-    st.caption(f"Currently Managing: **{selected_brand}**")
-
-with col_mode:
-    # THE PSYCHOLOGY TOGGLE: SMART VS ARCHITECT
-    app_mode = st.radio("System Engine", ["⚡ Smart Mode", "🛠️ Architect Mode"], help="Smart: One-click fast generation | Architect: Manual Expert control")
-
+# --- MAIN CONTENT ---
+st.title("🚀 AI Marketer Command Center")
+st.caption(f"Project: {selected_brand}")
 st.divider()
 
-# --- INPUT & OUTPUT AREA ---
-col_input, col_output = st.columns([1, 1.4], gap="large")
+col_input, col_output = st.columns([1, 1.5], gap="large")
 
 with col_input:
+    # Card ပုံစံလေးနဲ့ Input အကွက်
     st.markdown('<div class="command-card">', unsafe_allow_html=True)
-    st.subheader("🎯 Campaign Input")
+    st.subheader("🎯 Campaign Design")
     
-    topic = st.text_input("What are we marketing today?", placeholder="e.g. ရွှေဖြူဆွဲကြိုး လက်ရာသစ်")
+    app_mode = st.toggle("Switch to Architect Mode (Manual)", value=False)
     
-    # Smart Mode Logic
-    if "Smart" in app_mode:
-        st.info("💡 **Smart Tip:** Promo Price သို့မဟုတ် Discount ထည့်ပေးလျှင် AI က ပိုမိုထိရောက်သော Angle များ ထုတ်ပေးနိုင်ပါသည်။")
-        goal = st.selectbox("Campaign Goal", ["Instant Sales", "Brand Storytelling", "Educational Awareness"])
-        st.caption("System will auto-select Frameworks & Roles based on Brand DNA.")
+    topic = st.text_input("What is the topic?", placeholder="e.g. ရွှေဖြူဆွဲကြိုး လက်ရာသစ်")
     
-    # Architect Mode Logic (The IKEA Effect)
+    if not app_mode:
+        st.info("⚡ **Smart Mode Active**")
+        goal = st.selectbox("Goal", ["Sales", "Awareness", "Storytelling"])
     else:
-        st.warning("🛠️ **Expert Control Enabled**")
-        niche = st.selectbox("Niche", ["Jewelry", "Cosmetics", "Tech", "Real Estate"])
-        role = st.selectbox("AI Persona Role", ["Senior Copywriter", "Direct Response Closer", "Luxury Brand Expert"])
-        frameworks = st.multiselect("Select Frameworks", ["AIDA", "PAS", "BAB", "4Ps"], default=["AIDA", "PAS"])
-        creativity = st.slider("Creativity Level (Temperature)", 0.0, 1.0, 0.7)
-        tone_intensity = st.select_slider("Tone Intensity", ["Soft", "Medium", "Aggressive"])
-
-    if st.button("EXECUTE CAMPAIGN ✨"):
-        st.toast("AI Marketer is thinking...")
-        # (Generation Logic would go here)
-        st.session_state['generated'] = True
-    
+        st.warning("🛠️ **Architect Mode Active**")
+        framework = st.multiselect("Frameworks", ["AIDA", "PAS", "BAB"], default="AIDA")
+        creativity = st.slider("Creativity", 0.0, 1.0, 0.7)
+        
+    if st.button("EXECUTE NOW"):
+        st.session_state['run'] = True
     st.markdown('</div>', unsafe_allow_html=True)
 
 with col_output:
-    st.subheader("🚀 Content Matrix")
-    
-    if 'generated' in st.session_state:
-        # THE CONTENT MATRIX TABS
-        tab_copy, tab_script, tab_visual = st.tabs(["📝 Ad Copies", "🎬 Video Scripts", "🎨 Visual Assets"])
+    if st.session_state.get('run'):
+        st.subheader("🔥 Generated Content Matrix")
+        tab1, tab2, tab3 = st.tabs(["📝 Copies", "🎬 Scripts", "🎨 Visuals"])
         
-        with tab_copy:
-            st.markdown("### Framework-Based Variations")
-            col_a, col_p = st.columns(2)
-            with col_a:
-                st.markdown("**AIDA Style**")
-                st.text_area("Copy 1", "Attention: [Hook]...\nInterest: ...\nDesire: ...\nAction: ...", height=250, key="aida")
-            with col_p:
-                st.markdown("**PAS Style**")
-                st.text_area("Copy 2", "Problem: [Pain Point]...\nAgitation: ...\nSolution: ...", height=250, key="pas")
-        
-        with tab_script:
-            st.markdown("### Short-Form Video Scripts (Reels/TikTok)")
-            st.text_area("Viral Script", "Hook: 0-3 sec\nValue: 3-15 sec\nCTA: 15-20 sec", height=200)
-            st.button("🔄 Regenerate with Different Hook")
+        with tab1:
+            st.markdown("### Framework Variations")
+            st.text_area("AIDA Output", "Attention: Look at this!\nInterest: Pure White Gold...\n...", height=200)
             
-        with tab_visual:
-            st.markdown("### AI Image Prompts (Midjourney/DALL-E)")
-            st.code("/imagine prompt: Luxury white gold necklace on a velvet neck stand, soft cinematic lighting, 8k resolution --ar 4:5", language="bash")
-            st.caption("ဒီ Prompt ကိုကူးပြီး AI Image Generator တွေမှာ ပုံထုတ်နိုင်ပါတယ်။")
+        with tab2:
+            st.markdown("### Social Media Scripts")
+            st.text_area("TikTok/Reels Script", "0-3s Hook: \n3-15s Value: \n...", height=200)
             
-        # Global Action Bar
-        st.markdown("---")
-        c1, c2, c3 = st.columns(3)
-        c1.button("📋 Copy All Assets")
-        c2.button("📥 Export to PDF")
-        c3.button("🔄 Bulk Refine")
-
+        with tab3:
+            st.markdown("### Image Generation Prompts")
+            st.code("/imagine prompt: jewelry photography, white gold necklace, cinematic lighting --ar 4:5")
     else:
-        st.info("Input များဖြည့်သွင်းပြီး Execute နှိပ်ပါက Content Matrix ပေါ်လာပါလိမ့်မည်။")
-
-# --- FOOTER ---
-st.markdown("---")
-st.caption("Powered by Gemini 1.5 Pro | Designed for Digital Nomads & AI Marketers")
+        st.info("ဘယ်ဘက်တွင် အချက်အလက်များဖြည့်ပြီး Execute ကိုနှိပ်ပါ။")
