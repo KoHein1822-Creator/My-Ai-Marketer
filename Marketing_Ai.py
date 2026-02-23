@@ -3,48 +3,37 @@ import streamlit as st
 # --- PAGE CONFIGURATION ---
 st.set_page_config(page_title="AI Marketer Suite Pro", layout="wide", page_icon="🚀")
 
-# --- IMPROVED CSS (Better Visibility) ---
+# --- FORCE STYLE FIX (အရောင်ပြဿနာကို ဖြေရှင်းရန်) ---
 st.markdown("""
     <style>
-    /* တစ်ခုလုံးရဲ့ Background ကို ခပ်မှိန်မှိန် အရောင်ပေးထားပါမယ် (မျက်စိမအေးအောင်) */
-    .stApp {
-        background-color: #f0f2f6;
+    /* တစ်ခုလုံးကို Light Theme အနေနဲ့ စာလုံးအရောင် အမည်း Force လုပ်ပါမယ် */
+    html, body, [data-testid="stappview-container"] {
+        color: #000000 !important;
     }
     
-    /* Input ကွက်တွေရှိတဲ့ ဘေးဘောင် (Card) */
-    .command-card {
-        background-color: #ffffff;
-        border-radius: 12px;
-        padding: 25px;
-        border: 1px solid #d1d5db;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        margin-bottom: 20px;
-        color: #1f2937; /* စာလုံးအရောင်ကို အမည်းရောင် ပေးထားပါတယ် */
+    /* ခေါင်းစဉ်ကြီးများ စာလုံးအမည်း ပြောင်းရန် */
+    h1, h2, h3, p, span, label {
+        color: #1e293b !important;
     }
 
-    /* Output Section ရဲ့ Background */
-    .output-container {
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 12px;
-        border: 1px solid #e5e7eb;
+    /* Card Background နှင့် Border */
+    .stAlert, div[data-testid="stVerticalBlock"] > div > div {
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
     }
 
-    /* ခလုတ်အရောင်ကို ပိုတောက်အောင် ပြောင်းထားပါတယ် */
-    .stButton>button {
-        background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
-        color: white !important;
-        border: none;
-        padding: 10px 20px;
-        font-weight: 600;
-    }
-    
-    /* Sidebar ကို အရောင်ခွဲထားပါမယ် */
+    /* Sidebar အရောင်ကို သီးသန့် အမှောင်ထားပါမယ် */
     [data-testid="stSidebar"] {
-        background-color: #1e293b;
+        background-color: #0f172a !important;
     }
-    [data-testid="stSidebar"] .stMarkdown, [data-testid="stSidebar"] p {
-        color: #f8fafc;
+    [data-testid="stSidebar"] h1, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {
+        color: #ffffff !important;
+    }
+    
+    /* Input Box အရောင် */
+    .stTextInput input {
+        color: #000000 !important;
+        background-color: #ffffff !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -53,52 +42,47 @@ st.markdown("""
 with st.sidebar:
     st.title("💎 AI Marketer")
     st.markdown("---")
-    selected_brand = st.selectbox("Select Project", ["Jewelry Client A", "Tech Startup X", "+ Add New"])
-    st.info("Elite Agency Plan - Active")
+    selected_brand = st.selectbox("Select Project", ["Jewelry Client A", "Tech Startup X"])
+    st.success("Elite Agency Plan - Active")
 
 # --- MAIN CONTENT ---
 st.title("🚀 AI Marketer Command Center")
-st.caption(f"Project: {selected_brand}")
+st.write(f"**Current Project:** {selected_brand}")
 st.divider()
 
 col_input, col_output = st.columns([1, 1.5], gap="large")
 
 with col_input:
-    # Card ပုံစံလေးနဲ့ Input အကွက်
-    st.markdown('<div class="command-card">', unsafe_allow_html=True)
     st.subheader("🎯 Campaign Design")
     
-    app_mode = st.toggle("Switch to Architect Mode (Manual)", value=False)
+    # Toggle အစား Selectbox သုံးခြင်းက Visibility ပိုကောင်းစေပါတယ်
+    app_mode = st.selectbox("Engine Mode", ["⚡ Smart Mode", "🛠️ Architect Mode"])
     
-    topic = st.text_input("What is the topic?", placeholder="e.g. ရွှေဖြူဆွဲကြိုး လက်ရာသစ်")
+    topic = st.text_input("Marketing Topic", placeholder="ဥပမာ - ရွှေဖြူဆွဲကြိုး")
     
-    if not app_mode:
-        st.info("⚡ **Smart Mode Active**")
-        goal = st.selectbox("Goal", ["Sales", "Awareness", "Storytelling"])
+    if "Smart" in app_mode:
+        goal = st.selectbox("Select Goal", ["Instant Sales", "Awareness", "Storytelling"])
     else:
-        st.warning("🛠️ **Architect Mode Active**")
         framework = st.multiselect("Frameworks", ["AIDA", "PAS", "BAB"], default="AIDA")
-        creativity = st.slider("Creativity", 0.0, 1.0, 0.7)
+        creativity = st.slider("Creativity Level", 0.0, 1.0, 0.7)
         
-    if st.button("EXECUTE NOW"):
+    if st.button("EXECUTE CAMPAIGN"):
         st.session_state['run'] = True
-    st.markdown('</div>', unsafe_allow_html=True)
 
 with col_output:
     if st.session_state.get('run'):
-        st.subheader("🔥 Generated Content Matrix")
-        tab1, tab2, tab3 = st.tabs(["📝 Copies", "🎬 Scripts", "🎨 Visuals"])
+        st.subheader("🔥 Content Matrix")
+        tab1, tab2, tab3 = st.tabs(["📝 Ad Copies", "🎬 Video Scripts", "🎨 Visuals"])
         
         with tab1:
-            st.markdown("### Framework Variations")
-            st.text_area("AIDA Output", "Attention: Look at this!\nInterest: Pure White Gold...\n...", height=200)
-            
+            st.info("AI Generating Framework-based copies...")
+            st.text_area("AIDA Variation", "Content goes here...", height=200)
+        
         with tab2:
-            st.markdown("### Social Media Scripts")
-            st.text_area("TikTok/Reels Script", "0-3s Hook: \n3-15s Value: \n...", height=200)
+            st.text_area("Short Video Script", "Hook: ...\nBody: ...", height=200)
             
         with tab3:
-            st.markdown("### Image Generation Prompts")
-            st.code("/imagine prompt: jewelry photography, white gold necklace, cinematic lighting --ar 4:5")
+            st.code("/imagine prompt: high quality jewelry...")
     else:
-        st.info("ဘယ်ဘက်တွင် အချက်အလက်များဖြည့်ပြီး Execute ကိုနှိပ်ပါ။")
+        # ရှင်းလင်းသော အပြာရောင် Box ဖြင့် ပြပေးခြင်း
+        st.info("👈 ဘယ်ဘက်ခြမ်းတွင် အချက်အလက်များဖြည့်သွင်းပြီး Execute ကို နှိပ်ပါ။")
