@@ -7,7 +7,7 @@ st.set_page_config(page_title="AI Marketer Pro v4.0", layout="wide")
 # Secrets ထဲက Key ကို ချိတ်ဆက်ခြင်း
 try:
     genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('gemini-flash-lite-latest')
 except:
     st.error("Secrets ထဲမှာ API Key ထည့်ဖို့ လိုအပ်နေပါသေးတယ်ဗျာ။")
 
@@ -73,3 +73,4 @@ with col_out:
         st.markdown('</div>', unsafe_allow_html=True)
     else:
         st.markdown('<div style="border: 2px dashed #30363d; padding: 100px; text-align: center; border-radius: 12px; background: #161b22; color: #8b949e;">ဘယ်ဘက်တွင် အချက်အလက်ဖြည့်ပြီး Execute ကိုနှိပ်ပါ။</div>', unsafe_allow_html=True)
+
