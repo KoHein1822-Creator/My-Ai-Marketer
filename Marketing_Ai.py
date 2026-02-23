@@ -1,88 +1,62 @@
 import streamlit as st
 
-# --- PAGE CONFIGURATION ---
-st.set_page_config(page_title="AI Marketer Suite Pro", layout="wide", page_icon="🚀")
+# 1. ပထမဆုံးအနေနဲ့ UI ပုံစံကို Standard ဖြစ်အောင် ပြန်ညှိပါတယ်
+st.set_page_config(page_title="AI Marketer Suite", layout="wide")
 
-# --- FORCE STYLE FIX (အရောင်ပြဿနာကို ဖြေရှင်းရန်) ---
-st.markdown("""
-    <style>
-    /* တစ်ခုလုံးကို Light Theme အနေနဲ့ စာလုံးအရောင် အမည်း Force လုပ်ပါမယ် */
-    html, body, [data-testid="stappview-container"] {
-        color: #000000 !important;
-    }
-    
-    /* ခေါင်းစဉ်ကြီးများ စာလုံးအမည်း ပြောင်းရန် */
-    h1, h2, h3, p, span, label {
-        color: #1e293b !important;
-    }
-
-    /* Card Background နှင့် Border */
-    .stAlert, div[data-testid="stVerticalBlock"] > div > div {
-        background-color: #ffffff !important;
-        border: 1px solid #e2e8f0 !important;
-    }
-
-    /* Sidebar အရောင်ကို သီးသန့် အမှောင်ထားပါမယ် */
-    [data-testid="stSidebar"] {
-        background-color: #0f172a !important;
-    }
-    [data-testid="stSidebar"] h1, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {
-        color: #ffffff !important;
-    }
-    
-    /* Input Box အရောင် */
-    .stTextInput input {
-        color: #000000 !important;
-        background-color: #ffffff !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-# --- SIDEBAR ---
+# 2. Sidebar ကို အရင်တည်ဆောက်ပါမယ်
 with st.sidebar:
     st.title("💎 AI Marketer")
-    st.markdown("---")
+    st.divider()
     selected_brand = st.selectbox("Select Project", ["Jewelry Client A", "Tech Startup X"])
+    st.write("---")
     st.success("Elite Agency Plan - Active")
 
-# --- MAIN CONTENT ---
+# 3. Main Header
 st.title("🚀 AI Marketer Command Center")
-st.write(f"**Current Project:** {selected_brand}")
-st.divider()
+st.info(f"လက်ရှိစီမံနေသော Project: {selected_brand}")
 
-col_input, col_output = st.columns([1, 1.5], gap="large")
+# 4. Layout ကို ဘယ်/ညာ (၂) ခြမ်း ခွဲပါမယ်
+col_left, col_right = st.columns([1, 1.5], gap="large")
 
-with col_input:
+with col_left:
     st.subheader("🎯 Campaign Design")
     
-    # Toggle အစား Selectbox သုံးခြင်းက Visibility ပိုကောင်းစေပါတယ်
-    app_mode = st.selectbox("Engine Mode", ["⚡ Smart Mode", "🛠️ Architect Mode"])
+    # ရွေးချယ်စရာများကို ရှင်းလင်းစွာ ထားရှိခြင်း
+    app_mode = st.radio("System Engine Mode", ["Smart Mode", "Architect Mode"])
     
-    topic = st.text_input("Marketing Topic", placeholder="ဥပမာ - ရွှေဖြူဆွဲကြိုး")
+    marketing_topic = st.text_input("Marketing Topic", placeholder="ဥပမာ - ရွှေဖြူဆွဲကြိုး")
     
-    if "Smart" in app_mode:
-        goal = st.selectbox("Select Goal", ["Instant Sales", "Awareness", "Storytelling"])
+    if app_mode == "Smart Mode":
+        goal = st.selectbox("Goal", ["အရောင်းမြှင့်တင်ရန်", "အသိပညာပေးရန်", "Brand Story"])
     else:
-        framework = st.multiselect("Frameworks", ["AIDA", "PAS", "BAB"], default="AIDA")
-        creativity = st.slider("Creativity Level", 0.0, 1.0, 0.7)
-        
-    if st.button("EXECUTE CAMPAIGN"):
-        st.session_state['run'] = True
+        frameworks = st.multiselect("Frameworks", ["AIDA", "PAS", "BAB"], default=["AIDA"])
+        creativity = st.select_slider("Creativity Level", ["Low", "Medium", "High"])
 
-with col_output:
-    if st.session_state.get('run'):
-        st.subheader("🔥 Content Matrix")
-        tab1, tab2, tab3 = st.tabs(["📝 Ad Copies", "🎬 Video Scripts", "🎨 Visuals"])
+    if st.button("EXECUTE CAMPAIGN", type="primary"):
+        st.session_state['run_process'] = True
+
+with col_right:
+    if st.session_state.get('run_process'):
+        st.subheader("🔥 Result Matrix")
+        
+        # ရလဒ်များကို Tab များဖြင့် ခွဲပြခြင်း
+        tab1, tab2, tab3 = st.tabs(["📝 Ad Copies", "🎬 Video Scripts", "🎨 Image Prompts"])
         
         with tab1:
-            st.info("AI Generating Framework-based copies...")
-            st.text_area("AIDA Variation", "Content goes here...", height=200)
-        
+            st.write("### Sales Copy (AIDA)")
+            st.code("AI က ထုတ်ပေးမည့် စာသားများ ဤနေရာတွင် ပေါ်လာမည်...", language=None)
+            
         with tab2:
-            st.text_area("Short Video Script", "Hook: ...\nBody: ...", height=200)
+            st.write("### Video Script")
+            st.code("Hook: ... \nBody: ...", language=None)
             
         with tab3:
-            st.code("/imagine prompt: high quality jewelry...")
+            st.write("### Midjourney Prompt")
+            st.code("/imagine prompt: high-end jewelry...")
     else:
-        # ရှင်းလင်းသော အပြာရောင် Box ဖြင့် ပြပေးခြင်း
-        st.info("👈 ဘယ်ဘက်ခြမ်းတွင် အချက်အလက်များဖြည့်သွင်းပြီး Execute ကို နှိပ်ပါ။")
+        # ဘာမှမလုပ်ရသေးခင် ပြမည့် အကွက်လေး
+        st.warning("👈 ဘယ်ဘက်ခြမ်းတွင် အချက်အလက်များ ဖြည့်သွင်းပေးပါ။")
+
+# 5. Footer (Optional)
+st.divider()
+st.caption("AI Marketer Suite v2.0 - Optimized for Visibility")
