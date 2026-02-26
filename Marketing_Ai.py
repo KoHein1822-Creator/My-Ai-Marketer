@@ -1,142 +1,79 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import plotly.express as px
 
-# --- 1. PAGE CONFIG & UI STYLE (v27.0 Standards) ---
-st.set_page_config(page_title="SAYAR GYI v33.0", layout="wide")
+# --- 1. PAGE CONFIG & BRANDING ---
+st.set_page_config(page_title="SAYAR GYI v55.0", layout="wide")
 
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
     html, body, [class*="css"] { font-family: 'Inter', sans-serif; background-color: #05070a; color: #e1e4e8; }
     section[data-testid="stSidebar"] { background-color: #0d1117; border-right: 1px solid #30363d; }
-    .nav-label { font-size: 11px; text-transform: uppercase; color: #8b949e; margin-top: 10px; font-weight: 600; letter-spacing: 1px; }
-    .stMetric { background: #161b22; border: 1px solid #30363d; padding: 10px; border-radius: 8px; }
-    .header-blue { color: #58a6ff; font-weight: 600; }
-    .header-green { color: #aff5b4; font-weight: 600; }
-    .header-purple { color: #d3b6ff; font-weight: 600; }
+    .header-perfection { color: #d4af37; font-weight: 700; text-shadow: 0px 0px 15px rgba(212, 175, 55, 0.6); font-size: 2.5rem; }
+    .guard-dog-box { background: rgba(255, 75, 75, 0.1); border: 1px solid #ff4b4b; padding: 20px; border-radius: 12px; }
+    .nav-label { font-size: 11px; text-transform: uppercase; color: #8b949e; margin-top: 15px; font-weight: 600; letter-spacing: 1.5px; }
+    .stButton>button { border-radius: 8px; font-weight: 600; transition: 0.3s; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 2. SIDE PANEL (v27.0 Structure with Content Production Addition) ---
+# --- 2. SIDE PANEL (Final Command Structure) ---
 with st.sidebar:
-    st.markdown("<h2 style='margin-bottom:0;'>Sayar Gyi 's</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#58a6ff; margin-top:0;'>Ai Marketing Agency</p>", unsafe_allow_html=True)
-    
-    st.divider() # Line 1: News
-    st.markdown('<p class="nav-label">Industry News</p>', unsafe_allow_html=True)
-    if st.button("🌐 Read Industry Trends", use_container_width=True): st.session_state.menu = "Industry News"
-
-    st.divider() # Line 2: Production (New Integration)
-    st.markdown('<p class="nav-label">Execution</p>', unsafe_allow_html=True)
-    if st.button("🎬 Content Production", use_container_width=True): st.session_state.menu = "Content Production"
-
-    st.divider() # Line 3: Menu
-    st.markdown('<p class="nav-label">Menu</p>', unsafe_allow_html=True)
-    nav_choice = st.radio("Nav", ["Interactive Dashboard", "Brand DNA", "Project Archive", "Asset Library"], label_visibility="collapsed")
-    
-    if 'menu' not in st.session_state: st.session_state.menu = nav_choice
-    else: 
-        if st.session_state.menu in ["Interactive Dashboard", "Brand DNA", "Project Archive", "Asset Library"]:
-            st.session_state.menu = nav_choice
-
-    st.divider() # Line 4: Agents
-    st.markdown('<p class="nav-label">My Agents</p>', unsafe_allow_html=True)
-    st.caption("👤 Intel | 🎨 Creative | ⚖️ Auditor | ⚙️ Ops")
-
-    st.divider() # Line 5: Creator Mode
-    st.markdown('<p class="nav-label">Passive Income</p>', unsafe_allow_html=True)
-    if st.button("💰 Switch to Creator Mode", use_container_width=True): st.session_state.menu = "Creator Mode"
-
-    st.divider() # Line 6: System
-    st.success("Core Engine: Online")
+    st.markdown("<h1 class='header-perfection'>SAYAR GYI</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#d4af37; margin-top:-20px; font-size: 12px;'>v55.0 | PERFECTION EDITION</p>", unsafe_allow_html=True)
     st.divider()
-    brain_choice = st.segmented_control("Model", ["Gemini", "ChatGPT", "Claude"], default="Gemini")
 
-# --- 3. MAIN INTERFACE LOGIC ---
-
-# A. CONTENT PRODUCTION (THE ANALYZED FEATURE)
-if st.session_state.menu == "Content Production":
-    st.markdown('<h1 class="header-purple">Automated Content Production</h1>', unsafe_allow_html=True)
-    st.write("AI-driven execution based on Brand DNA and Industry Trends.")
+    st.markdown('<p class="nav-label">Main Controls</p>', unsafe_allow_html=True)
+    if st.button("🧠 Strategy & Guard Dog", use_container_width=True): st.session_state.menu = "Strategy"
+    if st.button("🎬 Monthly Content Factory", use_container_width=True): st.session_state.menu = "Content"
+    if st.button("👥 Ethical Lead CRM", use_container_width=True): st.session_state.menu = "Leads"
     
-    prod_tabs = st.tabs(["Strategy to Script", "Visual Production AI", "Automation Scheduler"])
+    st.divider()
+    st.markdown('<p class="nav-label">Intelligence</p>', unsafe_allow_html=True)
+    if st.button("🚨 Spy & Monitoring", use_container_width=True): st.session_state.menu = "Monitoring"
+    if st.button("📊 Executive AI Report", use_container_width=True): st.session_state.menu = "Report"
     
-    with prod_tabs[0]:
-        st.subheader("Automated Scripting Engine")
-        c1, c2 = st.columns(2)
-        with c1:
-            tone = st.selectbox("Tone of Voice", ["Professional", "Humorous", "Storytelling", "Direct Sales"])
-            platform = st.multiselect("Platforms", ["Facebook", "TikTok", "YouTube Shorts"], default=["TikTok"])
-        with c2:
-            hook_type = st.radio("Hook Style", ["Problem/Solution", "Curiosity Gap", "Shocking Stat"])
-        
-        if st.button("Analyze & Generate Content"):
-            with st.spinner("Analyzing Brand DNA & Market Trends..."):
-                st.markdown("---")
-                st.markdown("**[AI Output] Suggested TikTok Script:**")
-                st.code("Hook: သိပြီးကြပြီလား? Jewelry စျေးကွက်မှာ အခုရောင်းအကောင်းဆုံးက...\nBody: (Brand USP based content)\nCTA: အသေးစိတ်ကို Messenger မှာ စုံစမ်းလိုက်ပါ!")
-
-    with prod_tabs[1]:
-        st.subheader("Visual Asset Generator")
-        st.info("Midjourney & Canva API Integration Placeholder")
-        st.text_input("Enter Image Prompt for AI Design")
-        st.button("Generate Visual Concept")
-
-    with prod_tabs[2]:
-        st.subheader("Direct Posting Automation")
-        st.table(pd.DataFrame({
-            "Platform": ["Facebook", "TikTok"],
-            "Content Type": ["Video", "Static Post"],
-            "Status": ["Ready to Sync", "Awaiting Approval"]
-        }))
-
-# B. INTERACTIVE DASHBOARD (v27.0 Logic)
-elif st.session_state.menu == "Interactive Dashboard":
-    st.markdown('<h1 class="header-blue">Strategic Dashboard</h1>', unsafe_allow_html=True)
-    f_cols = st.columns([2, 1, 1])
-    with f_cols[0]: time_period = st.segmented_control("Timeframe", ["Weekly", "Monthly", "Yearly"], default="Monthly")
-    with f_cols[1]: chart_view = st.selectbox("Visual Filter", ["Bar Chart", "Pie Chart", "Line Chart"])
     st.divider()
-    s1, s2, s3, s4 = st.columns(4)
-    s1.metric("Drafting", "12"); s2.metric("Pending", "5"); s3.metric("Scheduled", "18"); s4.metric("Published", "145")
-    st.divider()
-    t1, t2, t3 = st.tabs(["Facebook", "TikTok", "YouTube"])
-    mock_data = pd.DataFrame({'Category': ['Engage', 'Reach', 'Convert'], 'Value': [45, 30, 25]})
-    def display_chart(chart_type, df, key):
-        if chart_type == "Bar Chart": st.bar_chart(df, x='Category', y='Value')
-        elif chart_type == "Line Chart": st.line_chart(df, x='Category', y='Value')
-        else:
-            fig = px.pie(df, values='Value', names='Category', hole=0.4, template="plotly_dark")
-            st.plotly_chart(fig, use_container_width=True, key=key)
-    with t1: display_chart(chart_view, mock_data, "fb_v33")
-    with t2: display_chart(chart_view, mock_data, "tt_v33")
-    with t3: display_chart(chart_view, mock_data, "yt_v33")
+    st.success("AI Core Status: Fully Autonomous")
+    st.info(f"Today: {pd.to_datetime('today').strftime('%d %B %Y')}")
 
-# C. BRAND DNA (v30.0 Logic)
-elif st.session_state.menu == "Brand DNA":
-    st.markdown('<h1 class="header-green">Brand DNA Intelligence</h1>', unsafe_allow_html=True)
-    dna_mode = st.radio("Mode", ["Intelligence Mode (AI Research)", "Manual Mode"], horizontal=True)
-    if dna_mode == "Intelligence Mode (AI Research)":
-        st.selectbox("လုပ်ငန်းအမျိုးအစား", ["Jewelry", "F&B", "Real Estate", "Other"])
-        st.button("Generate Strategy")
-    else:
-        st.text_input("Brand Name"); st.file_uploader("Upload Guideline")
+# --- 3. MAIN INTERFACE ---
 
-# D. PROJECT ARCHIVE & ASSET LIBRARY (v31.0 Logic)
-elif st.session_state.menu == "Project Archive":
-    st.markdown('<h1 class="header-blue">Project Archive</h1>', unsafe_allow_html=True)
-    st.table(pd.DataFrame({"Client": ["Diamond Star", "Zen Coffee"], "Status": ["Completed", "Active"]}))
+# A. STRATEGY & GUARD DOG (The v55.0 Addition)
+if st.session_state.get('menu') == "Strategy":
+    st.markdown('<h1 class="header-perfection">🛡️ Strategy & Guard Dog Control</h1>', unsafe_allow_html=True)
+    
+    g_col1, g_col2 = st.columns(2)
+    
+    with g_col1:
+        st.markdown("### ⚠️ Crisis Management (Active)")
+        st.markdown("""<div class="guard-dog-box">
+        <b style='color:#ff4b4b;'>Critical Alert:</b> Facebook Post #24 တွင် Negative Sentiment တစ်ခု တွေ့ရှိရပါသည်။<br>
+        <b>Comment:</b> "ဒီဇိုင်းက ကြည့်ရတာ တစ်မျိုးကြီးပဲ..."<br><br>
+        <b>AI Strategy:</b> မချေပပါနှင့်။ Brand ၏ Craftsmanship Video အား Reply တွင် အကျိုးအကြောင်းပြ၍ ပြန်လည်ဖြေရှင်းရန် အကြံပြုပါသည်။
+        </div>""", unsafe_allow_html=True)
+        if st.button("Execute Crisis Response", use_container_width=True):
+            st.success("AI is handling the situation...")
 
-elif st.session_state.menu == "Asset Library":
-    st.markdown('<h1 class="header-blue">Asset Library</h1>', unsafe_allow_html=True)
-    st.tabs(["Media", "Copywriting", "Legal"])
+    with g_col2:
+        st.markdown("### 🧬 Strategy Optimization")
+        st.info("Trend Detected: 'Vibe အသစ်နဲ့ ရွှေဆင်မယ်' Transition Videos are peaking.")
+        if st.button("Inject Trend Content into Calendar", use_container_width=True):
+            st.balloons()
+            st.success("Calendar updated with trending content.")
 
-# OTHERS
-elif st.session_state.menu == "Industry News":
-    st.title("Industry News")
-    if st.button("Back"): st.session_state.menu = "Interactive Dashboard"
-elif st.session_state.menu == "Creator Mode":
-    st.title("Creator Mode")
-    if st.button("Back"): st.session_state.menu = "Interactive Dashboard"
+# B. CONTENT FACTORY (Monthly Autopilot)
+elif st.session_state.get('menu') == "Content":
+    st.markdown('<h1 class="header-perfection">🎬 Monthly Content Factory</h1>', unsafe_allow_html=True)
+    st.write("တစ်လစာ Content (၃၀) ခုလုံးအား AI မှ Multimedia Render လုပ်ပြီးပါပြီ။")
+    st.progress(100)
+    if st.button("✅ Batch Approve All & Autopilot Start"):
+        st.success("System is now running on Autopilot for 30 days!")
+
+# C. MONITORING (The Spy)
+elif st.session_state.get('menu') == "Monitoring":
+    st.markdown('<h1 class="header-perfection">🚨 Intelligence Monitoring</h1>', unsafe_allow_html=True)
+    st.write("ပြိုင်ဘက်များ၏ ဈေးနှုန်းနှင့် လှုပ်ရှားမှုများကို AI မှ ၂၄ နာရီ စောင့်ကြည့်နေပါသည်။")
+
+else:
+    st.markdown('<h1 class="header-perfection">Welcome, CEO</h1>', unsafe_allow_html=True)
+    st.write("သင်၏ AI Agency သည် အပြည့်အဝ အဆင်သင့်ဖြစ်နေပါပြီ။ ဘယ်ဘက်မှ Menu များကို အသုံးပြု၍ စတင်ခိုင်းစေနိုင်ပါသည်။")
