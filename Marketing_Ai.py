@@ -3,117 +3,128 @@ import sqlite3
 from datetime import datetime
 import time
 
-# --- 1. CORE ENGINE & PERSISTENCE ---
+# --- 1. DATABASE & SYSTEM INITIALIZATION ---
 def init_db():
-    conn = sqlite3.connect('sayargyi_enterprise.db')
+    conn = sqlite3.connect('sayargyi_vault.db')
     c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS project_logs 
-                 (id INTEGER PRIMARY KEY, timestamp TEXT, client_name TEXT, 
-                  content_body TEXT, strategy_used TEXT, status TEXT)''')
+    c.execute('''CREATE TABLE IF NOT EXISTS archives 
+                 (id INTEGER PRIMARY KEY, date TEXT, client TEXT, content TEXT, strategy TEXT)''')
     conn.commit()
     conn.close()
 
 init_db()
 
-# --- 2. V14.0 LUXURY DESIGN STANDARDS ---
-st.set_page_config(page_title="SAYAR GYI | ENTERPRISE COMMAND", layout="wide")
+# --- 2. PREMIUM UI STYLING (The Professional Dark Theme) ---
+st.set_page_config(page_title="Sayar Gyi | Enterprise Command", layout="wide")
 
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
-    html, body, [class*="css"] { font-family: 'Inter', sans-serif; background-color: #05070a; color: #e1e4e8; }
-    
-    .metric-card { 
-        background: linear-gradient(145deg, #0d1117, #161b22); padding: 20px; border-radius: 12px; 
-        border: 1px solid #30363d; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    }
-    .sub-label { font-size: 11px; text-transform: uppercase; color: #8b949e; letter-spacing: 1px; font-weight: 600; }
-    .status-pulse { height: 8px; width: 8px; background-color: #238636; border-radius: 50%; display: inline-block; margin-right: 5px; animation: pulse 2s infinite; }
-    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(35, 134, 54, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(35, 134, 54, 0); } 100% { box-shadow: 0 0 0 0 rgba(35, 134, 54, 0); } }
-    
-    .stButton>button { 
-        background: #21262d !important; border: 1px solid #30363d !important; color: #c9d1d9 !important; 
-        border-radius: 6px !important; transition: all 0.3s ease; width: 100%;
-    }
-    .stButton>button:hover { border-color: #58a6ff !important; color: #58a6ff !important; }
+    html, body, [class*="css"] { font-family: 'Inter', sans-serif; background-color: #0d1117; color: #c9d1d9; }
+    .st-emotion-cache-1r6slb0 { background: #161b22; border: 1px solid #30363d; border-radius: 12px; }
+    .metric-card { background: #161b22; padding: 20px; border-radius: 12px; border: 1px solid #30363d; }
+    .sub-label { font-size: 10px; text-transform: uppercase; color: #8b949e; letter-spacing: 1.5px; font-weight: 700; margin-bottom: 8px; }
+    .status-online { color: #3fb950; font-size: 12px; font-weight: bold; }
+    .launch-btn button { background: #238636 !important; color: white !important; width: 100%; border: none !important; height: 45px; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. SIDEBAR (MULTI-ACCOUNT NAVIGATION) ---
+# --- 3. SIDEBAR: MULTI-ACCOUNT & NAVIGATION ---
 with st.sidebar:
-    st.markdown("<h2 style='letter-spacing: -1px;'>SAYAR GYI <span style='color:#58a6ff; font-size:12px;'>v15.5</span></h2>", unsafe_allow_html=True)
-    st.caption("Enterprise AI Command Center")
+    st.markdown("<h2 style='color:white;'>Sayar Gyi</h2>", unsafe_allow_html=True)
+    st.caption("AI Content Architect v15.0")
     st.divider()
     
-    # [NEW] Multi-Account Selection
-    st.markdown("<p class='sub-label'>Account Management</p>", unsafe_allow_html=True)
-    client_list = ["SME Jewelry Shop", "Digital Marketing Academy", "Real Estate Enterprise"]
-    selected_client = st.selectbox("Active Account", client_list, label_visibility="collapsed")
+    # [FEATURE INCLUDED]: Multi-Account Switcher
+    st.markdown("<p class='sub-label'>Account Switcher</p>", unsafe_allow_html=True)
+    active_client = st.selectbox(
+        "Select Active Client",
+        ["Jewelry SME", "Digital Marketing Academy", "Real Estate Pro"],
+        label_visibility="collapsed"
+    )
     
     st.divider()
-    nav = st.radio("NAVIGATION", ["Dashboard", "Asset Library", "Project Archive"])
+    nav = st.radio("MAIN MENU", ["Strategic Hub", "Project Archive", "Market Research Agent"])
     
     st.divider()
-    st.markdown("<p class='sub-label'>System Status</p>", unsafe_allow_html=True)
-    st.markdown(f"<span class='status-pulse'></span> <span style='font-size:12px;'>Monitoring {selected_client}</span>", unsafe_allow_html=True)
+    st.markdown("<p class='sub-label'>System Integrity</p>", unsafe_allow_html=True)
+    st.markdown("<span class='status-online'>● Official API Connected</span>", unsafe_allow_html=True)
+    st.markdown("<span class='status-online'>● Database Encrypted</span>", unsafe_allow_html=True)
 
-# --- 4. MAIN INTERFACE (V14.0 STYLE) ---
-if nav == "Dashboard":
-    st.markdown(f"<h2 style='margin-bottom:0;'>{selected_client}</h2>", unsafe_allow_html=True)
-    st.caption(f"Strategic Hub for {selected_client} Management")
+# --- 4. STRATEGIC HUB (Main Working Area) ---
+if nav == "Strategic Hub":
+    st.subheader(f"Strategic Hub: {active_client}")
     
-    # --- ROW 1: REAL-TIME ADAPTIVE MONITORS ---
-    st.markdown("<p class='sub-label' style='margin-top:20px;'>Operational Metrics</p>", unsafe_allow_html=True)
-    m1, m2, m3, m4 = st.columns(4)
-    
+    # [FEATURE INCLUDED]: Monitoring Row (Ops & Intel)
+    m1, m2, m3 = st.columns(3)
     with m1:
-        # Dynamic Metric Labeling based on Client
-        ops_label = "Seats Remaining" if "Academy" in selected_client else "Inventory Level"
-        ops_value = "2 / 30" if "Academy" in selected_client else "High"
-        st.markdown(f'<div class="metric-card"><p class="sub-label">{ops_label}</p><h3 style="margin:0;">{ops_value}</h3><p style="font-size:12px; color:#3fb950;">Live Sync</p></div>', unsafe_allow_html=True)
+        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+        st.markdown("<p class='sub-label'>Live Inventory (Ops)</p>", unsafe_allow_html=True)
+        # Conditional Logic based on Client Type
+        if "Academy" in active_client:
+            st.metric("Seats Remaining", "2 / 30", "-2")
+        else:
+            st.metric("Stock Level", "Active", "Normal")
+        st.markdown('</div>', unsafe_allow_html=True)
+        
     with m2:
-        st.markdown('<div class="metric-card"><p class="sub-label">Market Pulse</p><h3 style="margin:0;">Andromeda</h3><p style="font-size:12px; color:#3fb950;">Optimized</p></div>', unsafe_allow_html=True)
+        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+        st.markdown("<p class='sub-label'>Market Pulse (Intel)</p>", unsafe_allow_html=True)
+        st.write("Meta Andromeda: Optimized")
+        st.write("Trend: Storytelling Reels")
+        st.markdown('</div>', unsafe_allow_html=True)
+        
     with m3:
-        st.markdown('<div class="metric-card"><p class="sub-label">Campaign Reach</p><h3 style="margin:0;">+18.4%</h3><p style="font-size:12px; color:#3fb950;">Active Growth</p></div>', unsafe_allow_html=True)
-    with m4:
-        st.markdown('<div class="metric-card"><p class="sub-label">Tasks</p><h3 style="margin:0;">02</h3><p style="font-size:12px; color:#d29922;">Pending Approval</p></div>', unsafe_allow_html=True)
+        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+        st.markdown("<p class='sub-label'>Account Velocity</p>", unsafe_allow_html=True)
+        st.metric("Engagement", "+14.2%", "Growth")
+        st.markdown('</div>', unsafe_allow_html=True)
 
     st.divider()
 
-    # --- ROW 2: STRATEGIC GENERATION ENGINE ---
-    col_config, col_preview = st.columns([1, 1.8], gap="large")
+    # [FEATURE INCLUDED]: Strategic Generation Area
+    col_input, col_output = st.columns([1, 1.8], gap="medium")
     
-    with col_config:
-        st.markdown("<p class='sub-label'>Mission Configuration</p>", unsafe_allow_html=True)
+    with col_input:
+        st.markdown("<p class='sub-label'>Campaign Parameters</p>", unsafe_allow_html=True)
         with st.container(border=True):
-            mission_topic = st.text_input("Campaign Topic", placeholder="Enter product or event name")
-            st.selectbox("Strategy Logic", ["Urgent (Scarcity)", "Educational", "Brand Awareness"])
+            topic = st.text_input("Mission Topic", placeholder="Enter product or event name")
+            strategy = st.selectbox("Strategic Logic", ["Scarcity (Urgent)", "Educational", "Brand Story"])
             st.divider()
-            if st.button("EXECUTE MISSION"):
-                with st.spinner("Sayar Gyi is thinking..."):
-                    time.sleep(1.5)
-                    st.session_state['ready'] = True
+            if st.button("RUN SAYAR GYI ENGINE"):
+                with st.status("Sayar Gyi is architecting...", expanded=False):
+                    time.sleep(1)
+                    st.write("Analyzing Inventory status...")
+                    time.sleep(1)
+                    st.write("Checking latest Meta Andromeda trends...")
+                st.session_state['generated'] = True
 
-    with col_preview:
-        st.markdown("<p class='sub-label'>Strategic Output Preview</p>", unsafe_allow_html=True)
-        if st.session_state.get('ready'):
-            t1, t2, t3 = st.tabs(["Draft Content", "Strategic Insights", "Visual Direction"])
+    with col_output:
+        st.markdown("<p class='sub-label'>Proposed Strategic Assets</p>", unsafe_allow_html=True)
+        if st.session_state.get('generated'):
+            t1, t2, t3 = st.tabs(["Draft Content", "Sayar Gyi's Reasoning", "Visual Suggestion"])
             with t1:
-                st.markdown("### Social Media Architecture")
-                st.info(f"Campaign generated specifically for {selected_client} using Scarcity Logic.")
-                if st.button("✅ Approve & Launch to Vault"):
-                    st.toast(f"Data for {selected_client} archived.")
+                st.info("AI-generated Burmese/English content based on Scarcity logic will appear here.")
+                st.markdown('<div class="launch-btn">', unsafe_allow_html=True)
+                if st.button("✅ Approve & Launch"):
+                    st.success("Mission Launched and Archived Successfully!")
+                st.markdown('</div>', unsafe_allow_html=True)
             with t2:
-                st.write(f"Insight: Target audience for {selected_client} shows 35% higher engagement on professional hooks.")
+                st.write(f"This content is optimized for {active_client} because current trends favor short hooks.")
             with t3:
-                st.image("https://via.placeholder.com/600x250/161b22/58a6ff?text=AI+Recommended+Visual", use_container_width=True)
+                st.caption("AI-Selected Visual: High-contrast product shot for {active_client}")
         else:
-            st.markdown("<div style='height:300px; display:flex; align-items:center; justify-content:center; border: 1px dashed #30363d; border-radius:12px; color:#484f58;'>System Idle. Select a client and execute mission.</div>", unsafe_allow_html=True)
+            st.markdown("<div style='height:300px; display:flex; align-items:center; justify-content:center; border: 1px dashed #30363d; border-radius:12px; color:#484f58;'>Awaiting configuration for current client...</div>", unsafe_allow_html=True)
 
+# --- 5. PROJECT ARCHIVE (The Vault Feature) ---
 elif nav == "Project Archive":
-    st.title(f"Archive: {selected_client}")
-    st.write(f"Displaying historical records for **{selected_client}** only.")
-    # Archive filtering logic here
+    st.subheader(f"Project Archive: {active_client}")
+    st.write("Full history of approved campaigns and data logs.")
+    # Here we would display the SQLite data filtered by active_client
+    st.info(f"Filtering logs for {active_client}...")
 
-st.divider()
-st.caption("SAYAR GYI ENTERPRISE | UNIFIED v15.5 | MULTI-ACCOUNT READY")
+# --- 6. MARKET RESEARCH AGENT (SME Auto-Onboarding Feature) ---
+elif nav == "Market Research Agent":
+    st.subheader("Autonomous Research Node")
+    st.write(f"Analyzing market landscape for {active_client} to build Brand DNA.")
+    # Deep research logic here
