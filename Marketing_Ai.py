@@ -3,111 +3,89 @@ import pandas as pd
 import numpy as np
 import time
 
-# --- 1. SETTINGS & STYLING ---
-st.set_page_config(page_title="SAYAR GYI v25.0", layout="wide")
+# --- 1. CONFIG & STYLE ---
+st.set_page_config(page_title="SAYAR GYI | COMMAND CENTER", layout="wide")
 
-st.markdown("""
-    <style>
-    .metric-box { background: #0d1117; border: 1px solid #30363d; padding: 20px; border-radius: 12px; text-align: center; }
-    .status-label { font-size: 11px; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; }
-    .nav-btn { margin-bottom: 10px; }
-    </style>
-    """, unsafe_allow_html=True)
-
-# --- 2. SIDEBAR (FUNCTIONAL NAVIGATION) ---
+# --- 2. SIDEBAR SETUP (v15.5 UPGRADED) ---
 with st.sidebar:
     st.markdown("## Sayar Gyi 's")
     st.markdown("<p style='color:#58a6ff;'>Ai Marketing Agency</p>", unsafe_allow_html=True)
-    st.divider()
-
-    # Functional Buttons (Main Modes)
-    st.markdown("**Core Functions**")
-    mode = st.radio("Navigation", 
-                    ["Dashboard", "Industry News", "Creator Mode", "Brand DNA", "Asset Library"],
-                    label_visibility="collapsed")
     
-    st.divider()
+    st.markdown("**Industry News**")
+    st.info("Trend: Gold Investment posts up 20% in Facebook.")
+
+    st.markdown("**Menu**")
+    menu = st.radio("Nav", ["Dashboard", "Brand DNA", "Project Archive", "Asset Library"], label_visibility="collapsed")
+    
     st.markdown("**My Agents**")
-    st.caption("👤 Intel | 🎨 Creative | ⚖️ Auditor")
+    st.caption("👤 Intel | 🎨 Creative | ⚖️ Auditor | ⚙️ Ops")
+
+    st.markdown("**Creator Mode**")
+    st.toggle("Advanced Controls", value=True)
 
     st.markdown("**System Status**")
-    st.success("Core Engine: Active")
+    st.success("Core Engine: Online")
 
-    st.divider()
     st.markdown("**The Brain**")
-    brain_choice = st.segmented_control("Model", ["Gemini", "ChatGPT", "Claude"], default="Gemini")
+    brain = st.segmented_control("Model", ["Gemini", "ChatGPT", "Claude"], default="Gemini")
 
-# --- 3. MAIN INTERFACE LOGIC ---
-
-# A. DASHBOARD MODE
-if mode == "Dashboard":
-    st.title("Strategic Dashboard")
+# --- 3. MAIN DASHBOARD LOGIC ---
+if menu == "Dashboard":
+    st.title("Strategic Performance Dashboard")
     
-    # Timeframe Filter
-    timeframe = st.select_slider("Review Period", options=["Weekly", "Monthly", "Yearly"])
+    # FILTER SECTION
+    time_filter = st.select_slider("Timeframe", options=["Weekly", "Monthly", "Yearly"])
 
-    # --- 🔄 CONTENT CREATION STATUS (New Pipeline) ---
+    # 🔄 PIPELINE STATUS
     st.subheader("Content Creation Status")
-    s1, s2, s3, s4 = st.columns(4)
-    with s1: st.metric("Drafting", "12", delta="+3")
-    with s2: st.metric("Pending", "5", delta="Action Required", delta_color="inverse")
-    with s3: st.metric("Scheduled", "18", delta="Ready to Post")
-    with s4: st.metric("Published", "156", delta="+24 this month")
+    p1, p2, p3, p4, p5, p6 = st.columns(6)
+    p1.metric("Research", "3")
+    p2.metric("Drafting", "8")
+    p3.metric("Auditing", "2")
+    p4.metric("Pending CEO", "5", delta="Action Required", delta_color="inverse")
+    p5.metric("Scheduled", "12", delta="+4", delta_color="normal")
+    p6.metric("Published", "124")
+
     st.divider()
 
-    # --- 📊 PLATFORM SPECIFIC METRICS (The Power 3) ---
-    st.subheader(f"Platform Analytics ({timeframe})")
+    # 📊 PLATFORM SPECIFIC VISUALS
+    st.subheader(f"Platform Results ({time_filter})")
     
-    tab1, tab2, tab3 = st.tabs(["Facebook", "TikTok", "YouTube"])
+    tab1, tab2, tab3 = st.tabs(["Facebook", "TikTok", "Instagram"])
     
-    with tab1: # Facebook
-        c1, c2 = st.columns([1, 2])
+    with tab1:
+        c1, c2 = st.columns([1, 1.5])
         with c1:
-            st.markdown("#### Facebook KPIs")
-            st.metric("Reach", "45.2K", "+12%")
-            st.metric("Engagement", "3.1K", "+5%")
-            st.metric("Followers", "12,450", "+120")
+            st.markdown("**Key Metrics (FB)**")
+            st.metric("Engagement Rate", "5.2%", delta="+0.4%")
+            st.metric("Share Rate", "1.8%", delta="-0.1%")
+            st.metric("Message Leads", "42", delta="+12")
         with c2:
-            st.bar_chart(np.random.randn(10, 2)) # Visual Representation
+            # Visual Bar Chart for FB
+            chart_data = pd.DataFrame(
+                np.random.randn(7, 3),
+                columns=['Reach', 'Shares', 'Leads']
+            )
+            st.bar_chart(chart_data)
 
-    with tab2: # TikTok
-        c1, c2 = st.columns([1, 2])
+    with tab2:
+        c1, c2 = st.columns([1, 1.5])
         with c1:
-            st.markdown("#### TikTok KPIs")
-            st.metric("Total Views", "1.2M", "+25%")
-            st.metric("Avg. Watch Time", "18s", "+3s")
-            st.metric("Profile Visits", "4,200", "+450")
+            st.markdown("**Key Metrics (TikTok)**")
+            st.metric("Avg. Watch Time", "14s", delta="+2s")
+            st.metric("Profile Visits", "850", delta="+120")
+            st.metric("Completion Rate", "45%", delta="+5%")
         with c2:
-            st.line_chart(np.random.randn(15, 2))
+            # Visual Line Chart for TikTok
+            st.line_chart(np.random.randn(20, 2))
 
-    with tab3: # YouTube
-        c1, c2 = st.columns([1, 2])
-        with c1:
-            st.markdown("#### YouTube KPIs")
-            st.metric("CTR (Click-Through)", "8.5%", "+1.2%")
-            st.metric("Watch Time", "1,240 hrs", "+150 hrs")
-            st.metric("Subscribers", "8,900", "+85")
-        with c2:
-            st.area_chart(np.random.randn(20, 3))
+    # ⚖️ ACTIONABLE INSIGHTS (Deep Performance)
+    st.divider()
+    st.subheader("Sayar Gyi's Insight: Beyond Reach")
+    i1, i2, i3 = st.columns(3)
+    
+    i1.metric("Conversion Rate (CR)", "3.1%", help="How many views turn into customers?")
+    i2.metric("Return on Effort (ROE)", "85%", help="Efficiency of Content vs Results")
+    i3.metric("Customer Sentiment", "Positive", delta="Improving")
 
-# B. INDUSTRY NEWS MODE (Placeholder for next discussion)
-elif mode == "Industry News":
-    st.title("🌐 Industry News & Trends")
-    st.info("AI is scanning global marketing trends for your business...")
-    # CEO's future topics will be injected here
-    st.markdown("### Latest Topics for You")
-    st.write("- Meta's New AI Ad Strategy for 2026")
-    st.write("- Short-form Video Trends in SE Asia")
-
-# C. CREATOR MODE (Placeholder for Passive Income discussion)
-elif mode == "Creator Mode":
-    st.title("💰 Creator Mode: Passive Income Hub")
-    st.warning("This module is currently in Setup Mode.")
-    # Passive income logic will be discussed later
-    st.markdown("### Monetization Channels")
-    st.caption("Wait for Sayar Gyi's Strategic Expansion...")
-
-# D. OTHER MODES
-else:
-    st.title(mode)
-    st.write(f"This is the {mode} interface.")
+# --- END OF CODE ---
