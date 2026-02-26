@@ -145,4 +145,7 @@ elif st.session_state.current_page == "Industry News":
 elif st.session_state.current_page == "Creator Mode":
     st.title("Creator Mode")
     st.write("Passive Income tracking...")
-    if st.button("Back to Dashboard"): st.session_state.current_page = "Interactive Dashboard
+    if st.button("Back to Dashboard"): st.session_state.current_page = "Interactive Dashboard"
+
+else:
+    st.title(st.session_state.current_page)
