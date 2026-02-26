@@ -1,12 +1,18 @@
 import streamlit as st
 import pandas as pd
 
-# --- 1. SESSION STATE (Database) ---
+# --- [V32.0 ORIGINAL DATABASE & SESSION STATE] ---
 if 'menu' not in st.session_state: st.session_state.menu = "Interactive Dashboard"
-if 'bulk_gen' not in st.session_state: st.session_state.bulk_gen = False
+# Industry News Data (Restored)
+news_data = [
+    {"date": "2026-02-25", "news": "ရွှေဈေးကွက်အတွင်း ဝယ်လိုအား ပြန်လည်မြင့်တက်လာ"},
+    {"date": "2026-02-24", "news": "AI Video Generation နည်းပညာအသစ် TikTok တွင် ခေတ်စားလာ"}
+]
+# Project Archive & Asset Library (Restored)
+archive_data = pd.DataFrame({"Project": ["Promotion A", "Brand Launch"], "Status": ["Finished", "Ongoing"]})
 
-# --- 2. PAGE CONFIG & v32.0 ORIGINAL UI ---
-st.set_page_config(page_title="SAYAR GYI v58.0", layout="wide")
+# --- [PAGE CONFIG - V32.0 ORIGINAL] ---
+st.set_page_config(page_title="SAYAR GYI v32.0+", layout="wide")
 
 st.markdown("""
     <style>
@@ -15,81 +21,79 @@ st.markdown("""
     section[data-testid="stSidebar"] { background-color: #0d1117; border-right: 1px solid #30363d; }
     .nav-label { font-size: 11px; text-transform: uppercase; color: #8b949e; margin-top: 10px; font-weight: 600; letter-spacing: 1px; }
     .header-blue { color: #58a6ff; font-weight: 600; }
-    /* v32.0 UI Elements */
-    .stMetric { background: #161b22; border: 1px solid #30363d; padding: 10px; border-radius: 8px; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. SIDE PANEL (v32.0 Structure with New Add-ons) ---
+# --- [SIDE PANEL - V32.0 ORIGINAL STRUCTURE + ADD-ONS] ---
 with st.sidebar:
     st.markdown("## Sayar Gyi 's")
     st.markdown("<p style='color:#58a6ff; margin-top:-15px;'>Ai Marketing Agency</p>", unsafe_allow_html=True)
     st.divider()
 
-    # --- UPGRADES Section (ထပ်တိုး Add-ons) ---
-    st.markdown('<p class="nav-label">Executive Upgrades</p>', unsafe_allow_html=True)
+    # --- [UPGRADES SECTION - NEW ADD-ONS ONLY] ---
+    st.markdown('<p class="nav-label">Executive Upgrades (New)</p>', unsafe_allow_html=True)
     if st.button("📊 Executive Report AI", use_container_width=True): st.session_state.menu = "Executive Report"
-    if st.button("🧠 Strategy & Guard Dog", use_container_width=True): st.session_state.menu = "Guard Dog"
+    if st.button("🛡️ Strategy & Guard Dog", use_container_width=True): st.session_state.menu = "Guard Dog"
     if st.button("👥 Ethical Lead CRM", use_container_width=True): st.session_state.menu = "Leads"
 
     st.divider()
-    # --- CORE Execution (Original v32.0 Buttons) ---
+    # --- [V32.0 ORIGINAL EXECUTION BUTTONS] ---
     st.markdown('<p class="nav-label">Execution</p>', unsafe_allow_html=True)
     if st.button("🎬 Content Production", use_container_width=True): st.session_state.menu = "Content Production"
     if st.button("💬 AI Auto-Responder", use_container_width=True): st.session_state.menu = "Engagement"
     if st.button("🚨 Monitoring & Spy Center", use_container_width=True): st.session_state.menu = "Monitoring"
 
     st.divider()
-    # --- ORIGINAL v32.0 Navigation ---
+    # --- [V32.0 ORIGINAL RADIO NAV] ---
     nav_choice = st.radio("Nav", ["Interactive Dashboard", "Brand DNA", "Project Archive", "Asset Library"], label_visibility="collapsed")
-    if nav_choice != st.session_state.menu and nav_choice in ["Interactive Dashboard", "Brand DNA", "Project Archive", "Asset Library"]:
+    # Sync radio with menu
+    if nav_choice in ["Interactive Dashboard", "Brand DNA", "Project Archive", "Asset Library"] and st.session_state.menu not in ["Executive Report", "Guard Dog", "Leads", "Content Production", "Engagement", "Monitoring"]:
         st.session_state.menu = nav_choice
 
     st.divider()
-    st.success("Core Engine: v58.0 Online")
+    st.success("Core Engine: v32.0 Original + Upgrades")
 
-# --- 4. MAIN INTERFACE (v32.0 Layout with Added Logic) ---
+# --- [MAIN INTERFACE - V32.0 ORIGINAL LAYOUTS + ADD-ON PAGES] ---
 
-if st.session_state.menu == "Executive Report":
-    st.markdown('<h1 class="header-blue">📊 Executive Intelligence Report</h1>', unsafe_allow_html=True)
-    st.info("AI Analysis: ယခုလတွင် ROI ၁၅% တိုးတက်လာပြီး Competitive Edge မြင့်မားနေပါသည်။")
-    st.button("📥 Download CEO Report (PDF)")
+if st.session_state.menu == "Interactive Dashboard":
+    st.markdown('<h1 class="header-blue">Strategic Dashboard</h1>', unsafe_allow_html=True)
+    # Original V32.0 Metrics
+    m1, m2, m3 = st.columns(3)
+    m1.metric("Total Engagement", "12,450", "+15%")
+    m2.metric("Active Campaigns", "4", "Stable")
+    m3.metric("AI Efficiency", "98%", "+2%")
+    
+    st.divider()
+    # Original V32.0 Industry News Section
+    st.subheader("📰 Industry News (Restored)")
+    for news in news_data:
+        st.write(f"**[{news['date']}]** - {news['news']}")
+
+elif st.session_state.menu == "Project Archive":
+    st.title("📂 Project Archive")
+    st.table(archive_data)
+
+elif st.session_state.menu == "Asset Library":
+    st.title("📦 Asset Library")
+    st.write("Original assets and media files preserved.")
+
+# --- [LOGIC FOR NEW UPGRADES] ---
+elif st.session_state.menu == "Executive Report":
+    st.markdown('<h1 class="header-blue">📊 Executive Report</h1>', unsafe_allow_html=True)
+    st.write("AI-Generated Monthly Summary...")
 
 elif st.session_state.menu == "Guard Dog":
-    st.markdown('<h1 style="color:#ff4b4b;">🛡️ Strategy & Guard Dog</h1>', unsafe_allow_html=True)
-    col_g1, col_g2 = st.columns(2)
-    with col_g1:
-        st.warning("Trend Alert: Transition Videos are Viral.")
-        st.button("Update Strategy")
-    with col_g2:
-        st.error("Crisis Watch: 1 Negative Comment Found.")
-        st.button("Deploy AI Defense")
+    st.markdown('<h1 style="color:#ff4b4b;">🛡️ Guard Dog Crisis Control</h1>', unsafe_allow_html=True)
+    st.error("No Crisis Detected. Monitoring 24/7.")
 
 elif st.session_state.menu == "Leads":
-    st.markdown('<h1 style="color:#aff5b4;">👥 Ethical Lead CRM</h1>', unsafe_allow_html=True)
-    st.write("Inbox-Only Strategy မှ ရရှိထားသော ဖုန်းနံပါတ်စာရင်း")
-    st.table(pd.DataFrame({"Name": ["Ma Thandar"], "Phone": ["09-450XXX"], "Interest": ["Diamond"]}))
+    st.markdown('<h1 style="color:#aff5b4;">👥 Lead CRM</h1>', unsafe_allow_html=True)
+    st.write("Ethical leads from inbox-only strategy.")
 
 elif st.session_state.menu == "Content Production":
-    st.markdown('<h1 style="color:#d3b6ff;">🎬 Content Factory</h1>', unsafe_allow_html=True)
-    t1, t2 = st.tabs(["Monthly Calendar", "Bulk Multimedia Generator"])
-    with t2:
-        st.write("တစ်လစာ Content (Video/Script) ကြိုထုတ်ရန်")
-        if st.button("🚀 Start 30-Day Bulk Render"): st.session_state.bulk_gen = True
-    with t1:
-        if st.session_state.bulk_gen: 
-            st.success("30-Day Content Batch Ready for Preview.")
-            st.button("Approve & Autopilot")
-        else: st.info("Generator တွင် အရင် Generate လုပ်ပေးပါ။")
-
-elif st.session_state.menu == "Interactive Dashboard":
-    st.markdown('<h1 class="header-blue">Strategic Dashboard</h1>', unsafe_allow_html=True)
-    m1, m2, m3 = st.columns(3)
-    m1.metric("Engagement", "12.5k", "+12%")
-    m2.metric("Response Rate", "100%", "Stable")
-    m3.metric("Leads", "150", "+5%")
-    st.divider()
-    st.tabs(["Facebook Insights", "TikTok Performance", "YouTube Metrics"])
+    st.title("🎬 Content Production")
+    st.info("Upgraded: 1-Month Bulk Generation Ready.")
+    st.button("Start Bulk Multimedia Render")
 
 else:
     st.title(st.session_state.menu)
