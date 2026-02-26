@@ -4,7 +4,7 @@ import numpy as np
 import plotly.express as px
 
 # --- 1. PAGE CONFIG & UI STYLE (v27.0 Standards) ---
-st.set_page_config(page_title="SAYAR GYI v32.0", layout="wide")
+st.set_page_config(page_title="SAYAR GYI v33.0", layout="wide")
 
 st.markdown("""
     <style>
@@ -15,149 +15,125 @@ st.markdown("""
     .stMetric { background: #161b22; border: 1px solid #30363d; padding: 10px; border-radius: 8px; }
     .header-blue { color: #58a6ff; font-weight: 600; }
     .header-green { color: #aff5b4; font-weight: 600; }
+    .header-purple { color: #d3b6ff; font-weight: 600; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 2. SIDE PANEL (v27.0 Structure - UNCHANGED) ---
+# --- 2. SIDE PANEL (v27.0 Structure with Content Production Addition) ---
 with st.sidebar:
     st.markdown("<h2 style='margin-bottom:0;'>Sayar Gyi 's</h2>", unsafe_allow_html=True)
     st.markdown("<p style='color:#58a6ff; margin-top:0;'>Ai Marketing Agency</p>", unsafe_allow_html=True)
     
-    st.divider() # Line 1
-
+    st.divider() # Line 1: News
     st.markdown('<p class="nav-label">Industry News</p>', unsafe_allow_html=True)
-    if st.button("🌐 Read Industry Trends", use_container_width=True): 
-        st.session_state.menu = "Industry News"
+    if st.button("🌐 Read Industry Trends", use_container_width=True): st.session_state.menu = "Industry News"
 
-    st.divider() # Line 2
+    st.divider() # Line 2: Production (New Integration)
+    st.markdown('<p class="nav-label">Execution</p>', unsafe_allow_html=True)
+    if st.button("🎬 Content Production", use_container_width=True): st.session_state.menu = "Content Production"
 
+    st.divider() # Line 3: Menu
     st.markdown('<p class="nav-label">Menu</p>', unsafe_allow_html=True)
-    nav_choice = st.radio("Nav", 
-                          ["Interactive Dashboard", "Brand DNA", "Project Archive", "Asset Library"], 
-                          label_visibility="collapsed")
+    nav_choice = st.radio("Nav", ["Interactive Dashboard", "Brand DNA", "Project Archive", "Asset Library"], label_visibility="collapsed")
     
     if 'menu' not in st.session_state: st.session_state.menu = nav_choice
-    else: st.session_state.menu = nav_choice
+    else: 
+        if st.session_state.menu in ["Interactive Dashboard", "Brand DNA", "Project Archive", "Asset Library"]:
+            st.session_state.menu = nav_choice
 
-    st.divider() # Line 3
-
+    st.divider() # Line 4: Agents
     st.markdown('<p class="nav-label">My Agents</p>', unsafe_allow_html=True)
     st.caption("👤 Intel | 🎨 Creative | ⚖️ Auditor | ⚙️ Ops")
 
-    st.divider() # Line 4
+    st.divider() # Line 5: Creator Mode
+    st.markdown('<p class="nav-label">Passive Income</p>', unsafe_allow_html=True)
+    if st.button("💰 Switch to Creator Mode", use_container_width=True): st.session_state.menu = "Creator Mode"
 
-    st.markdown('<p class="nav-label">Creator Mode</p>', unsafe_allow_html=True)
-    if st.button("💰 Switch to Creator Mode", use_container_width=True):
-        st.session_state.menu = "Creator Mode"
-
-    st.divider() # Line 5
-
+    st.divider() # Line 6: System
     st.success("Core Engine: Online")
-
-    st.divider() # Line 6
-
+    st.divider()
     brain_choice = st.segmented_control("Model", ["Gemini", "ChatGPT", "Claude"], default="Gemini")
 
 # --- 3. MAIN INTERFACE LOGIC ---
 
-# A. INTERACTIVE DASHBOARD
-if st.session_state.menu == "Interactive Dashboard":
+# A. CONTENT PRODUCTION (THE ANALYZED FEATURE)
+if st.session_state.menu == "Content Production":
+    st.markdown('<h1 class="header-purple">Automated Content Production</h1>', unsafe_allow_html=True)
+    st.write("AI-driven execution based on Brand DNA and Industry Trends.")
+    
+    prod_tabs = st.tabs(["Strategy to Script", "Visual Production AI", "Automation Scheduler"])
+    
+    with prod_tabs[0]:
+        st.subheader("Automated Scripting Engine")
+        c1, c2 = st.columns(2)
+        with c1:
+            tone = st.selectbox("Tone of Voice", ["Professional", "Humorous", "Storytelling", "Direct Sales"])
+            platform = st.multiselect("Platforms", ["Facebook", "TikTok", "YouTube Shorts"], default=["TikTok"])
+        with c2:
+            hook_type = st.radio("Hook Style", ["Problem/Solution", "Curiosity Gap", "Shocking Stat"])
+        
+        if st.button("Analyze & Generate Content"):
+            with st.spinner("Analyzing Brand DNA & Market Trends..."):
+                st.markdown("---")
+                st.markdown("**[AI Output] Suggested TikTok Script:**")
+                st.code("Hook: သိပြီးကြပြီလား? Jewelry စျေးကွက်မှာ အခုရောင်းအကောင်းဆုံးက...\nBody: (Brand USP based content)\nCTA: အသေးစိတ်ကို Messenger မှာ စုံစမ်းလိုက်ပါ!")
+
+    with prod_tabs[1]:
+        st.subheader("Visual Asset Generator")
+        st.info("Midjourney & Canva API Integration Placeholder")
+        st.text_input("Enter Image Prompt for AI Design")
+        st.button("Generate Visual Concept")
+
+    with prod_tabs[2]:
+        st.subheader("Direct Posting Automation")
+        st.table(pd.DataFrame({
+            "Platform": ["Facebook", "TikTok"],
+            "Content Type": ["Video", "Static Post"],
+            "Status": ["Ready to Sync", "Awaiting Approval"]
+        }))
+
+# B. INTERACTIVE DASHBOARD (v27.0 Logic)
+elif st.session_state.menu == "Interactive Dashboard":
     st.markdown('<h1 class="header-blue">Strategic Dashboard</h1>', unsafe_allow_html=True)
     f_cols = st.columns([2, 1, 1])
-    with f_cols[0]:
-        time_period = st.segmented_control("Timeframe", ["Weekly", "Monthly", "Yearly"], default="Monthly")
-    with f_cols[1]:
-        chart_view = st.selectbox("Visual Filter", ["Bar Chart", "Pie Chart", "Line Chart"])
-    
+    with f_cols[0]: time_period = st.segmented_control("Timeframe", ["Weekly", "Monthly", "Yearly"], default="Monthly")
+    with f_cols[1]: chart_view = st.selectbox("Visual Filter", ["Bar Chart", "Pie Chart", "Line Chart"])
     st.divider()
-    st.markdown('<p class="nav-label">Content Creation Status</p>', unsafe_allow_html=True)
     s1, s2, s3, s4 = st.columns(4)
     s1.metric("Drafting", "12"); s2.metric("Pending", "5"); s3.metric("Scheduled", "18"); s4.metric("Published", "145")
-    
     st.divider()
-    st.markdown('<p class="nav-label">Platform Metrics</p>', unsafe_allow_html=True)
     t1, t2, t3 = st.tabs(["Facebook", "TikTok", "YouTube"])
     mock_data = pd.DataFrame({'Category': ['Engage', 'Reach', 'Convert'], 'Value': [45, 30, 25]})
-
-    def display_chart(chart_type, df, unique_key):
+    def display_chart(chart_type, df, key):
         if chart_type == "Bar Chart": st.bar_chart(df, x='Category', y='Value')
         elif chart_type == "Line Chart": st.line_chart(df, x='Category', y='Value')
         else:
             fig = px.pie(df, values='Value', names='Category', hole=0.4, template="plotly_dark")
-            st.plotly_chart(fig, use_container_width=True, key=unique_key)
+            st.plotly_chart(fig, use_container_width=True, key=key)
+    with t1: display_chart(chart_view, mock_data, "fb_v33")
+    with t2: display_chart(chart_view, mock_data, "tt_v33")
+    with t3: display_chart(chart_view, mock_data, "yt_v33")
 
-    with t1:
-        c1, c2, c3 = st.columns(3)
-        c1.metric("Reach", "45.2K"); c2.metric("Engagement", "3.2K"); c3.metric("Followers", "12.4K")
-        display_chart(chart_view, mock_data, "fb_v32")
-    with t2:
-        c1, c2, c3 = st.columns(3)
-        c1.metric("Total Views", "1.2M"); c2.metric("Avg Watch Time", "18s"); c3.metric("Profile Visits", "4.2K")
-        display_chart(chart_view, mock_data, "tt_v32")
-    with t3:
-        c1, c2, c3 = st.columns(3)
-        c1.metric("CTR", "8.5%"); c2.metric("Watch Time", "1.2K h"); c3.metric("Subscribers", "8.9K")
-        display_chart(chart_view, mock_data, "yt_v32")
-
-# B. BRAND DNA (Intelligence & Manual Dual Mode)
+# C. BRAND DNA (v30.0 Logic)
 elif st.session_state.menu == "Brand DNA":
     st.markdown('<h1 class="header-green">Brand DNA Intelligence</h1>', unsafe_allow_html=True)
-    dna_mode = st.radio("Select Mode", ["Intelligence Mode (AI Research)", "Manual Mode (User Input)"], horizontal=True)
-    st.divider()
-
+    dna_mode = st.radio("Mode", ["Intelligence Mode (AI Research)", "Manual Mode"], horizontal=True)
     if dna_mode == "Intelligence Mode (AI Research)":
-        st.subheader("AI Intelligence Researcher")
-        mm_industries = [
-            "Jewelry & Gold (ကျောက်မျက်ရတနာနှင့် ရွှေဆိုင်)", "F&B / Coffee Shop (စားသောက်ဆိုင်နှင့် ကော်ဖီဆိုင်)",
-            "Real Estate (အိမ်ခြံမြေ ဝန်ဆောင်မှု)", "Cosmetic & Skincare (အလှကုန်နှင့် အသားအရေထိန်းသိမ်းမှု)",
-            "Travel & Tour (ခရီးသွားလာရေး ဝန်ဆောင်မှု)", "E-commerce / Retail (အွန်လိုင်းစျေးဆိုင်)",
-            "Education / Training (ပညာရေးနှင့် သင်တန်း)", "Auto Mobile (မော်တော်ယာဉ် ရောင်းဝယ်ရေး)",
-            "Health & Wellness (ကျန်းမာရေးနှင့် အားကစား)", "Digital Services / Tech (နည်းပညာနှင့် ဒစ်ဂျစ်တယ်ဝန်ဆောင်မှု)",
-            "Other (အခြားလုပ်ငန်း အမျိုးအစား...)"
-        ]
-        selected_industry = st.selectbox("လုပ်ငန်းအမျိုးအစား ရွေးချယ်ပါ", mm_industries)
-        final_industry = selected_industry
-        if selected_industry == "Other (အခြားလုပ်ငန်း အမျိုးအစား...)":
-            final_industry = st.text_input("လုပ်ငန်းအမျိုးအစားကို စာရိုက်ထည့်ပါ")
-        
-        if st.button("Generate Strategy"):
-            st.info(f"{final_industry} အတွက် AI က Research လုပ်နေပါသည်...")
-    
+        st.selectbox("လုပ်ငန်းအမျိုးအစား", ["Jewelry", "F&B", "Real Estate", "Other"])
+        st.button("Generate Strategy")
     else:
-        st.subheader("Manual Brand Configuration")
-        col_m1, col_m2 = st.columns(2)
-        with col_m1:
-            st.text_input("Brand Name"); st.text_area("Brand Mission")
-            st.selectbox("Brand Tone", ["Professional", "Witty", "Elegant", "Friendly"])
-        with col_m2:
-            st.text_input("Target Audience"); st.text_area("Unique Selling Point (USP)")
-            st.file_uploader("Upload Brand Guideline (PDF/DOC)", type=["pdf", "docx"])
-        st.button("Save Brand DNA")
+        st.text_input("Brand Name"); st.file_uploader("Upload Guideline")
 
-# C. PROJECT ARCHIVE (Database)
+# D. PROJECT ARCHIVE & ASSET LIBRARY (v31.0 Logic)
 elif st.session_state.menu == "Project Archive":
-    st.markdown('<h1 class="header-blue">Project Archive Database</h1>', unsafe_allow_html=True)
-    df_projects = pd.DataFrame({
-        "Client Name": ["Diamond Star", "Zen Coffee", "Tech Solutions"],
-        "Status": ["Completed", "Active", "Pending"],
-        "Start Date": ["2025-01-10", "2025-02-01", "2025-02-15"],
-        "Budget": ["$2,500", "$1,200", "$4,000"]
-    })
-    st.table(df_projects)
-    with st.expander("Add New Project"):
-        st.text_input("Client Name"); st.date_input("Start Date"); st.button("Save")
+    st.markdown('<h1 class="header-blue">Project Archive</h1>', unsafe_allow_html=True)
+    st.table(pd.DataFrame({"Client": ["Diamond Star", "Zen Coffee"], "Status": ["Completed", "Active"]}))
 
-# D. ASSET LIBRARY (Database)
 elif st.session_state.menu == "Asset Library":
     st.markdown('<h1 class="header-blue">Asset Library</h1>', unsafe_allow_html=True)
-    a_tab1, a_tab2, a_tab3 = st.tabs(["Media", "Copywriting", "Legal"])
-    with a_tab1:
-        st.table(pd.DataFrame({"File": ["Logo.png", "Promo.mp4"], "Type": ["Image", "Video"], "Platform": ["All", "TikTok"]}))
-        st.file_uploader("Upload Assets")
-    with a_tab2: st.write("Copywriting Templates Store")
-    with a_tab3: st.write("Legal & Contract Templates")
+    st.tabs(["Media", "Copywriting", "Legal"])
 
-# NEWS & CREATOR MODE
+# OTHERS
 elif st.session_state.menu == "Industry News":
     st.title("Industry News")
     if st.button("Back"): st.session_state.menu = "Interactive Dashboard"
