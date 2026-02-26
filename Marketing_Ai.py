@@ -1,121 +1,94 @@
 import streamlit as st
-import sqlite3
-from datetime import datetime
+import time
 
-# --- 1. DATABASE ENGINE (THE VAULT - LOCAL STORAGE) ---
-# ဒါက AI အကောင့် ဘာဖြစ်ဖြစ် ကိုယ့်ဒေတာ ကိုယ့်ဆီမှာ ကျန်နေအောင် လုပ်ပေးတဲ့အပိုင်းပါ
-def init_db():
-    conn = sqlite3.connect('project_archive.db')
-    c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS archives 
-                 (id INTEGER PRIMARY KEY, date TEXT, client TEXT, content TEXT, strategy TEXT)''')
-    conn.commit()
-    conn.close()
-
-def save_to_archive(client, content, strategy):
-    conn = sqlite3.connect('project_archive.db')
-    c = conn.cursor()
-    date_now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    c.execute("INSERT INTO archives (date, client, content, strategy) VALUES (?, ?, ?, ?)",
-              (date_now, client, content, strategy))
-    conn.commit()
-    conn.close()
-
-init_db()
-
-# --- 2. PREMIUM UI STYLING ---
-st.set_page_config(page_title="Sayar Gyi | Strategic Hub", layout="wide")
+# --- 1. CEO INTERFACE SETUP ---
+st.set_page_config(page_title="Sayar Gyi | CEO Command Center", layout="wide")
 
 st.markdown("""
     <style>
-    .stApp { background-color: #0d1117; color: #c9d1d9; }
-    .hub-card { background: #161b22; padding: 20px; border-radius: 12px; border: 1px solid #30363d; margin-bottom: 15px; }
-    .status-active { color: #3fb950; font-weight: bold; font-size: 12px; }
-    .section-header { color: #58a6ff; font-size: 14px; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; }
-    .launch-btn button { 
-        background: linear-gradient(135deg, #238636 0%, #2ea043 100%) !important; 
-        color: white !important; width: 100%; border: none !important; height: 50px; font-size: 18px;
-    }
+    .stApp { background-color: #0b0e11; color: #c9d1d9; }
+    .agent-box { background: #161b22; padding: 15px; border-radius: 10px; border-left: 5px solid #8957e5; margin-bottom: 10px; }
+    .approval-card { background: #1c2128; padding: 25px; border-radius: 15px; border: 1px solid #3fb950; }
+    .status-tag { font-size: 10px; font-weight: bold; padding: 2px 8px; border-radius: 5px; }
+    .tag-live { background: #238636; color: white; }
+    .tag-wait { background: #d29922; color: white; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. SIDEBAR: CEO NAVIGATION ---
+# --- 2. SIDEBAR: THE EXECUTIVE SUITE ---
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", width=80)
-    st.title("Sayar Gyi")
-    st.caption("Strategic Content Architect")
+    st.markdown("### 👑 CEO Control Panel")
+    st.caption("Monitoring: Autonomous Department")
     st.divider()
     
-    menu = st.selectbox("ဗဟိုထိန်းချုပ်ခန်း", ["🎯 Strategic Hub", "📂 Project Archive", "⚙️ Settings"])
+    # SYSTEM HEALTH (Monitoring Agent Activity)
+    st.markdown("**Department Status**")
+    st.markdown("📡 **Ops Agent:** <span class='status-tag tag-live'>SYNCED</span>", unsafe_allow_html=True)
+    st.markdown("🧠 **Intel Agent:** <span class='status-tag tag-live'>ACTIVE</span>", unsafe_allow_html=True)
+    st.markdown("✍️ **Creative Agent:** <span class='status-tag tag-live'>READY</span>", unsafe_allow_html=True)
     
     st.divider()
-    st.markdown("<p class='section-header'>စနစ်အခြေအနေ</p>", unsafe_allow_html=True)
-    st.markdown("✅ AI Connect: **Official API**")
-    st.markdown("✅ Archive: **Local Encrypted**")
+    if st.button("RESCAN ALL SYSTEMS"):
+        st.toast("Sayar Gyi is resyncing with Google Sheets & Meta...")
 
-# --- 4. MAIN INTERFACE ---
+# --- 3. MAIN DASHBOARD: CEO MONITORING VIEW ---
+st.title("Sayar Gyi's Mission Control")
 
-if menu == "🎯 Strategic Hub":
-    st.title("Strategic Hub")
+# TOP ROW: REAL-TIME DATA (From Ops Agent)
+col_ops, col_intel, col_asset = st.columns(3)
+
+with col_ops:
+    st.markdown('<div class="agent-box">', unsafe_allow_html=True)
+    st.markdown("<p style='color:#58a6ff;'>📊 OPS AGENT REPORT</p>", unsafe_allow_html=True)
+    st.metric(label="Current Enrollment", value="28/30", delta="-2 Seats Left")
+    st.caption("Source: Google Sheets (Synced 1m ago)")
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with col_intel:
+    st.markdown('<div class="agent-box">', unsafe_allow_html=True)
+    st.markdown("<p style='color:#58a6ff;'>🧠 INTEL AGENT REPORT</p>", unsafe_allow_html=True)
+    st.write("Current Trend: Meta Andromeda Logic favors 'Direct Hook' Storytelling.")
+    st.write("Market Focus: Professional Development.")
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with col_asset:
+    st.markdown('<div class="agent-box">', unsafe_allow_html=True)
+    st.markdown("<p style='color:#58a6ff;'>🖼️ ASSET AGENT REPORT</p>", unsafe_allow_html=True)
+    st.write("Library: 15 Product Images, 3 Course Intro Videos Ready.")
+    st.caption("Auto-Selection: Enabled")
+    st.markdown('</div>', unsafe_allow_html=True)
+
+st.divider()
+
+# MIDDLE ROW: THE APPROVAL QUEUE (The CEO's Main Task)
+st.subheader("📝 Approval Queue (Pending Review)")
+
+with st.container():
+    st.markdown('<div class="approval-card">', unsafe_allow_html=True)
+    col_content, col_action = st.columns([3, 1])
     
-    # TOP SECTION: TEAM UPDATES
-    col1, col2, col3 = st.columns(3)
+    with col_content:
+        st.markdown("### Campaign: Final 2 Seats Alert (Urgent)")
+        st.markdown("**Strategy:** Scarcity (based on Ops Agent Data)")
+        st.info("""
+        [FACEBOOK COPY]
+        သင်တန်းသား ၂ ယောက်ပဲ ကျန်ပါတော့တယ်! 🚀 
+        နောက် ၃ လစောင့်စရာမလိုဘဲ အခုပဲ အမြန်စာရင်းသွင်းလိုက်ပါ။
+        """)
+        st.markdown("**Attached Asset:** `Course_Promo_Video_02.mp4`")
     
-    with col1:
-        st.markdown('<div class="hub-card">', unsafe_allow_html=True)
-        st.markdown('<p class="section-header">လက်ကျန်နှင့် အရောင်း</p>', unsafe_allow_html=True)
-        st.metric("သင်တန်းသား လက်ကျန်", "၂ နေရာ", "-၂")
-        st.markdown('<span class="status-active">● Live Sync Active</span>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-    with col2:
-        st.markdown('<div class="hub-card">', unsafe_allow_html=True)
-        st.markdown('<p class="section-header">ဈေးကွက်ရေစီးကြောင်း</p>', unsafe_allow_html=True)
-        st.write("Trending: Meta Andromeda Logic")
-        st.write("Focus: Short-form Video Storytelling")
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-    with col3:
-        st.markdown('<div class="hub-card">', unsafe_allow_html=True)
-        st.markdown('<p class="section-header">အကြောင်းအရာ ဖန်တီးသူ</p>', unsafe_allow_html=True)
-        st.write("Drafting: Urgent Enrollment Post")
-        st.write("Style: Professional & Urgent")
-        st.markdown('</div>', unsafe_allow_html=True)
+    with col_action:
+        st.write("CEO DECISION")
+        if st.button("✅ APPROVE & PUBLISH"):
+            st.success("Mission Executed!")
+        if st.button("❌ REJECT / RE-EDIT"):
+            st.warning("Sent back to Creative Agent.")
+        st.button("✍️ EDIT MANUALLY")
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    st.divider()
-
-    # REVIEW AREA
-    st.subheader("📝 Review & Launch (စစ်ဆေးပြီး ထုတ်လွှင့်ရန်)")
-    
-    with st.container():
-        st.markdown('<div class="hub-card" style="border: 1px solid #58a6ff;">', unsafe_allow_html=True)
-        c_body, c_action = st.columns([3, 1])
-        
-        client_name = "SME Jewelry Shop" # Example
-        proposed_content = "သင်တန်းသား ၂ ယောက်ပဲ ကျန်ပါတော့တယ်! 🚀 အခုပဲ စာရင်းသွင်းလိုက်ပါ။"
-        proposed_strategy = "Scarcity & Urgent Logic"
-
-        with c_body:
-            st.markdown(f"**လုပ်ငန်းအမည်:** {client_name}")
-            st.markdown(f"**ဗျူဟာ:** {proposed_strategy}")
-            st.info(proposed_content)
-            st.caption("Attached: 🎥 Promo_Video.mp4")
-            
-        with c_action:
-            st.markdown('<div class="launch-btn">', unsafe_allow_html=True)
-            if st.button("✅ Launch Now"):
-                save_to_archive(client_name, proposed_content, proposed_strategy)
-                st.success("Archive ထဲသို့ သိမ်းဆည်းပြီး Facebook သို့ ထုတ်လွှင့်လိုက်ပါပြီ။")
-            st.markdown('</div>', unsafe_allow_html=True)
-            st.button("❌ ပြန်ပြင်ရန် ခိုင်းစေမည်")
-        st.markdown('</div>', unsafe_allow_html=True)
-
-elif menu == "📂 Project Archive":
-    st.title("Project Archive (လုပ်ငန်းမှတ်တမ်းတိုက်)")
-    st.write("ယခင်က လုပ်ဆောင်ခဲ့သမျှ Campaign အားလုံးကို ဤနေရာတွင် လုံခြုံစွာ သိမ်းဆည်းထားပါသည်။")
-    
-    conn = sqlite3.connect('project_archive.db')
-    import pandas as pd
-    df = pd.read_sql_query("SELECT * FROM archives ORDER BY id DESC", conn)
-    st.dataframe(df, use_container_width=True)
-    conn.close()
+# --- 4. FUTURE LOGIC: DYNAMIC ADAPTATION ---
+st.divider()
+st.markdown("### 🧬 Sayar Gyi's Logic Log")
+st.caption("CEO-only view of how Sayar Gyi is thinking.")
+st.write("1. Ops Agent detected 28/30 seats. Switched strategy from 'Awareness' to 'Hard Sell (Urgent)'.")
+st.write("2. Intel Agent confirmed 9:00 PM is the peak time for target audience. Scheduled for tonight.")
