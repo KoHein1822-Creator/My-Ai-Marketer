@@ -3,116 +3,146 @@ import google.generativeai as genai
 import time
 import re
 
-# --- 1. CORE SETUP ---
-st.set_page_config(page_title="Sayar Gyi | AI Command Center", layout="wide", page_icon="💎")
+# --- 1. CORE CONFIGURATION ---
+st.set_page_config(page_title="Mission Control | Ultimate", layout="wide", page_icon="🚀")
 
+# Gemini API Connection
 try:
     genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-    # Note: Search Grounding requires specific model configuration in production
     model = genai.GenerativeModel('gemini-1.5-flash')
 except:
-    st.error("API Key missing. Please configure in Streamlit Secrets.")
+    st.error("Authentication Error: Connect your API Key in Secrets.")
 
-# --- 2. PREMIUM DARK UI STYLING ---
+# --- 2. THE MASTER UI STYLING (GLASSMORPHISM) ---
 st.markdown("""
     <style>
-    .stApp { background-color: #0d1117; color: #c9d1d9; font-family: 'Inter', sans-serif; }
-    [data-testid="stSidebar"] { background-color: #161b22 !important; border-right: 1px solid #30363d; }
-    .module-card { background: #161b22; padding: 25px; border-radius: 12px; border: 1px solid #30363d; margin-bottom: 20px; }
-    .label-blue { font-size: 11px; font-weight: 800; color: #58a6ff; text-transform: uppercase; letter-spacing: 1.5px; }
-    .status-badge { background: #238636; color: white; padding: 2px 8px; border-radius: 10px; font-size: 10px; }
+    .stApp { background-color: #0b0e14; color: #adbac7; font-family: 'Inter', sans-serif; }
+    [data-testid="stSidebar"] { background-color: #0d1117 !important; border-right: 1px solid #30363d; }
+    
+    /* Global Card Style */
+    .mc-card { 
+        background: #161b22; padding: 20px; border-radius: 12px; 
+        border: 1px solid #30363d; margin-bottom: 20px; 
+    }
+    .label-sm { font-size: 10px; font-weight: bold; color: #58a6ff; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+    
+    /* Metrics Styling */
+    .metric-value { font-size: 24px; font-weight: bold; color: #ffffff; }
+    .status-active { color: #3fb950; font-size: 12px; }
+    
+    /* Button Styling */
     .stButton>button { 
-        background: linear-gradient(135deg, #1f6feb 0%, #8957e5 100%) !important; 
-        color: white !important; font-weight: bold; border: none !important; width: 100%; height: 45px;
+        background: linear-gradient(135deg, #1f6feb 0%, #238636 100%) !important; 
+        border: none !important; color: white !important; font-weight: bold; height: 48px; width: 100%; border-radius: 8px;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. SIDEBAR: THE ARCHITECT (SAYAR GYI) ---
+# --- 3. SIDEBAR: NAVIGATION & BRAIN STATUS ---
 with st.sidebar:
-    st.markdown(f"""
-        <div style='text-align: center; padding: 20px;'>
-            <img src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png' width='90' style='border-radius: 50%; border: 3px solid #8957e5;'>
-            <h2 style='margin-bottom:0; color:white;'>Sayar Gyi</h2>
-            <p style='font-size: 13px; color: #8b949e;'>Senior Content Architect</p>
-            <span class='status-badge'>AUTONOMOUS MODE ACTIVE</span>
-        </div>
-    """, unsafe_allow_html=True)
+    st.markdown("<h2 style='color:white;'>M-Control <span style='color:#58a6ff;'>Pro</span></h2>", unsafe_allow_html=True)
+    st.caption("Enterprise AI OS | v10.0 Final UI")
+    st.divider()
+    
+    st.markdown('<p class="label-sm">Control Modules</p>', unsafe_allow_html=True)
+    menu = st.radio("Navigation", ["🛸 Command Center", "📊 Analytics Hub", "🧬 Audience Engine", "⚙️ Settings"], label_visibility="collapsed")
     
     st.divider()
-    menu = st.radio("OPERATIONS", ["🛸 Mission Control", "🧬 Auto-Research (SME)", "📊 Performance", "Vault"])
-    
-    st.divider()
-    st.markdown('<p class="label-blue">Live Watcher</p>', unsafe_allow_html=True)
-    st.caption("📡 Meta Andromeda Logic: Stable")
-    st.caption("📡 Global Jewelry Trends: Rising")
+    st.markdown('<p class="label-sm">The Brain (Aung Gyee)</p>', unsafe_allow_html=True)
+    st.markdown("<p class='status-active'>● Online & Synchronized</p>", unsafe_allow_html=True)
+    st.progress(100) # Efficiency meter
 
 # --- 4. MAIN COMMAND CENTER ---
-if menu == "🛸 Mission Control":
-    st.markdown("<h2 style='color:white;'>Strategic Command Center</h2>", unsafe_allow_html=True)
-    
-    col_in, col_out = st.columns([1, 2], gap="large")
-    
-    with col_in:
-        st.markdown('<div class="module-card">', unsafe_allow_html=True)
-        st.markdown('<p class="label-blue">Campaign Config</p>', unsafe_allow_html=True)
+if menu == "🛸 Command Center":
+    # Dashboard Grid
+    col_config, col_main, col_insight = st.columns([1, 2, 1], gap="medium")
+
+    # --- ZONE 1: CONFIGURATION ---
+    with col_config:
+        st.markdown('<div class="mc-card">', unsafe_allow_html=True)
+        st.markdown('<p class="label-sm">Mission Parameters</p>', unsafe_allow_html=True)
+        topic = st.text_input("Campaign Topic", placeholder="e.g. Rare Jewelry")
+        strategy = st.selectbox("Logic Framework", ["AIDA (Attention-Interest)", "PAS (Problem-Agitate)", "Storytelling (Emotional)"])
+        tone = st.select_slider("Brand Voice", options=["Soft", "Professional", "Bold"])
         
-        biz_name = st.text_input("Business Name", placeholder="e.g. Shwe Jewelry SME")
-        biz_type = st.selectbox("Industry", ["Jewelry", "Fashion", "Real Estate", "F&B"])
+        st.markdown('<p class="label-sm" style="margin-top:15px;">Target Channel</p>', unsafe_allow_html=True)
+        channels = st.multiselect("Publishing to", ["Facebook", "Instagram", "TikTok"], default="Facebook")
         
-        # New Feature: Deep Research Toggle
-        deep_research = st.toggle("Enable Real-time Market Research", value=True)
-        
-        execute = st.button("EXECUTE AGENTIC MISSION")
+        execute = st.button("EXECUTE MISSION")
         st.markdown('</div>', unsafe_allow_html=True)
 
-        if execute:
-            with st.status("Sayar Gyi is working...", expanded=True) as status:
-                st.write("🔍 Searching for Meta Andromeda Updates...")
-                time.sleep(1)
-                st.write(f"📊 Analyzing Competitors for {biz_type} in Myanmar...")
-                time.sleep(1)
-                st.write("🧠 Drafting Brand DNA & Target Audience Segments...")
-                time.sleep(1)
-                status.update(label="Mission Prepared!", state="complete", expanded=False)
-                st.session_state['ready'] = True
+    # --- ZONE 2: EXECUTION & OUTPUT ---
+    with col_main:
+        if execute and topic:
+            # Agent Thought Simulation
+            status_box = st.empty()
+            with status_box.container():
+                st.markdown('<div class="mc-card">', unsafe_allow_html=True)
+                st.markdown('<p class="label-sm">Agent Reasoning (Aung Gyee)</p>', unsafe_allow_html=True)
+                steps = ["Analyzing Market Trends...", "Segmenting Audience Interests...", "Constructing Strategic Copy...", "Optimizing for Luxury Tone..."]
+                for step in steps:
+                    st.write(f"⚡ {step}")
+                    time.sleep(0.6)
+                st.markdown('</div>', unsafe_allow_html=True)
+            status_box.empty()
 
-    with col_out:
-        if st.session_state.get('ready'):
-            st.markdown('<div class="module-card">', unsafe_allow_html=True)
-            st.markdown('<p class="label-blue">Strategic Output Matrix</p>', unsafe_allow_html=True)
-            
-            # Simulated Output (Since we're building the UI foundation)
-            tab1, tab2, tab3 = st.tabs(["📄 Content Deck", "🧬 Derived Strategy", "🎨 Visuals"])
-            
-            with tab1:
-                st.markdown("**Andromeda Logic Optimized Copy**")
-                st.info("AI will generate AIDA/PAS copies here based on the live trends found.")
-            
-            with tab2:
-                st.markdown("**Sayar Gyi's Research Findings**")
-                st.success("Target Audience: Women (25-45) interested in investment gold.")
-                st.warning("Trend Alert: Customers now prefer 'Behind-the-scenes' Reels over studio photos.")
+            # AI Content Generation
+            with st.spinner("AI Generating Final Assets..."):
+                prompt = f"""
+                Act as a Master Marketing Architect. 
+                Topic: {topic}. Strategy: {strategy}. Tone: {tone}.
+                Language: Myanmar (Natural & Elegant).
+                Structure your output with tags: [AIDA], [PAS], [SCRIPT], [IMAGE_PROMPT]
+                """
+                response = model.generate_content(prompt)
+                res_text = response.text
+
+                # Parsing
+                def get_part(tag, text):
+                    match = re.search(f"\[{tag}\](.*?)(?=\[|$)", text, re.DOTALL)
+                    return match.group(1).strip() if match else "Preparing content..."
+
+                st.markdown('<div class="mc-card">', unsafe_allow_html=True)
+                st.markdown('<p class="label-sm">Strategy Matrix Output</p>', unsafe_allow_html=True)
                 
-            with tab3:
-                st.markdown("**Visual Direction**")
-                st.code("Cinematic macro shot of jewelry craft, natural lighting, 4k --ar 9:16", language="bash")
-            st.markdown('</div>', unsafe_allow_html=True)
+                t1, t2, t3 = st.tabs(["📄 Strategic Copy", "🎥 Video Script", "🎨 Visual Prompt"])
+                with t1:
+                    st.markdown("**Core Frameworks**")
+                    st.write(get_part("AIDA", res_text))
+                    st.divider()
+                    st.write(get_part("PAS", res_text))
+                with t2:
+                    st.write(get_part("SCRIPT", res_text))
+                with t3:
+                    st.code(get_part("IMAGE_PROMPT", res_text), language="bash")
+                
+                st.divider()
+                st.download_button("Export Mission Report", res_text, file_name="mission_report.txt")
+                st.markdown('</div>', unsafe_allow_html=True)
         else:
+            # Placeholder State
             st.markdown("""
-                <div style='height: 400px; display: flex; align-items: center; justify-content: center; border: 2px dashed #30363d; border-radius: 12px; color: #8b949e;'>
-                    Awaiting Business Configuration...
+                <div style="height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px dashed #30363d; border-radius:12px; color:#484f58;">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2592/2592201.png" width="80" style="opacity: 0.2; margin-bottom: 20px;">
+                    <p>Ready for Mission Command. Enter a topic to begin.</p>
                 </div>
             """, unsafe_allow_html=True)
 
-elif menu == "🧬 Auto-Research (SME)":
-    st.markdown("<h2 style='color:white;'>SME Research Agent</h2>", unsafe_allow_html=True)
-    st.info("This module is designed for SME clients without Brand Guidelines. Sayar Gyi will conduct market research to define their DNA.")
-    
-    biz_input = st.text_area("Describe the SME business in one sentence:", placeholder="A family-owned gold shop in Mandalay that sells traditional designs.")
-    if st.button("Generate Brand DNA"):
-        st.write("Sayar Gyi is analyzing market data to build a Brand Identity for you...")
+    # --- ZONE 3: INSIGHTS & PREVIEW ---
+    with col_insight:
+        st.markdown('<div class="mc-card">', unsafe_allow_html=True)
+        st.markdown('<p class="label-sm">Predictive Analytics</p>', unsafe_allow_html=True)
+        st.write("Engagement Probability")
+        st.progress(88)
+        st.write("Conversion Index")
+        st.progress(72)
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        st.markdown('<div class="mc-card">', unsafe_allow_html=True)
+        st.markdown('<p class="label-sm">Multi-Channel Preview</p>', unsafe_allow_html=True)
+        st.caption("Visualizing content for Desktop & Mobile...")
+        st.image("https://via.placeholder.com/300x200/0d1117/58a6ff?text=Social+Media+Preview", use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
-# --- 5. SYSTEM THINKING FOOTER ---
-st.divider()
-st.caption("Sayar Gyi AI System | System Thinking Enabled | Real-time Adaptation Logic Ready")
+else:
+    st.info(f"The {menu} module is fully designed. Integration with backend database will follow.")
