@@ -125,4 +125,48 @@ if menu_choice == "Interactive Dashboard":
     # Overview Metrics
     m1, m2, m3, m4 = st.columns(4)
     with m1: st.markdown('<div class="metric-card"><p class="sub-label">Active Campaigns</p><h3>12</h3></div>', unsafe_allow_html=True)
-    with m2: st.markdown('<div class="metric-card"><p class="sub-label">Content Generated</p><h3>
+    with m2: st.markdown('<div class="metric-card"><p class="sub-label">Content Generated</p><h3>145</h3></div>', unsafe_allow_html=True)
+    with m3: st.markdown('<div class="metric-card"><p class="sub-label">Audit Score</p><h3>98%</h3></div>', unsafe_allow_html=True)
+    with m4: st.markdown('<div class="metric-card"><p class="sub-label">Tokens Used</p><h3>4.2k</h3></div>', unsafe_allow_html=True)
+
+    st.divider()
+
+    # Simple Simulation of Content Generation Flow
+    col_input, col_output = st.columns([1, 1.5], gap="large")
+    
+    with col_input:
+        st.subheader("Mission Setup")
+        task = st.text_area("What is the mission today?", placeholder="e.g., Create a TOFU post for Jewelry SME...")
+        if st.button("RUN AGENT PIPELINE"):
+            with st.status("Agents working...", expanded=True):
+                st.write("🧠 Agent 1 (Intel) is researching...")
+                time.sleep(1)
+                st.write("🎨 Agent 2 (Creative) is drafting...")
+                time.sleep(1)
+                st.write("⚖️ Agent 3 (Auditor) is verifying...")
+                time.sleep(1)
+            st.session_state['ready'] = True
+
+    with col_output:
+        st.subheader("Final Asset Preview")
+        if st.session_state.get('ready'):
+            st.success("Verification Complete. Ready for CEO Approval.")
+            with st.container(border=True):
+                st.markdown("**Copywriting Draft:**")
+                st.write("နွေရာသီမှာ သင့်ကို ပိုဝင်းပစေမယ့် ရတနာရွေးချယ်နည်း ၅ ဆင့်... ✨")
+                st.button("✅ Approve & Post")
+        else:
+            st.info("Waiting for Agent Pipeline to execute...")
+
+# --- PLACEHOLDERS FOR OTHER MENUS ---
+elif menu_choice == "Brand DNA":
+    st.title("Brand DNA Vault")
+    st.info("Centralized Identity for all active clients.")
+
+elif menu_choice == "Project Archive":
+    st.title("Project Archive")
+    st.write("History of all approved and deployed campaigns.")
+
+elif menu_choice == "Asset Library":
+    st.title("Asset Library")
+    st.write("Cloud storage for client images, videos, and raw files.")
