@@ -1,68 +1,98 @@
 import streamlit as st
 import pandas as pd
 
-def render_funnel_dashboard():
-    # --- HEADER ---
-    st.markdown("""
-        <div style="background: #0d1117; border-bottom: 2px solid #58a6ff; padding-bottom: 10px; margin-bottom: 25px;">
-            <h2 style="color: #ffffff; margin: 0; font-size: 24px;">🎯 Strategic Funnel Audit</h2>
-            <p style="color: #8b949e; font-size: 13px; margin: 0;">Monitoring AI Performance Across TOFU, MOFU, and BOFU</p>
+def render_multi_platform_monitor():
+    # --- 1. GLOBAL FILTERS (Meta Business Suite Style) ---
+    st.markdown('<p style="font-size:11px; font-weight:700; color:#58a6ff; letter-spacing:1px; text-transform:uppercase;">Global Insight Filters</p>', unsafe_allow_html=True)
+    
+    f1, f2, f3 = st.columns([1, 1, 1])
+    with f1:
+        platform = st.selectbox("Select Platform", ["Meta (FB & IG)", "TikTok", "YouTube"])
+    with f2:
+        date_range = st.selectbox("Date Range", ["Last 7 Days", "Last 28 Days", "Last 90 Days", "Custom Range"])
+    with f3:
+        content_type = st.multiselect("Content Type", ["Reels/Shorts", "Static Posts", "Long Video", "Stories"], default=["Reels/Shorts"])
+
+    st.divider()
+
+    # --- 2. PLATFORM SPECIFIC DEEP INSIGHTS ---
+    
+    # --- A. META (FACEBOOK/INSTAGRAM) VIEW ---
+    if platform == "Meta (FB & IG)":
+        st.subheader("🔵 Meta Business Performance")
+        
+        # Funnel Metrics (TOFU -> BOFU)
+        t1, t2, t3 = st.columns(3)
+        with t1:
+            st.metric("Total Reach (TOFU)", "142.5K", "+15%")
+            st.caption("Awareness through Ads & Reels")
+        with t2:
+            st.metric("Link Clicks / Msg (MOFU)", "2,840", "+8%")
+            st.caption("Interest & Inquiries")
+        with t3:
+            st.metric("Closing / Sales (BOFU)", "420 Units", "+5%")
+            st.caption("Completed Transactions")
+
+        st.write("")
+        # Deep Metrics Table (Like Meta Insights)
+        st.markdown("##### Post Performance Breakdown")
+        meta_data = pd.DataFrame({
+            'Content Title': ['Jewelry Promo #1', 'Customer Review Video', 'Behind the Scene'],
+            'Reach': [45000, 32000, 15000],
+            'Eng. Rate': ['4.2%', '5.8%', '3.1%'],
+            'Messages': [120, 340, 45],
+            'Closing %': ['12%', '25%', '8%']
+        })
+        st.table(meta_data)
+
+    # --- B. TIKTOK VIEW ---
+    elif platform == "TikTok":
+        st.subheader("🎵 TikTok Creator Insights")
+        
+        t1, t2, t3 = st.columns(3)
+        with t1:
+            st.metric("Video Views", "850K", "+42%")
+            st.caption("TOFU: Discovery Velocity")
+        with t2:
+            st.metric("Avg. Watch Time", "12.4s", "Optimal")
+            st.caption("MOFU: Content Retention")
+        with t3:
+            st.metric("Bio Link Clicks", "1,150", "+12%")
+            st.caption("BOFU: Traffic to Sales")
+
+        st.write("")
+        st.markdown("##### Video Completion & Hook Analysis")
+        # Visualizing Retention (Placeholder for Chart)
+        st.info("AI Analysis: 'Hook' ၃ စက္ကန့်အတွင်း လူဝင်ကြည့်နှုန်း ၇၀% ရှိပါတယ်။ ဒါကြောင့် Retention ကောင်းနေပါတယ်။")
+
+    # --- C. YOUTUBE VIEW ---
+    elif platform == "YouTube":
+        st.subheader("📽️ YouTube Channel Analytics")
+        
+        t1, t2, t3 = st.columns(3)
+        with t1:
+            st.metric("Impressions", "2.1M", "+5%")
+            st.caption("TOFU: Search Presence")
+        with t2:
+            st.metric("CTR (Click-Through)", "8.2%", "Healthy")
+            st.caption("MOFU: Thumbnail Efficiency")
+        with t3:
+            st.metric("Watch Time (Hours)", "14.5K", "+2.1K")
+            st.caption("BOFU: Authority Building")
+
+    st.divider()
+
+    # --- 3. AI AUDIT LOG (Cross-Platform) ---
+    st.markdown('<p style="font-size:11px; font-weight:700; color:#3fb950; letter-spacing:1px; text-transform:uppercase;">AI Agent Efficiency Log</p>', unsafe_allow_html=True)
+    st.markdown(f"""
+        <div style="background: #161b22; padding: 15px; border-radius: 8px; border: 1px solid #30363d;">
+            <p style="color: #e1e4e8; font-size: 14px;">
+            <b>Audit Report:</b> {platform} အား စစ်ဆေးရာတွင် <b>{content_type}</b> များသည် <b>{date_range}</b> အတွင်း 
+            Closing Rate ပိုကောင်းလာကြောင်း တွေ့ရပါသည်။ Messenger Agent ၏ လုပ်ဆောင်ချက်မှာ ပုံမှန်ရှိသော်လည်း 
+            Comment များကို Reply ပြန်သည့်နှုန်း ၅% တိုးမြှင့်ရန် လိုအပ်ပါသည်။
+            </p>
         </div>
     """, unsafe_allow_html=True)
 
-    # --- FUNNEL STAGE 1: TOFU (AWARENESS) ---
-    with st.container():
-        st.markdown('<p style="font-size:11px; font-weight:700; color:#58a6ff; letter-spacing:1px; text-transform:uppercase;">Stage 01: TOFU (Top of Funnel) - Awareness</p>', unsafe_allow_html=True)
-        st.markdown('<p style="font-size:12px; color:#8b949e; margin-top:-10px;">AI က လူတွေသိအောင် ဘယ်လောက်လုပ်နိုင်သလဲ?</p>', unsafe_allow_html=True)
-        t1, t2, t3, t4 = st.columns(4)
-        t1.metric("Content Velocity", "45 Posts", "AI Active")
-        t2.metric("Total Reach", "150.2K", "+12%")
-        t3.metric("New Followers", "1,200", "+150")
-        t4.metric("Video Views", "85K", "+10%")
-        st.divider()
-
-    # --- FUNNEL STAGE 2: MOFU (CONSIDERATION) ---
-    with st.container():
-        st.markdown('<p style="font-size:11px; font-weight:700; color:#a371f7; letter-spacing:1px; text-transform:uppercase;">Stage 02: MOFU (Middle of Funnel) - Interest</p>', unsafe_allow_html=True)
-        st.markdown('<p style="font-size:12px; color:#8b949e; margin-top:-10px;">AI ရဲ့ Content ကို လူတွေ ဘယ်လောက် စိတ်ဝင်စားသလဲ?</p>', unsafe_allow_html=True)
-        m1, m2, m3, m4 = st.columns(4)
-        m1.metric("Engagement Rate", "5.8%", "High")
-        m2.metric("Post Shares", "420", "+45")
-        m3.metric("Post Saves", "150", "Valuable")
-        m4.metric("Click to Message", "850 Clicks", "Conversion Lead")
-        st.divider()
-
-    # --- FUNNEL STAGE 3: BOFU (CONVERSION) ---
-    with st.container():
-        st.markdown('<p style="font-size:11px; font-weight:700; color:#3fb950; letter-spacing:1px; text-transform:uppercase;">Stage 03: BOFU (Bottom of Funnel) - Closing</p>', unsafe_allow_html=True)
-        st.markdown('<p style="font-size:12px; color:#8b949e; margin-top:-10px;">AI က အရောင်းပိတ်နိုင်တဲ့အထိ စွမ်းဆောင်နိုင်ရဲ့လား?</p>', unsafe_allow_html=True)
-        b1, b2, b3, b4 = st.columns(4)
-        b1.metric("Response Rate", "99.9%", "Instant")
-        b2.metric("Total Inquiries", "620 Msgs", "Qualified")
-        b3.metric("Confirmed Orders", "85 Units", "+12")
-        b4.metric("Revenue (Lakhs)", "35.2 L", "Target Met")
-        st.divider()
-
-    # --- ROW 4: AI AGENT EFFICIENCY REPORT ---
-    st.markdown('<p style="font-size:11px; font-weight:700; color:#58a6ff; letter-spacing:1px; text-transform:uppercase;">AI Agent Efficiency Analysis (CEO Summary)</p>', unsafe_allow_html=True)
-    c1, c2 = st.columns([1, 1])
-    
-    with c1:
-        st.markdown("""
-            <div style="background: #161b22; padding: 15px; border-radius: 10px; border: 1px solid #30363d;">
-                <p style="color:#8b949e; font-size:12px;">BOTTLENECK DETECTION</p>
-                <p style="color:#e1e4e8; font-size:14px;">လက်ရှိ <b>MOFU</b> မှာ Engagement ကောင်းသော်လည်း <b>BOFU</b> (Closing) ပိုင်းတွင် အနည်းငယ်နှေးနေပါသည်။ 
-                Messenger Agent ၏ ဈေးနှုန်းတင်ပြပုံ (Sales Script) ကို ပြန်လည် Optimize လုပ်ရန် လိုအပ်ပါသည်။</p>
-            </div>
-        """, unsafe_allow_html=True)
-        
-    with c2:
-        # Mini Efficiency Chart
-        chart_data = pd.DataFrame({
-            'Funnel Stage': ['TOFU', 'MOFU', 'BOFU'],
-            'AI Efficiency Score': [95, 88, 72]
-        })
-        st.bar_chart(chart_data.set_index('Funnel Stage'), color="#58a6ff", height=150)
-
 if __name__ == "__main__":
-    render_funnel_dashboard()
+    render_multi_platform_monitor()
