@@ -5,58 +5,60 @@ import numpy as np
 # --- 1. GLOBAL CONFIGURATION ---
 st.set_page_config(
     layout="wide", 
-    page_title="SAYAR GYI v84.0 | Master Command Center",
-    page_icon="📊"
+    page_title="SAYAR GYI v85.0 | Ultimate Command Center",
+    page_icon="🚀"
 )
 
 # --- 2. PREMIUM CSS STYLING ---
 def apply_custom_styles():
     st.markdown("""
         <style>
-        /* Overall Page Optimization */
-        .block-container { padding-top: 1.5rem; max-width: 97%; }
-        
-        /* Sidebar Styling */
+        .block-container { padding-top: 1rem; max-width: 98%; }
         [data-testid="stSidebar"] { background-color: #0d1117; border-right: 1px solid #30363d; }
         
         /* Section Headers */
         .main-header {
-            color: #58a6ff; font-size: 14px; font-weight: 700;
+            color: #58a6ff; font-size: 13px; font-weight: 700;
             text-transform: uppercase; letter-spacing: 2px;
-            margin-bottom: 25px; margin-top: 20px;
-            border-left: 5px solid #58a6ff; padding-left: 15px;
+            margin-bottom: 20px; border-left: 5px solid #58a6ff; padding-left: 15px;
         }
 
-        /* Status Boxes (Bigger & Bolder) */
+        /* Status Boxes (Top Pipeline) */
         .status-box-master {
             background: #161b22; border: 1px solid #30363d;
-            padding: 35px 20px; border-radius: 15px; text-align: center;
-            transition: transform 0.3s;
+            padding: 30px 20px; border-radius: 12px; text-align: center;
         }
-        .status-box-master:hover { border-color: #58a6ff; transform: translateY(-5px); }
         
-        /* Metrics Container */
-        .metric-container-master {
-            background: #161b22; border: 1px solid #30363d;
-            padding: 25px; border-radius: 15px; margin-top: 10px;
+        /* Metric Box Integration - အပေါ်က Box လေးထဲမှာ Data ထည့်ရန် */
+        .metric-header-box {
+            background: #0d1117; border: 1px solid #30363d;
+            padding: 10px 15px; border-radius: 8px 8px 0 0;
+            display: flex; justify-content: space-between; align-items: center;
         }
-
-        /* Sidebar Logo/Title Area */
-        .sidebar-brand { font-size: 20px; font-weight: 800; color: white; margin-bottom: 0px; }
-        .sidebar-tag { font-size: 11px; color: #58a6ff; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .chart-container-v85 {
+            background: #161b22; border: 1px solid #30363d;
+            border-top: none; padding: 15px; border-radius: 0 0 12px 12px;
+            margin-bottom: 20px;
+        }
+        
+        /* Font Tweaks */
+        .m-label { color: #8b949e; font-size: 13px; font-weight: 600; }
+        .m-value { color: #ffffff; font-size: 20px; font-weight: 800; }
+        .m-delta { color: #3fb950; font-size: 12px; font-weight: 700; }
         </style>
     """, unsafe_allow_html=True)
 
-# --- 3. SIDE PANEL NAVIGATION ---
+# --- 3. FINAL SIDE PANEL (RESTORED VERSION) ---
 def render_sidebar():
     with st.sidebar:
-        st.markdown('<p class="sidebar-brand">SAYAR GYI\'S</p>', unsafe_allow_html=True)
-        st.markdown('<p class="sidebar-tag">AI Marketing Agency</p>', unsafe_allow_html=True)
-        st.write("")
+        st.markdown('<h2 style="margin-bottom:0; color:white;">SAYAR GYI\'S</h2>', unsafe_allow_html=True)
+        st.markdown('<p style="color:#58a6ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">AI Marketing Agency</p>', unsafe_allow_html=True)
         
+        st.write("")
         st.markdown("### INDUSTRY NEWS")
         if st.button("🌐 Read Industry Trends", use_container_width=True):
-            st.toast("Fetching latest marketing trends...")
+            st.toast("Scanning global marketing nodes...")
             
         st.divider()
         st.markdown("### MENU")
@@ -82,66 +84,72 @@ def render_sidebar():
         
     return nav
 
-# --- 4. MAIN DASHBOARD ENGINE ---
-def render_dashboard_content():
-    # --- TOP CONTROL BAR ---
-    t_col, c_col = st.columns([1.5, 1])
-    with t_col:
-        st.markdown('<h1 style="font-weight:900; margin:0; font-size:38px;">Strategic Dashboard</h1>', unsafe_allow_html=True)
-    with c_col:
-        sub_c1, sub_c2, sub_c3 = st.columns(3)
-        with sub_c1: platform = st.selectbox("Platform", ["Facebook", "TikTok", "YouTube"])
-        with sub_c2: timeframe = st.selectbox("Timeframe", ["Weekly", "Monthly", "Yearly"])
-        with sub_c3: chart_style = st.selectbox("View Style", ["Line Chart", "Area Chart", "Bar Chart"])
+# --- 4. INTEGRATED DASHBOARD ENGINE ---
+def render_dashboard():
+    # --- HEADER & FILTERS ---
+    h_col, f_col = st.columns([1.5, 1])
+    with h_col:
+        st.markdown('<h1 style="font-weight:900; margin:0; font-size:35px;">Strategic Dashboard</h1>', unsafe_allow_html=True)
+    with f_col:
+        c1, c2, c3 = st.columns(3)
+        with c1: platform = st.selectbox("Platform", ["Facebook", "TikTok", "YouTube"])
+        with c2: timeframe = st.selectbox("Timeframe", ["Weekly", "Monthly", "Yearly"])
+        with c3: chart_style = st.selectbox("View Style", ["Line Chart", "Area Chart", "Bar Chart"])
 
-    # --- SECTION 1: CONTENT CREATION STATUS ---
+    # --- 1. CONTENT CREATION STATUS ---
     st.markdown('<p class="main-header">Content Creation Status</p>', unsafe_allow_html=True)
     p1, p2, p3, p4 = st.columns(4)
     pipeline = [("Drafting", "12"), ("Pending", "5"), ("Scheduled", "18"), ("Published", "145")]
     for i, (label, val) in enumerate(pipeline):
         with [p1, p2, p3, p4][i]:
-            st.markdown(f"""
-                <div class="status-box-master">
-                    <div style="color:#8b949e; font-size:14px; font-weight:600; text-transform:uppercase;">{label}</div>
-                    <div style="font-size:48px; font-weight:900; color:#58a6ff; margin-top:10px;">{val}</div>
-                </div>
-            """, unsafe_allow_html=True)
+            st.markdown(f'<div class="status-box-master"><div style="color:#8b949e; font-size:14px; text-transform:uppercase;">{label}</div>'
+                        f'<div style="font-size:45px; font-weight:900; color:#58a6ff; margin-top:10px;">{val}</div></div>', unsafe_allow_html=True)
 
     st.write("")
     st.write("")
 
-    # --- SECTION 2: DEEP INSIGHTS GRID ---
+    # --- 2. DEEP INSIGHTS WITH INTEGRATED METRIC BOXES ---
     st.markdown(f'<p class="main-header">{platform} Deep Insights & Trends</p>', unsafe_allow_html=True)
 
-    def render_metric_card(label, value, delta):
-        st.markdown('<div class="metric-container-master">', unsafe_allow_html=True)
-        st.metric(label, value, delta)
-        st.write("")
-        # Dynamic Chart Engine
+    def render_integrated_card(label, value, delta):
+        # အပေါ်က Box လေးထဲမှာ Metric ပြခြင်း
+        st.markdown(f"""
+            <div class="metric-header-box">
+                <span class="m-label">{label}</span>
+                <div>
+                    <span class="m-value">{value}</span>
+                    <span class="m-delta">&nbsp; {delta}</span>
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
+        
+        # အောက်က Container ထဲမှာ Chart ပြခြင်း
+        st.markdown('<div class="chart-container-v85">', unsafe_allow_html=True)
         data = pd.DataFrame(np.random.randn(25, 1), columns=['Val'])
-        if chart_style == "Line Chart": st.line_chart(data, height=180, use_container_width=True)
-        elif chart_style == "Area Chart": st.area_chart(data, height=180, use_container_width=True)
-        else: st.bar_chart(data, height=180, use_container_width=True)
+        if chart_style == "Line Chart": st.line_chart(data, height=160, use_container_width=True)
+        elif chart_style == "Area Chart": st.area_chart(data, height=160, use_container_width=True)
+        else: st.bar_chart(data, height=160, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Platform Data Logic
+    # Dynamic Data Loading
     if platform == "Facebook":
-        m_data = [("Views", "85.2K", "+12%"), ("Interactions", "3.2K", "+8%"), ("Followers", "12.4K", "+1%"),
-                  ("Page Visits", "4.5K", "+15%"), ("Link Clicks", "920", "+22%"), ("Conversations", "128", "+5%")]
+        metrics = [("Views", "85.2K", "↑12%"), ("Interactions", "3.2K", "↑8%"), ("Followers", "12,402", "↑1.2%"),
+                   ("Page Visits", "4.5K", "↑15%"), ("Link Clicks", "920", "↑22%"), ("Conversations", "128", "↑5.6%")]
     elif platform == "TikTok":
-        m_data = [("Video Views", "1.2M", "+45%"), ("Shares", "12K", "+30%"), ("Saves", "4.5K", "+18%"),
-                  ("Profile Visits", "25K", "+10%"), ("Bio Clicks", "1.5K", "+25%"), ("Completion Rate", "65%", "+5%")]
+        metrics = [("Video Views", "1.2M", "↑45%"), ("Shares", "12K", "↑30%"), ("Saves", "4.5K", "↑18%"),
+                   ("Profile Visits", "25K", "↑10%"), ("Bio Clicks", "1.5K", "↑25%"), ("Completion Rate", "65%", "↑5%")]
     else: # YouTube
-        m_data = [("Impressions", "2.5M", "+5%"), ("Watch Time", "14K hrs", "+12%"), ("Subscribers", "420", "+2%"),
-                  ("Avg Duration", "4:32", "+0:45"), ("CTR", "8.5%", "+1.2%"), ("Comments", "850", "+15%")]
+        metrics = [("Impressions", "2.5M", "↑5%"), ("Watch Time", "14K h", "↑12%"), ("Subscribers", "420", "↑2%"),
+                   ("Avg Duration", "4:32", "↑0:45"), ("CTR", "8.5%", "↑1.2%"), ("Comments", "850", "↑15%")]
 
-    # Render Grid (3x2)
-    grid_rows = [st.columns(3), st.columns(3)]
-    for idx, row_cols in enumerate(grid_rows):
-        for col_idx in range(3):
-            data_idx = (idx * 3) + col_idx
-            with row_cols[col_idx]:
-                render_metric_card(m_data[data_idx][0], m_data[data_idx][1], m_data[data_idx][2])
+    # Grid Render (3x2)
+    row1 = st.columns(3)
+    for i in range(3):
+        with row1[i]: render_integrated_card(metrics[i][0], metrics[i][1], metrics[i][2])
+    
+    row2 = st.columns(3)
+    for i in range(3, 6):
+        with row2[i-3]: render_integrated_card(metrics[i][0], metrics[i][1], metrics[i][2])
 
 # --- 5. EXECUTION ---
 if __name__ == "__main__":
@@ -149,7 +157,7 @@ if __name__ == "__main__":
     current_page = render_sidebar()
     
     if "Dashboard" in current_page:
-        render_dashboard_content()
+        render_dashboard()
     else:
         st.title(current_page)
-        st.info("This section is under AI development. Please check back later.")
+        st.info("Section currently under AI synchronization...")
