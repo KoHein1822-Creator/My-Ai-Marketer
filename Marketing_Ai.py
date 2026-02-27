@@ -54,4 +54,33 @@ def render_v79_dashboard():
             # Generate dummy trend data for sparkline
             chart_data = pd.DataFrame(np.random.randn(10, 1), columns=['trend'])
             st.line_chart(chart_data, height=60, use_container_width=True)
-            st.markdown
+            st.markdown('</div>', unsafe_allow_html=True)
+
+    # Metric Grid: Row 1
+    m1, m2, m3 = st.columns(3)
+    with m1: spark_metric("Views", "85.2K", "+12.5%", 1)
+    with m2: spark_metric("Interactions", "3.2K", "+8.2%", 2)
+    with m3: spark_metric("Followers", "12,402", "+1.2%", 3)
+
+    # Metric Grid: Row 2
+    m4, m5, m6 = st.columns(3)
+    with m4: spark_metric("Page Visits", "4.5K", "+15.0%", 4)
+    with m5: spark_metric("Link Clicks", "920", "+22.4%", 5)
+    with m6: spark_metric("Conversations", "128", "+5.6%", 6)
+
+    st.write("")
+
+    # --- 3. MAIN PERFORMANCE ANALYTICS ---
+    st.markdown('<p style="font-size:11px; font-weight:700; color:#8b949e; text-transform:uppercase;">Funnel Efficiency Overview</p>', unsafe_allow_html=True)
+    main_chart_data = pd.DataFrame({
+        'Stage': ['Convert', 'Engage', 'Reach'],
+        'Performance': [25, 45, 32]
+    }).set_index('Stage')
+    
+    if v_filter == "Bar Chart":
+        st.bar_chart(main_chart_data, color="#58a6ff", height=300)
+    else:
+        st.area_chart(main_chart_data, color="#58a6ff", height=300)
+
+if __name__ == "__main__":
+    render_v79_dashboard()
