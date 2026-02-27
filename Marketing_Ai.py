@@ -1,98 +1,103 @@
 import streamlit as st
 import pandas as pd
 
-def render_multi_platform_monitor():
-    # --- 1. GLOBAL FILTERS (Meta Business Suite Style) ---
-    st.markdown('<p style="font-size:11px; font-weight:700; color:#58a6ff; letter-spacing:1px; text-transform:uppercase;">Global Insight Filters</p>', unsafe_allow_html=True)
-    
-    f1, f2, f3 = st.columns([1, 1, 1])
-    with f1:
-        platform = st.selectbox("Select Platform", ["Meta (FB & IG)", "TikTok", "YouTube"])
-    with f2:
-        date_range = st.selectbox("Date Range", ["Last 7 Days", "Last 28 Days", "Last 90 Days", "Custom Range"])
-    with f3:
-        content_type = st.multiselect("Content Type", ["Reels/Shorts", "Static Posts", "Long Video", "Stories"], default=["Reels/Shorts"])
-
-    st.divider()
-
-    # --- 2. PLATFORM SPECIFIC DEEP INSIGHTS ---
-    
-    # --- A. META (FACEBOOK/INSTAGRAM) VIEW ---
-    if platform == "Meta (FB & IG)":
-        st.subheader("🔵 Meta Business Performance")
+# --- CUSTOM CSS FOR ENHANCED UI ---
+def local_css():
+    st.markdown("""
+        <style>
+        /* Creation Status Cards Styling */
+        .status-card {
+            background: #161b22; border: 1px solid #30363d;
+            padding: 20px; border-radius: 12px; text-align: center;
+            transition: transform 0.2s;
+        }
+        .status-card:hover { border-color: #58a6ff; transform: translateY(-5px); }
+        .status-label { color: #8b949e; font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px; }
+        .status-value { color: #ffffff; font-size: 28px; font-weight: 700; }
         
-        # Funnel Metrics (TOFU -> BOFU)
-        t1, t2, t3 = st.columns(3)
-        with t1:
-            st.metric("Total Reach (TOFU)", "142.5K", "+15%")
-            st.caption("Awareness through Ads & Reels")
-        with t2:
-            st.metric("Link Clicks / Msg (MOFU)", "2,840", "+8%")
-            st.caption("Interest & Inquiries")
-        with t3:
-            st.metric("Closing / Sales (BOFU)", "420 Units", "+5%")
-            st.caption("Completed Transactions")
-
-        st.write("")
-        # Deep Metrics Table (Like Meta Insights)
-        st.markdown("##### Post Performance Breakdown")
-        meta_data = pd.DataFrame({
-            'Content Title': ['Jewelry Promo #1', 'Customer Review Video', 'Behind the Scene'],
-            'Reach': [45000, 32000, 15000],
-            'Eng. Rate': ['4.2%', '5.8%', '3.1%'],
-            'Messages': [120, 340, 45],
-            'Closing %': ['12%', '25%', '8%']
-        })
-        st.table(meta_data)
-
-    # --- B. TIKTOK VIEW ---
-    elif platform == "TikTok":
-        st.subheader("🎵 TikTok Creator Insights")
-        
-        t1, t2, t3 = st.columns(3)
-        with t1:
-            st.metric("Video Views", "850K", "+42%")
-            st.caption("TOFU: Discovery Velocity")
-        with t2:
-            st.metric("Avg. Watch Time", "12.4s", "Optimal")
-            st.caption("MOFU: Content Retention")
-        with t3:
-            st.metric("Bio Link Clicks", "1,150", "+12%")
-            st.caption("BOFU: Traffic to Sales")
-
-        st.write("")
-        st.markdown("##### Video Completion & Hook Analysis")
-        # Visualizing Retention (Placeholder for Chart)
-        st.info("AI Analysis: 'Hook' ၃ စက္ကန့်အတွင်း လူဝင်ကြည့်နှုန်း ၇၀% ရှိပါတယ်။ ဒါကြောင့် Retention ကောင်းနေပါတယ်။")
-
-    # --- C. YOUTUBE VIEW ---
-    elif platform == "YouTube":
-        st.subheader("📽️ YouTube Channel Analytics")
-        
-        t1, t2, t3 = st.columns(3)
-        with t1:
-            st.metric("Impressions", "2.1M", "+5%")
-            st.caption("TOFU: Search Presence")
-        with t2:
-            st.metric("CTR (Click-Through)", "8.2%", "Healthy")
-            st.caption("MOFU: Thumbnail Efficiency")
-        with t3:
-            st.metric("Watch Time (Hours)", "14.5K", "+2.1K")
-            st.caption("BOFU: Authority Building")
-
-    st.divider()
-
-    # --- 3. AI AUDIT LOG (Cross-Platform) ---
-    st.markdown('<p style="font-size:11px; font-weight:700; color:#3fb950; letter-spacing:1px; text-transform:uppercase;">AI Agent Efficiency Log</p>', unsafe_allow_html=True)
-    st.markdown(f"""
-        <div style="background: #161b22; padding: 15px; border-radius: 8px; border: 1px solid #30363d;">
-            <p style="color: #e1e4e8; font-size: 14px;">
-            <b>Audit Report:</b> {platform} အား စစ်ဆေးရာတွင် <b>{content_type}</b> များသည် <b>{date_range}</b> အတွင်း 
-            Closing Rate ပိုကောင်းလာကြောင်း တွေ့ရပါသည်။ Messenger Agent ၏ လုပ်ဆောင်ချက်မှာ ပုံမှန်ရှိသော်လည်း 
-            Comment များကို Reply ပြန်သည့်နှုန်း ၅% တိုးမြှင့်ရန် လိုအပ်ပါသည်။
-            </p>
-        </div>
+        /* Metric Box Tweaks */
+        [data-testid="stMetricValue"] { font-size: 24px !important; color: #ffffff !important; }
+        [data-testid="stMetricDelta"] { font-size: 14px !important; }
+        </style>
     """, unsafe_allow_html=True)
 
+def render_v78_dashboard():
+    local_css()
+    
+    # --- HEADER & GLOBAL FILTERS ---
+    st.markdown('<h1 style="font-size:32px; font-weight:700; margin-bottom:5px;">Strategic Dashboard</h1>', unsafe_allow_html=True)
+    
+    col_filter_1, col_filter_2 = st.columns([1, 1.5])
+    with col_filter_1:
+        # Timeframe Customization Feature
+        timeframe = st.radio("Timeframe", ["Weekly", "Monthly", "Yearly", "Custom Range"], horizontal=True, label_visibility="collapsed")
+    with col_filter_2:
+        # Visual Filter as seen in Screenshot (40)
+        v_filter = st.selectbox("Visual Filter", ["Bar Chart", "Line Chart", "Area Chart"], label_visibility="collapsed")
+
+    st.write("")
+
+    # --- 1. CONTENT CREATION STATUS (ENHANCED UI) ---
+    st.markdown('<p style="font-size:11px; font-weight:700; color:#8b949e; text-transform:uppercase; letter-spacing:1px;">Content Creation Status</p>', unsafe_allow_html=True)
+    s1, s2, s3, s4 = st.columns(4)
+    
+    status_items = [
+        {"label": "Drafting", "value": "12", "col": s1},
+        {"label": "Pending", "value": "5", "col": s2},
+        {"label": "Scheduled", "value": "18", "col": s3},
+        {"label": "Published", "value": "145", "col": s4}
+    ]
+    
+    for item in status_items:
+        with item["col"]:
+            st.markdown(f"""
+                <div class="status-card">
+                    <div class="status-label">{item['label']}</div>
+                    <div class="status-value">{item['value']}</div>
+                </div>
+            """, unsafe_allow_html=True)
+
+    st.write("")
+    st.divider()
+
+    # --- 2. PLATFORM METRICS (DEEP FACEBOOK INSIGHTS) ---
+    st.markdown('<p style="font-size:11px; font-weight:700; color:#8b949e; text-transform:uppercase; letter-spacing:1px;">Platform Performance Metrics</p>', unsafe_allow_html=True)
+    
+    p_tabs = st.tabs(["Facebook", "TikTok", "YouTube"])
+
+    with p_tabs[0]: # Facebook Deep Metrics
+        st.write("")
+        # First Row of Metrics
+        m1, m2, m3 = st.columns(3)
+        m1.metric("Views", "85.2K", "+12.5%")
+        m2.metric("Interactions", "3.2K", "+8.2%")
+        m3.metric("Followers", "12,402", "+1.2%")
+        
+        # Second Row of Metrics (New Requirements)
+        m4, m5, m6 = st.columns(3)
+        m4.metric("Page Visits", "4.5K", "+15.0%")
+        m5.metric("Link Clicks", "920", "+22.4%")
+        m6.metric("Conversations", "128", "+5.6%")
+        
+        st.write("")
+        # Integrated Chart
+        chart_data = pd.DataFrame({
+            'Category': ['Convert', 'Engage', 'Reach'],
+            'Value': [25, 45, 32]
+        }).set_index('Category')
+        
+        if v_filter == "Bar Chart":
+            st.bar_chart(chart_data, color="#58a6ff")
+        elif v_filter == "Line Chart":
+            st.line_chart(chart_data, color="#58a6ff")
+        else:
+            st.area_chart(chart_data, color="#58a6ff")
+
+    with p_tabs[1]:
+        st.info("TikTok Metrics are being synced from Creator Center...")
+    with p_tabs[2]:
+        st.info("YouTube Studio insights are loading...")
+
+# Test Execution
 if __name__ == "__main__":
-    render_multi_platform_monitor()
+    render_v78_dashboard()
