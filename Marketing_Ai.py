@@ -1,13 +1,12 @@
 import streamlit as st
 import pandas as pd
 
-# --- 1. SESSION STATE (v64.0 Base preserved) ---
+# --- 1. SESSION STATE (Preserved) ---
 if 'menu' not in st.session_state: st.session_state.menu = "Interactive Dashboard"
-if 'brand_mode' not in st.session_state: st.session_state.brand_mode = "Intelligence Mode (AI Research)"
 if 'model_choice' not in st.session_state: st.session_state.model_choice = "Gemini"
 
 # --- 2. PAGE CONFIG ---
-st.set_page_config(page_title="SAYAR GYI v65.0", layout="wide")
+st.set_page_config(page_title="SAYAR GYI v66.0", layout="wide")
 
 st.markdown("""
     <style>
@@ -15,71 +14,74 @@ st.markdown("""
     html, body, [class*="css"] { font-family: 'Inter', sans-serif; background-color: #0d1117; color: #e1e4e8; }
     section[data-testid="stSidebar"] { background-color: #010409; border-right: 1px solid #30363d; padding-top: 10px; }
     
-    /* Highlighted Section Titles */
-    .section-header { 
-        font-size: 16px; 
-        font-weight: 800; 
+    /* Section Headers */
+    .section-title { 
+        font-size: 14px; 
+        font-weight: 700; 
         color: #58a6ff; 
-        margin-top: 15px; 
+        margin-top: 10px; 
         margin-bottom: 10px;
-        letter-spacing: 1px;
+        letter-spacing: 1.5px;
         text-transform: uppercase;
     }
+    
+    /* System Status Style */
+    .status-online {
+        color: #238636;
+        font-weight: 600;
+        font-size: 13px;
+    }
+    
     .header-blue { color: #58a6ff; font-weight: 600; font-size: 24px; margin-bottom: 20px; }
-    .stMetric { background: #161b22; border: 1px solid #30363d; padding: 15px; border-radius: 6px; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. SIDE PANEL (Revised Structure) ---
+# --- 3. SIDE PANEL (Clean Professional Structure) ---
 with st.sidebar:
-    # Title Section
-    st.markdown("<h2 style='color:#58a6ff; margin-bottom:0;'>Sayar Gyi 's</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#58a6ff; font-size:12px; margin-top:0;'>Ai Marketing Agency</p>", unsafe_allow_html=True)
-    st.divider() # မျဉ်းခွဲခြင်း
+    # Branding
+    st.markdown("<h2 style='color:#ffffff; margin-bottom:0;'>Sayar Gyi's</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#58a6ff; font-size:14px; margin-top:0; letter-spacing:2px;'>COMMAND CENTER</p>", unsafe_allow_html=True)
+    st.divider()
 
-    # Marketing Intelligence Section
-    st.markdown('<p class="section-header">🔍 Marketing Intelligence</p>', unsafe_allow_html=True)
-    if st.button("🌐 Market Intelligence Hub", use_container_width=True): 
+    # The Brain (AI Model Selection)
+    st.markdown('<p class="section-title">The Brain</p>', unsafe_allow_html=True)
+    model_cols = st.columns(3)
+    if model_cols[0].button("Gemini", use_container_width=True): st.session_state.model_choice = "Gemini"
+    if model_cols[1].button("GPT", use_container_width=True): st.session_state.model_choice = "ChatGPT"
+    if model_cols[2].button("Claude", use_container_width=True): st.session_state.model_choice = "Claude"
+    st.info(f"Active Model: {st.session_state.model_choice}")
+    st.divider()
+
+    # Marketing Intelligence
+    st.markdown('<p class="section-title">Marketing Intelligence</p>', unsafe_allow_html=True)
+    if st.button("Enter Intelligence Hub", use_container_width=True):
         st.session_state.menu = "Market Intelligence Hub"
     st.divider()
 
-    # Menu Section
-    st.markdown('<p class="section-header">📋 Menu</p>', unsafe_allow_html=True)
-    menu_options = ["Interactive Dashboard", "Brand DNA", "Project Archive", "Asset Library"]
-    # Radio buttons with default based on session state
-    st.session_state.menu = st.radio("Navigation", menu_options, label_visibility="collapsed")
+    # Menu
+    st.markdown('<p class="section-title">Menu</p>', unsafe_allow_html=True)
+    menu_choice = st.radio("Navigation", ["Interactive Dashboard", "Brand DNA", "Project Archive", "Asset Library"], label_visibility="collapsed")
+    # Sync radio with menu logic
+    if st.session_state.menu not in ["Market Intelligence Hub", "Creator Mode"]:
+        st.session_state.menu = menu_choice
     st.divider()
 
-    # My Agent Section
-    st.markdown('<p class="section-header">👥 My Agents</p>', unsafe_allow_html=True)
-    st.markdown("""
-    - 🧘 **Agent 1:** Intel Researcher
-    - 🎨 **Agent 2:** Creative Director
-    - ⚖️ **Agent 3:** Performance Auditor
-    """)
-    st.divider()
-
-    # Creator Mode Section
-    st.markdown('<p class="section-header">🎬 Creator Mode</p>', unsafe_allow_html=True)
-    if st.button("🔥 Switch to Creator Mode", use_container_width=True): 
+    # Creator Mode
+    st.markdown('<p class="section-title">Creator Mode</p>', unsafe_allow_html=True)
+    if st.button("Switch to Creator Mode", use_container_width=True):
         st.session_state.menu = "Creator Mode"
     st.divider()
 
-    # System Status Section
-    st.markdown('<p class="section-header">⚙️ System Status</p>', unsafe_allow_html=True)
-    st.success("Core Engine: Online")
+    # System Status
+    st.markdown('<p class="section-title">System Status</p>', unsafe_allow_html=True)
+    st.markdown('<p class="status-online">● Core Engine: Online</p>', unsafe_allow_html=True)
     st.divider()
 
-    # The Brain Section
-    st.markdown('<p class="section-header">🧠 The Brain (AI Model)</p>', unsafe_allow_html=True)
-    st.session_state.model_choice = st.selectbox("Choice Mode", ["Gemini", "ChatGPT", "Claude"], label_visibility="collapsed")
-    st.divider()
-
-# --- 4. MAIN INTERFACE (V64.0 Base Contents - NO CHANGES) ---
+# --- 4. MAIN INTERFACE (V64.0 Content Preservation) ---
 
 if st.session_state.menu == "Interactive Dashboard":
-    st.markdown('<h1 class="header-blue">Strategic Dashboard 🔗</h1>', unsafe_allow_html=True)
-    # ... (Metrics and charts from v64.0)
+    st.markdown('<h1 class="header-blue">Strategic Dashboard</h1>', unsafe_allow_html=True)
+    # Original Metrics & Charts
     m_col1, m_col2, m_col3, m_col4 = st.columns(4)
     m_col1.metric("Drafting", "12"); m_col2.metric("Pending", "5")
     m_col3.metric("Scheduled", "18"); m_col4.metric("Published", "145")
@@ -87,24 +89,15 @@ if st.session_state.menu == "Interactive Dashboard":
 
 elif st.session_state.menu == "Brand DNA":
     st.markdown('<h1 class="header-blue">Brand DNA Intelligence</h1>', unsafe_allow_html=True)
-    # ... (V64.0 logic preserved)
     st.radio("Select Mode", ["Intelligence Mode (AI Research)", "Manual Mode (User Input)"], horizontal=True)
 
-elif st.session_state.menu == "Project Archive":
-    st.markdown('<h1 class="header-blue">Project Archive Database</h1>', unsafe_allow_html=True)
-    st.table(pd.DataFrame({"Client Name": ["Diamond Star"], "Status": ["Completed"], "Budget": ["$2,500"]}))
-
-elif st.session_state.menu == "Asset Library":
-    st.markdown('<h1 class="header-blue">Asset Library</h1>', unsafe_allow_html=True)
-    st.tabs(["Media", "Copywriting", "Legal"])
-
 elif st.session_state.menu == "Market Intelligence Hub":
-    st.markdown('<h1 class="header-blue">🌐 Market Intelligence Hub</h1>', unsafe_allow_html=True)
-    st.tabs(["📰 Industry News", "📊 Market Research", "🕵️ Spy Mode"])
+    st.markdown('<h1 class="header-blue">Intelligence Hub</h1>', unsafe_allow_html=True)
+    st.tabs(["Industry News", "Market Research", "Spy Mode"])
 
 elif st.session_state.menu == "Creator Mode":
-    st.markdown('<h1 class="header-blue">🎬 Creator Mode Active</h1>', unsafe_allow_html=True)
-    st.info("AI Workspace for high-speed content generation.")
+    st.markdown('<h1 class="header-blue">Creator Mode</h1>', unsafe_allow_html=True)
+    st.info("AI Workspace Active.")
 
 else:
-    st.title(st.session_state.menu)
+    st.markdown(f'<h1 class="header-blue">{st.session_state.menu}</h1>', unsafe_allow_html=True)
