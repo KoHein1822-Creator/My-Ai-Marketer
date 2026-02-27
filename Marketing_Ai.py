@@ -106,3 +106,38 @@ def render_dashboard():
                 <div class="insight-header-v87">
                     <span class="m-value-v87">{value}</span>
                     <span class="m-delta-v87">{delta}</span>
+                </div>
+        """, unsafe_allow_html=True)
+        
+        # Chart Height ကို ၂၀၀ အထိ တိုးမြှင့်လိုက်ခြင်းဖြင့် အောက်က Space ကို အပြည့်ယူစေသည်
+        data = pd.DataFrame(np.random.randn(30, 1), columns=['Val'])
+        if chart_style == "Line Chart": st.line_chart(data, height=200, use_container_width=True)
+        elif chart_style == "Area Chart": st.area_chart(data, height=200, use_container_width=True)
+        else: st.bar_chart(data, height=200, use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    # Data Source
+    if platform == "Facebook":
+        metrics = [("Views", "85.2K", "↑12%"), ("Interactions", "3.2K", "↑8%"), ("Followers", "12,402", "↑1.2%"),
+                   ("Page Visits", "4.5K", "↑15%"), ("Link Clicks", "920", "↑22%"), ("Conversations", "128", "↑5.6%")]
+    elif platform == "TikTok":
+        metrics = [("Video Views", "1.2M", "↑45%"), ("Shares", "12K", "↑30%"), ("Saves", "4.5K", "↑18%"),
+                   ("Profile Visits", "25K", "↑10%"), ("Bio Clicks", "1.5K", "↑25%"), ("Completion Rate", "65%", "↑5%")]
+    else: # YouTube
+        metrics = [("Impressions", "2.5M", "↑5%"), ("Watch Time", "14K h", "↑12%"), ("Subscribers", "420", "↑2%"),
+                   ("Avg Duration", "4:32", "↑0:45"), ("CTR", "8.5%", "↑1.2%"), ("Comments", "850", "↑15%")]
+
+    # Grid Render (3x2)
+    rows = [st.columns(3), st.columns(3)]
+    for r_idx, cols in enumerate(rows):
+        for c_idx in range(3):
+            m_idx = (r_idx * 3) + c_idx
+            with cols[c_idx]:
+                render_ultimate_card(metrics[m_idx][0], metrics[m_idx][1], metrics[m_idx][2])
+
+# --- 5. EXECUTION ---
+if __name__ == "__main__":
+    apply_v87_styles()
+    current_page = render_sidebar()
+    if "Dashboard" in current_page: render_dashboard()
+    else: st.title(current_page); st.info("SAYAR GYI is preparing this module...")
