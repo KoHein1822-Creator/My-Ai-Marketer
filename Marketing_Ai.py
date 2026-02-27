@@ -111,4 +111,45 @@ def render_dashboard_content():
     st.write("")
 
     # --- SECTION 2: DEEP INSIGHTS GRID ---
-    st.markdown(f'<p class="main-header">{platform} Deep Insights & Trends</p>', unsafe_allow_html=True
+    st.markdown(f'<p class="main-header">{platform} Deep Insights & Trends</p>', unsafe_allow_html=True)
+
+    def render_metric_card(label, value, delta):
+        st.markdown('<div class="metric-container-master">', unsafe_allow_html=True)
+        st.metric(label, value, delta)
+        st.write("")
+        # Dynamic Chart Engine
+        data = pd.DataFrame(np.random.randn(25, 1), columns=['Val'])
+        if chart_style == "Line Chart": st.line_chart(data, height=180, use_container_width=True)
+        elif chart_style == "Area Chart": st.area_chart(data, height=180, use_container_width=True)
+        else: st.bar_chart(data, height=180, use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    # Platform Data Logic
+    if platform == "Facebook":
+        m_data = [("Views", "85.2K", "+12%"), ("Interactions", "3.2K", "+8%"), ("Followers", "12.4K", "+1%"),
+                  ("Page Visits", "4.5K", "+15%"), ("Link Clicks", "920", "+22%"), ("Conversations", "128", "+5%")]
+    elif platform == "TikTok":
+        m_data = [("Video Views", "1.2M", "+45%"), ("Shares", "12K", "+30%"), ("Saves", "4.5K", "+18%"),
+                  ("Profile Visits", "25K", "+10%"), ("Bio Clicks", "1.5K", "+25%"), ("Completion Rate", "65%", "+5%")]
+    else: # YouTube
+        m_data = [("Impressions", "2.5M", "+5%"), ("Watch Time", "14K hrs", "+12%"), ("Subscribers", "420", "+2%"),
+                  ("Avg Duration", "4:32", "+0:45"), ("CTR", "8.5%", "+1.2%"), ("Comments", "850", "+15%")]
+
+    # Render Grid (3x2)
+    grid_rows = [st.columns(3), st.columns(3)]
+    for idx, row_cols in enumerate(grid_rows):
+        for col_idx in range(3):
+            data_idx = (idx * 3) + col_idx
+            with row_cols[col_idx]:
+                render_metric_card(m_data[data_idx][0], m_data[data_idx][1], m_data[data_idx][2])
+
+# --- 5. EXECUTION ---
+if __name__ == "__main__":
+    apply_custom_styles()
+    current_page = render_sidebar()
+    
+    if "Dashboard" in current_page:
+        render_dashboard_content()
+    else:
+        st.title(current_page)
+        st.info("This section is under AI development. Please check back later.")
