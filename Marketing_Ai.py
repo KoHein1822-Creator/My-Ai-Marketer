@@ -6,7 +6,7 @@ if 'menu' not in st.session_state:
     st.session_state.menu = "Interactive Dashboard"
 
 # --- 2. PAGE CONFIG & v32.0 THEME ---
-st.set_page_config(page_title="SAYAR GYI v32.0 Updated", layout="wide")
+st.set_page_config(page_title="SAYAR GYI v62.0", layout="wide")
 
 st.markdown("""
     <style>
@@ -19,7 +19,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. SIDE PANEL (v32.0 Structure - Buttons Only Updated) ---
+# --- 3. SIDE PANEL (v32.0 Original Structure) ---
 with st.sidebar:
     st.markdown("## Sayar Gyi 's")
     st.markdown("<p style='color:#58a6ff; margin-top:-15px;'>Ai Marketing Agency</p>", unsafe_allow_html=True)
@@ -36,11 +36,11 @@ with st.sidebar:
     if st.button("📦 Asset Library", use_container_width=True): st.session_state.menu = "Asset Library"
     
     st.divider()
-    st.success("v32.0 Stable Build + Hub Upgrade")
+    st.success("v62.0 | Syntax Corrected")
 
-# --- 4. MAIN INTERFACE (v32.0 Components) ---
+# --- 4. MAIN INTERFACE ---
 
-# A. INTERACTIVE DASHBOARD
+# A. INTERACTIVE DASHBOARD (v32.0 Base)
 if st.session_state.menu == "Interactive Dashboard":
     st.markdown('<h1 class="header-blue">Strategic Dashboard</h1>', unsafe_allow_html=True)
     col1, col2, col3 = st.columns(3)
@@ -48,14 +48,15 @@ if st.session_state.menu == "Interactive Dashboard":
     col2.metric("Efficiency", "98%", "+2%")
     col3.metric("Leads", "150", "Stable")
 
-# B. PROJECT ARCHIVE (v32.0 Original)
+# B. PROJECT ARCHIVE (CEO Original Snippet)
 elif st.session_state.menu == "Project Archive":
     st.markdown('<h1 class="header-blue">Project Archive</h1>', unsafe_allow_html=True)
     with st.expander("Add New Project"):
         st.text_input("Client Name"); st.date_input("Start Date"); st.button("Save")
-    st.table(pd.DataFrame({"Project": ["Promotion A", "Brand DNA"], "Status": ["Finished", "Active"]}))
+    # Table from v32.0 original data
+    st.table(pd.DataFrame({"Project": ["Promotion A", "Brand DNA Setup"], "Status": ["Finished", "Active"]}))
 
-# C. ASSET LIBRARY (As requested - No Changes)
+# C. ASSET LIBRARY (CEO Original Snippet)
 elif st.session_state.menu == "Asset Library":
     st.markdown('<h1 class="header-blue">Asset Library</h1>', unsafe_allow_html=True)
     a_tab1, a_tab2, a_tab3 = st.tabs(["Media", "Copywriting", "Legal"])
@@ -65,10 +66,34 @@ elif st.session_state.menu == "Asset Library":
     with a_tab2: st.write("Copywriting Templates Store")
     with a_tab3: st.write("Legal & Contract Templates")
 
-# D. MARKET INTELLIGENCE HUB (Updated Industry News Feature)
+# D. MARKET INTELLIGENCE HUB (The Fixed Integrated Section)
 elif st.session_state.menu == "Market Intelligence Hub":
     st.markdown('<h1 class="header-blue">🌐 Market Intelligence Hub</h1>', unsafe_allow_html=True)
     if st.button("Back"): st.session_state.menu = "Interactive Dashboard"
     
-    # 3-in-1 Logic Integration
-    i_tab1, i_tab2, i_tab3 = st.
+    # syntax error ပြင်ထားသော နေရာ
+    i_tab1, i_tab2, i_tab3 = st.tabs(["📰 Industry & AI News", "📈 Market Research & Analytic", "🕵️ Competitor Spy Mode"])
+    
+    with i_tab1:
+        st.subheader("Industry News")
+        st.write("• AI Trend: Short-form video contents are leading the market.")
+        st.write("• Facebook algorithm update affects organic reach.")
+        
+    with i_tab2:
+        st.subheader("Market Research & Analytic")
+        st.info("Market follow-up for your Industry:")
+        st.line_chart(pd.DataFrame([10, 20, 50, 40, 80], columns=["Market Trend"]))
+        
+    with i_tab3:
+        st.subheader("Competitor Spy Mode")
+        st.write("Follow up on what competitors are doing:")
+        st.table(pd.DataFrame({"Competitor": ["Comp A", "Comp B"], "Active Strategy": ["Live Promo", "Viral Content"]}))
+
+# E. CREATOR MODE (CEO Original Snippet)
+elif st.session_state.menu == "Creator Mode":
+    st.title("Creator Mode")
+    if st.button("Back"): st.session_state.menu = "Interactive Dashboard"
+    st.write("Creator tools and workspace for AI content generation.")
+
+else:
+    st.title(st.session_state.menu)
