@@ -1,82 +1,61 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 
-def render_executive_telemetry():
-    # --- AUTONOMOUS STATUS HEADER ---
+def render_myanmar_telemetry():
+    # --- HEADER: LOCALIZED COMMAND CENTER ---
     st.markdown("""
-        <div style="display: flex; justify-content: space-between; align-items: center; background: #0d1117; border-bottom: 1px solid #30363d; padding-bottom: 15px; margin-bottom: 20px;">
-            <div>
-                <h1 style="font-size: 28px; color: #ffffff; margin: 0;">🛰️ Executive Telemetry</h1>
-                <p style="color: #8b949e; font-size: 12px; margin: 0;">Fully Autonomous Mode: <span style="color: #3fb950;">ENGAGED</span></p>
-            </div>
-            <div style="text-align: right;">
-                <div style="display: inline-block; width: 10px; height: 10px; background-color: #3fb950; border-radius: 50%; box-shadow: 0 0 10px #3fb950; animation: pulse 2s infinite;"></div>
-                <span style="color: #3fb950; font-weight: 700; font-size: 13px; margin-left: 8px;">SYSTEMS LIVE</span>
-            </div>
+        <div style="background: #0d1117; border-bottom: 2px solid #58a6ff; padding-bottom: 10px; margin-bottom: 20px;">
+            <h2 style="color: #ffffff; margin: 0; font-size: 24px;">🇲🇲 Business Operations Monitor</h2>
+            <p style="color: #8b949e; font-size: 13px; margin: 0;">Fully Autonomous AI Management | <span style="color:#3fb950;">System Active</span></p>
         </div>
     """, unsafe_allow_html=True)
 
-    # --- ROW 1: THE BOTTOM LINE (MACRO METRICS) ---
-    st.markdown('<p style="font-size:11px; font-weight:700; color:#58a6ff; letter-spacing:1.5px; text-transform:uppercase;">Business Health Overview</p>', unsafe_allow_html=True)
+    # --- ROW 1: LOCAL BUSINESS METRICS (Lakhs & Percentage) ---
+    st.markdown('<p style="font-size:11px; font-weight:700; color:#58a6ff; letter-spacing:1px; text-transform:uppercase;">ယနေ့ လုပ်ငန်းအခြေအနေ</p>', unsafe_allow_html=True)
     m1, m2, m3, m4 = st.columns(4)
-    m1.metric("AI-Generated Revenue", "4.2M MMK", "+18.5%")
-    m2.metric("Net Audience Growth", "12.4K", "+2.1K")
-    m3.metric("Global Sentiment", "92% Positive", "+4%")
-    m4.metric("Active AI Campaigns", "8", "Running smoothly")
+    m1.metric("Daily Sales (Kpay/Cash)", "45.5 Lakhs", "+5.2L")
+    m2.metric("Messenger Response", "99%", "Fast (Instant)")
+    m3.metric("Facebook Ad Reach", "12.4K", "+15%")
+    m4.metric("Active Leads", "42 People", "In Pipeline")
 
     st.write("")
 
-    # --- ROW 2: AUTONOMOUS NEURAL NETWORK (LIVE FEED) ---
-    feed_col, chart_col = st.columns([1.2, 1])
+    # --- ROW 2: LIVE AGENT LOG (MYANMAR CONTEXT) ---
+    feed_col, deli_col = st.columns([1.5, 1])
 
     with feed_col:
-        st.markdown('<p style="font-size:11px; font-weight:700; color:#58a6ff; letter-spacing:1.5px; text-transform:uppercase;">Live Autonomous Actions (Agent Feed)</p>', unsafe_allow_html=True)
-        # Terminal-style Live Feed Box
+        st.markdown('<p style="font-size:11px; font-weight:700; color:#58a6ff; letter-spacing:1px; text-transform:uppercase;">AI Agent Activity Log (ဘာတွေလုပ်နေလဲ)</p>', unsafe_allow_html=True)
         st.markdown("""
-            <div style="background: #010409; border: 1px solid #30363d; padding: 15px; border-radius: 8px; height: 250px; overflow-y: hidden; font-family: monospace; font-size: 12px;">
-                <p style="color: #8b949e; margin: 5px 0;">[10:42 AM] <span style="color: #58a6ff;">[Data Agent]</span> Detected 15% drop in Facebook Reach.</p>
-                <p style="color: #8b949e; margin: 5px 0;">[10:43 AM] <span style="color: #58a6ff;">[Data Agent]</span> Identifying cause: Outdated creative assets.</p>
-                <p style="color: #e1e4e8; margin: 5px 0;">[10:43 AM] <span style="color: #a371f7;">[Data Agent -> Content Agent]</span> Brief sent: Requesting 3 new engaging Reels.</p>
-                <p style="color: #8b949e; margin: 5px 0;">[10:50 AM] <span style="color: #3fb950;">[Content Agent]</span> Generation complete. A/B testing variations.</p>
-                <p style="color: #8b949e; margin: 5px 0;">[11:05 AM] <span style="color: #d29922;">[Ads Agent]</span> Reallocating $20 budget to winning variation.</p>
-                <div style="border-top: 1px dashed #30363d; margin: 10px 0; padding-top: 10px;">
-                    <span style="color: #3fb950;">> AI Network is optimizing continuously...</span>
-                </div>
+            <div style="background: #010409; border: 1px solid #30363d; padding: 15px; border-radius: 8px; height: 220px; font-family: 'Inter', sans-serif; font-size: 13px; overflow-y: auto;">
+                <p style="color: #8b949e; margin: 5px 0;">[09:15 AM] <span style="color: #3fb950;">●</span> <b>[Messenger Agent]</b> က Customer (၃) ဦးကို ဈေးနှုန်းဖြေကြားပြီးပါပြီ။</p>
+                <p style="color: #8b949e; margin: 5px 0;">[09:42 AM] <span style="color: #58a6ff;">●</span> <b>[Data Agent]</b> KPay Screenshot (၅) ခုကို စစ်ဆေးအတည်ပြုပြီးပါပြီ။</p>
+                <p style="color: #e1e4e8; margin: 5px 0;">[10:05 AM] <span style="color: #a371f7;">●</span> <b>[Content Agent]</b> ယနေ့ Trend ဖြစ်နေသော သီချင်းဖြင့် TikTok Video (၁) ပုဒ်တင်ပြီးပါပြီ။</p>
+                <p style="color: #8b949e; margin: 5px 0;">[10:30 AM] <span style="color: #d29922;">●</span> <b>[Ad Manager]</b> Engagement ကျနေသော Post ကို Ads Budget (၅၀၀၀) ကျပ် ထပ်တိုးလိုက်သည်။</p>
+                <p style="color: #3fb950; margin-top: 10px; font-weight: bold;">> AI Network is managing your page autonomously.</p>
             </div>
         """, unsafe_allow_html=True)
 
-    with chart_col:
-        st.markdown('<p style="font-size:11px; font-weight:700; color:#58a6ff; letter-spacing:1.5px; text-transform:uppercase;">Engagement Velocity</p>', unsafe_allow_html=True)
-        # Area chart showing "Live Flow" of engagement
-        chart_data = pd.DataFrame(
-            np.random.randn(20, 2) * 10 + [50, 40],
-            columns=["Organic Traffic", "AI-Driven Traffic"]
-        )
-        st.area_chart(chart_data, color=["#3fb950", "#58a6ff"], height=250)
+    with deli_col:
+        st.markdown('<p style="font-size:11px; font-weight:700; color:#58a6ff; letter-spacing:1px; text-transform:uppercase;">Transaction & Deli Flow</p>', unsafe_allow_html=True)
+        # Simple Local Flow Table
+        deli_data = pd.DataFrame({
+            'Order': ['ORD-001', 'ORD-002', 'ORD-003'],
+            'Status': ['On Deli', 'Checking Pay', 'Confirmed'],
+            'Payment': ['KPay', 'Wave', 'Cash']
+        })
+        st.table(deli_data)
 
     st.write("")
 
-    # --- ROW 3: CRITICAL RADAR (OPPORTUNITIES & THREATS) ---
-    st.markdown('<p style="font-size:11px; font-weight:700; color:#58a6ff; letter-spacing:1.5px; text-transform:uppercase;">Intelligence Radar</p>', unsafe_allow_html=True)
+    # --- ROW 3: LOCAL MARKET INSIGHTS ---
+    st.markdown('<p style="font-size:11px; font-weight:700; color:#58a6ff; letter-spacing:1px; text-transform:uppercase;">Market Intelligence (မြန်မာ့ဈေးကွက် အခြေအနေ)</p>', unsafe_allow_html=True)
     r1, r2 = st.columns(2)
     
     with r1:
-        st.markdown("""
-            <div style="border-left: 4px solid #3fb950; background: rgba(63, 185, 80, 0.05); padding: 15px; border-radius: 4px;">
-                <h4 style="color: #3fb950; margin-top: 0; font-size: 14px;">🎯 High Opportunity Detected</h4>
-                <p style="color: #c9d1d9; font-size: 12px; margin-bottom: 0;">Competitor "Brand X" is receiving negative reviews on customer service. <b>AI Content Agent</b> has automatically scheduled a post highlighting our 24/7 support.</p>
-            </div>
-        """, unsafe_allow_html=True)
+        st.info("**Trend Alert:** လက်ရှိ ရွှေဈေး/ဒေါ်လာဈေး အတက်အကျကြောင့် Customer များ ဈေးနှုန်းမေးမြန်းမှု (Messenger) ပိုများနေပါသည်။ AI က ဈေးနှုန်းများကို Real-time Update လုပ်ပေးနေပါသည်။")
 
     with r2:
-        st.markdown("""
-            <div style="border-left: 4px solid #d29922; background: rgba(210, 153, 34, 0.05); padding: 15px; border-radius: 4px;">
-                <h4 style="color: #d29922; margin-top: 0; font-size: 14px;">⚠️ Algorithm Shift Alert</h4>
-                <p style="color: #c9d1d9; font-size: 12px; margin-bottom: 0;">TikTok algorithm is currently favoring 15-second videos over 60-second ones. <b>AI Content Agent</b> is adjusting video lengths for tomorrow's batch.</p>
-            </div>
-        """, unsafe_allow_html=True)
+        st.success("**Opportunity:** ယနေ့ညနေ (၆:၀၀) မှ (၉:၀၀) အတွင်း Content တင်လျှင် Reach ပိုရနိုင်ကြောင်း AI က ခန့်မှန်းထားပါသည်။ Video Content ကို ဦးစားပေးရန် အကြံပြုပါသည်။")
 
-# To Test in Streamlit
 if __name__ == "__main__":
-    render_executive_telemetry()
+    render_myanmar_telemetry()
