@@ -2,145 +2,152 @@ import streamlit as st
 import pandas as pd
 
 # --- 1. SESSION STATE ---
-if 'menu' not in st.session_state: st.session_state.menu = "Interactive Dashboard"
+if 'menu' not in st.session_state: st.session_state.menu = "Dashboard"
 if 'model_choice' not in st.session_state: st.session_state.model_choice = "Gemini"
 
 # --- 2. PAGE CONFIG ---
-st.set_page_config(page_title="SAYAR GYI v69.0", layout="wide")
+st.set_page_config(page_title="SAYAR GYI v70.0", layout="wide")
 
+# THE LUXURY UI ENGINE (Custom CSS)
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     
+    /* Background & Global Font */
     html, body, [class*="css"] { font-family: 'Inter', sans-serif; background-color: #0d1117; color: #e1e4e8; }
     
-    /* Sidebar Overhaul for Spatial Balance */
+    /* Sidebar Overhaul */
     section[data-testid="stSidebar"] { 
         background-color: #010409 !important; 
         border-right: 1px solid #30363d; 
-        min-width: 300px !important;
+        min-width: 320px !important;
     }
 
-    /* Section Headers - Elevated Typography */
-    .sidebar-label {
-        font-size: 13px;
-        font-weight: 600;
+    /* Professional Branding */
+    .brand-box { padding: 20px 0; text-align: left; }
+    .brand-main { font-size: 26px; font-weight: 700; color: #ffffff; margin-bottom: 0; }
+    .brand-sub { font-size: 13px; font-weight: 600; color: #58a6ff; letter-spacing: 3px; margin-top: -5px; }
+
+    /* Custom Header Styles */
+    .nav-header {
+        font-size: 12px;
+        font-weight: 700;
         color: #58a6ff;
-        margin-top: 30px;
-        margin-bottom: 12px;
-        letter-spacing: 1px;
+        margin-top: 35px;
+        margin-bottom: 15px;
+        letter-spacing: 2px;
         text-transform: uppercase;
+        border-bottom: 1px solid #30363d;
+        padding-bottom: 5px;
     }
 
-    /* Professional Button Styling */
-    div.stButton > button {
-        width: 100%;
-        border-radius: 6px;
-        height: 42px;
+    /* Luxury Navigation Buttons (Replacing Radio) */
+    .stButton > button {
+        width: 100% !important;
+        background-color: transparent !important;
+        border: 1px solid #30363d !important;
+        color: #8b949e !important;
+        text-align: left !important;
+        padding: 10px 15px !important;
         font-size: 14px !important;
-        font-weight: 500;
-        background-color: #161b22;
-        border: 1px solid #30363d;
-        color: #c9d1d9;
+        font-weight: 500 !important;
+        border-radius: 6px !important;
+        margin-bottom: 8px !important;
+        transition: 0.2s !important;
     }
-    div.stButton > button:hover { border-color: #58a6ff; color: #58a6ff; background: #0d1117; }
+    .stButton > button:hover {
+        border-color: #58a6ff !important;
+        color: #58a6ff !important;
+        background: rgba(88, 166, 255, 0.05) !important;
+    }
     
-    /* Active Model Box */
-    .active-indicator {
-        background: #0d1117;
-        border-left: 3px solid #58a6ff;
-        padding: 10px;
-        margin-top: 5px;
-        font-size: 13px;
+    /* Active State for Navigation */
+    .active-nav button {
+        border-color: #58a6ff !important;
+        color: #ffffff !important;
+        background: #161b22 !important;
+        border-left: 4px solid #58a6ff !important;
     }
 
-    /* Layout Spacing */
-    .spacer { margin-bottom: 40px; }
+    /* Model Selection Grid */
+    .model-grid { display: flex; gap: 8px; margin-bottom: 10px; }
     
-    /* System Status at Bottom */
-    .status-container {
-        margin-top: 100px; /* Pushes to bottom area */
+    /* Status Section at the absolute bottom */
+    .fixed-bottom {
+        position: fixed;
+        bottom: 20px;
+        width: 280px;
         padding: 15px;
-        border-top: 1px solid #30363d;
+        background: #0d1117;
+        border: 1px solid #30363d;
+        border-radius: 8px;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. SIDE PANEL (Spatial Redesign) ---
+# --- 3. SIDE PANEL (Luxury Reconstruction) ---
 with st.sidebar:
-    # --- Branding ---
-    st.markdown('<div style="padding: 10px 0;">', unsafe_allow_html=True)
-    st.markdown('<p style="font-size: 24px; font-weight: 700; color: white; margin-bottom:0;">Sayar Gyi\'s</p>', unsafe_allow_html=True)
-    st.markdown('<p style="font-size: 14px; font-weight: 600; color: #58a6ff; letter-spacing: 3px; margin-top:-5px;">COMMAND CENTER</p>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-    st.divider()
+    # Branding
+    st.markdown('<div class="brand-box"><p class="brand-main">Sayar Gyi\'s</p><p class="brand-sub">COMMAND CENTER</p></div>', unsafe_allow_html=True)
 
-    # --- THE BRAIN ---
-    st.markdown('<p class="sidebar-label">The Brain</p>', unsafe_allow_html=True)
-    # 2-column layout to ensure text fits comfortably
-    m_col1, m_col2 = st.columns(2)
-    with m_col1:
-        if st.button("Gemini"): st.session_state.model_choice = "Gemini"
-        if st.button("Claude"): st.session_state.model_choice = "Claude"
-    with m_col2:
-        if st.button("ChatGPT"): st.session_state.model_choice = "ChatGPT"
-
-    st.markdown(f'<div class="active-indicator">Running: <b style="color:#58a6ff;">{st.session_state.model_choice}</b></div>', unsafe_allow_html=True)
+    # --- THE BRAIN (3-Column Symmetrical Grid) ---
+    st.markdown('<p class="nav-header">The Brain</p>', unsafe_allow_html=True)
+    b_col1, b_col2, b_col3 = st.columns(3)
+    with b_col1: 
+        if st.button("Gemini", key="gem"): st.session_state.model_choice = "Gemini"
+    with b_col2: 
+        if st.button("GPT", key="gpt"): st.session_state.model_choice = "ChatGPT"
+    with b_col3: 
+        if st.button("Claude", key="cla"): st.session_state.model_choice = "Claude"
     
-    st.markdown('<div class="spacer"></div>', unsafe_allow_html=True)
+    st.markdown(f'<p style="font-size:12px; color:#8b949e; margin-top:5px; text-align:center;">Active Core: <span style="color:#58a6ff; font-weight:600;">{st.session_state.model_choice}</span></p>', unsafe_allow_html=True)
 
     # --- INTELLIGENCE ---
-    st.markdown('<p class="sidebar-label">Intelligence</p>', unsafe_allow_html=True)
-    if st.button("Market Intelligence Hub", use_container_width=True):
-        st.session_state.menu = "Market Intelligence Hub"
+    st.markdown('<p class="nav-header">Intelligence</p>', unsafe_allow_html=True)
+    if st.button("Market Intelligence Hub", key="intel_hub"):
+        st.session_state.menu = "Intelligence Hub"
 
-    st.markdown('<div class="spacer"></div>', unsafe_allow_html=True)
-
-    # --- NAVIGATION ---
-    st.markdown('<p class="sidebar-label">System Menu</p>', unsafe_allow_html=True)
-    # Using a list with larger font via radio or custom buttons
-    nav_selected = st.radio("Select View", ["Dashboard", "Brand DNA", "Project Archive", "Asset Library"], label_visibility="collapsed")
+    # --- SYSTEM MENU (Replaced Radio with High-End Buttons) ---
+    st.markdown('<p class="nav-header">System Menu</p>', unsafe_allow_html=True)
     
-    # Internal Logic mapping
-    menu_map = {"Dashboard": "Interactive Dashboard", "Brand DNA": "Brand DNA", "Project Archive": "Project Archive", "Asset Library": "Asset Library"}
-    if st.session_state.menu not in ["Market Intelligence Hub", "Creator Mode"]:
-        st.session_state.menu = menu_map[nav_selected]
+    # Custom Button Logic for Menu
+    menus = ["Dashboard", "Brand DNA", "Project Archive", "Asset Library"]
+    for m in menus:
+        # Highlight active menu
+        if st.session_state.menu == m:
+            st.markdown(f'<div class="active-nav">', unsafe_allow_html=True)
+            if st.button(m, key=f"btn_{m}"): st.session_state.menu = m
+            st.markdown('</div>', unsafe_allow_html=True)
+        else:
+            if st.button(m, key=f"btn_{m}"): st.session_state.menu = m
 
-    st.markdown('<div class="spacer"></div>', unsafe_allow_html=True)
-
-    # --- CREATOR MODE ---
-    st.markdown('<p class="sidebar-label">Execution</p>', unsafe_allow_html=True)
-    if st.button("Switch to Creator Mode", use_container_width=True):
+    # --- EXECUTION ---
+    st.markdown('<p class="nav-header">Execution</p>', unsafe_allow_html=True)
+    if st.button("Switch to Creator Mode", key="creator"):
         st.session_state.menu = "Creator Mode"
 
-    # --- SYSTEM STATUS (Bottom Aligned) ---
-    st.markdown('<div class="status-container">', unsafe_allow_html=True)
-    st.markdown('<p style="font-size:11px; color:#8b949e; margin-bottom:5px;">SYSTEM STATUS</p>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#3fb950; font-size:14px; font-weight:600;">● Core Engine: Online</p>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#8b949e; font-size:10px;">Version 69.0.2 Stable</p>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    # --- SYSTEM STATUS (Bottom Aligned & Readable) ---
+    st.markdown('<div style="height: 100px;"></div>', unsafe_allow_html=True) # Spacer
+    st.markdown("""
+        <div style="border-top: 1px solid #30363d; padding-top: 20px;">
+            <p style="font-size:12px; color:#8b949e; margin-bottom:8px; font-weight:600; letter-spacing:1px;">SYSTEM STATUS</p>
+            <p style="color:#3fb950; font-size:15px; font-weight:700; margin:0;">● Core Engine: Online</p>
+            <p style="color:#58a6ff; font-size:11px; margin-top:4px;">Secure Connection: Active</p>
+        </div>
+    """, unsafe_allow_html=True)
 
-# --- 4. MAIN INTERFACE (V32.0 Restore & Polishing) ---
-
-if st.session_state.menu == "Interactive Dashboard":
-    st.markdown('<h1 style="color: #58a6ff; font-size: 32px; font-weight:700;">Strategic Dashboard</h1>', unsafe_allow_html=True)
-    
-    # Row 1: Metrics
-    st.markdown('<p class="sidebar-label" style="color:#8b949e;">Content Status</p>', unsafe_allow_html=True)
+# --- 4. MAIN INTERFACE ---
+if st.session_state.menu == "Dashboard":
+    st.markdown('<h1 style="font-size: 32px; font-weight:700;">Strategic Dashboard</h1>', unsafe_allow_html=True)
+    # Preservation of the content from V32.0 Screenshot
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Drafting", "12"); c2.metric("Pending", "5")
     c3.metric("Scheduled", "18"); c4.metric("Published", "145")
-    
-    st.divider()
-    
-    # Row 2: Analytics
-    st.markdown('<p class="sidebar-label" style="color:#8b949e;">Performance Analytics</p>', unsafe_allow_html=True)
-    chart_data = pd.DataFrame({'Value': [25, 45, 32]}, index=['Convert', 'Engage', 'Reach'])
-    st.bar_chart(chart_data, color="#58a6ff", use_container_width=True)
+    st.bar_chart(pd.DataFrame({'Value': [25, 45, 32]}, index=['Convert', 'Engage', 'Reach']), color="#58a6ff")
 
-elif st.session_state.menu == "Market Intelligence Hub":
-    st.markdown('<h1 style="color: #58a6ff;">Market Intelligence Hub</h1>', unsafe_allow_html=True)
-    st.tabs(["Industry News", "Competitor Research", "Trend Analytics"])
+elif st.session_state.menu == "Brand DNA":
+    st.markdown('<h1 style="font-size: 32px;">🧬 Brand DNA Intelligence</h1>', unsafe_allow_html=True)
+    st.radio("Select Mode", ["Intelligence Mode (AI Research)", "Manual Mode (User Input)"], horizontal=True)
 
 else:
-    st.markdown(f'<h1 style="color: #58a6ff;">{st.session_state.menu}</h1>', unsafe_allow_html=True)
+    st.markdown(f'<h1>{st.session_state.menu}</h1>', unsafe_allow_html=True)
