@@ -2,138 +2,129 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-# --- 1. GLOBAL CONFIGURATION ---
-st.set_page_config(
-    layout="wide", 
-    page_title="SAYAR GYI v88.0 | Balanced Executive",
-    page_icon="⚖️"
-)
+# --- 1. CONFIG & STYLES ---
+st.set_page_config(layout="wide", page_title="SAYAR GYI Intelligence Hub")
 
-# --- 2. PREMIUM CSS (BALANCED SPACING) ---
-def apply_v88_styles():
+def apply_intelligence_styles():
     st.markdown("""
         <style>
-        /* အပေါ်နဲ့ ဘေး Space များကို အချိုးကျအောင် ညှိထားသည် */
-        .block-container { padding-top: 1.5rem; max-width: 96%; padding-bottom: 5rem; }
-        [data-testid="stSidebar"] { background-color: #0d1117; border-right: 1px solid #30363d; }
+        .block-container { padding-top: 1rem; max-width: 98%; }
+        .stButton>button { width: 100%; border-radius: 8px; }
         
-        .main-header {
-            color: #58a6ff; font-size: 13px; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 2px;
-            margin-bottom: 15px; border-left: 5px solid #58a6ff; padding-left: 15px;
+        /* Intelligence Cards */
+        .news-card {
+            background: #0d1117; border-left: 4px solid #58a6ff;
+            padding: 15px; border-radius: 0 10px 10px 0; margin-bottom: 15px;
+            border-top: 1px solid #30363d; border-right: 1px solid #30363d; border-bottom: 1px solid #30363d;
         }
-
-        /* Status Box Style - ရှင်းလင်းပြတ်သားသော ပုံစံ */
-        .status-box-v88 {
-            background: #161b22; border: 1px solid #30363d;
-            padding: 30px 15px; border-radius: 12px; text-align: center;
+        .advice-box {
+            background: linear-gradient(135deg, #161b22 0%, #0d1117 100%);
+            border: 1px solid #58a6ff; padding: 25px; border-radius: 15px;
+            color: #c9d1d9; line-height: 1.6;
         }
-        
-        /* Metric Card - ပြည့်ကြပ်မနေစေရန် Padding နှင့် Margin ညှိထားသည် */
-        .insight-card-v88 {
-            background: #161b22; border: 1px solid #30363d;
-            padding: 22px; border-radius: 15px; margin-bottom: 15px;
+        .status-pill {
+            background: #238636; color: white; padding: 2px 10px;
+            border-radius: 20px; font-size: 12px; font-weight: bold;
         }
-        
-        .m-label-v88 { color: #8b949e; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px; }
-        .m-value-v88 { color: #ffffff; font-size: 34px; font-weight: 800; line-height: 1.1; }
-        .m-delta-v88 { color: #3fb950; font-size: 14px; font-weight: 700; background: rgba(63, 185, 80, 0.1); padding: 3px 8px; border-radius: 5px; }
-        
-        .header-flex {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 18px;
-        }
+        .ai-title { color: #58a6ff; font-weight: 800; font-size: 18px; margin-bottom: 10px; }
         </style>
     """, unsafe_allow_html=True)
 
-# --- 3. MASTER SIDE PANEL (UP-TO-DATE) ---
+# --- 2. SIDEBAR WITH NEW FEATURE BUTTON ---
 def render_sidebar():
     with st.sidebar:
-        st.markdown('<h2 style="margin-bottom:0; color:white;">SAYAR GYI\'S</h2>', unsafe_allow_html=True)
-        st.markdown('<p style="color:#58a6ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">AI Marketing Agency</p>', unsafe_allow_html=True)
-        st.write("")
-        st.markdown("### INDUSTRY NEWS")
-        st.button("🌐 Read Industry Trends", use_container_width=True)
+        st.markdown('<h2 style="color:white;">SAYAR GYI\'S</h2>', unsafe_allow_html=True)
         st.divider()
-        st.markdown("### MENU")
-        nav = st.radio("Nav", ["📊 Interactive Dashboard", "🧬 Brand DNA", "📂 Project Archive", "🎨 Asset Library"], label_visibility="collapsed")
-        st.divider()
-        st.markdown("### MY AGENTS")
-        st.caption("🤖 Intel | 🎨 Creative | ⚖️ Auditor | ⚙️ Ops")
-        st.write("")
-        st.button("🔥 Switch to Creator Mode", use_container_width=True)
-        st.divider()
-        st.success("Core Engine: Online")
-        st.write("")
-        st.markdown("### MODEL")
-        st.radio("Engine", ["Gemini 1.5 Pro", "GPT-4o", "Claude 3.5"], horizontal=True, label_visibility="collapsed")
-    return nav
-
-# --- 4. BALANCED DASHBOARD ENGINE ---
-def render_dashboard():
-    # --- TOP CONTROLS ---
-    h_col, f_col = st.columns([1.5, 1])
-    with h_col:
-        st.markdown('<h1 style="font-weight:900; margin:0; font-size:38px;">Strategic Dashboard</h1>', unsafe_allow_html=True)
-    with f_col:
-        c1, c2, c3 = st.columns(3)
-        with c1: platform = st.selectbox("Platform", ["Facebook", "TikTok", "YouTube"])
-        with c2: timeframe = st.selectbox("Timeframe", ["Weekly", "Monthly", "Yearly"])
-        with c3: chart_style = st.selectbox("View Style", ["Line Chart", "Area Chart", "Bar Chart"])
-
-    # --- 1. CONTENT CREATION STATUS ---
-    st.markdown('<p class="main-header" style="margin-top:20px;">Content Creation Status</p>', unsafe_allow_html=True)
-    p1, p2, p3, p4 = st.columns(4)
-    pipeline = [("Drafting", "12"), ("Pending", "5"), ("Scheduled", "18"), ("Published", "145")]
-    for i, (label, val) in enumerate(pipeline):
-        with [p1, p2, p3, p4][i]:
-            st.markdown(f'<div class="status-box-v88"><div class="m-label-v88">{label}</div>'
-                        f'<div style="font-size:42px; font-weight:900; color:#58a6ff; margin-top:10px;">{val}</div></div>', unsafe_allow_html=True)
-
-    st.write("")
-    st.write("")
-
-    # --- 2. DEEP INSIGHTS (ADJUSTED FOR BREATHING SPACE) ---
-    st.markdown(f'<p class="main-header">{platform} Deep Insights & Trends</p>', unsafe_allow_html=True)
-
-    def render_balanced_card(label, value, delta):
-        st.markdown(f"""
-            <div class="insight-card-v88">
-                <div class="m-label-v88">{label}</div>
-                <div class="header-flex">
-                    <span class="m-value-v88">{value}</span>
-                    <span class="m-delta-v88">{delta}</span>
-                </div>
-        """, unsafe_allow_html=True)
+        st.markdown("### MAIN MENU")
+        # Feature Button အသစ်ထည့်သွင်းခြင်း
+        menu_choice = st.radio("Features", 
+            ["📊 Dashboard", "🧠 Sayar Gyi's Intelligence", "🧬 Brand DNA", "📂 Archive"], 
+            label_visibility="collapsed")
         
-        # Chart Height ကို 170px တွင် ထားခြင်းဖြင့် အရမ်းမပြည့်ကြပ်စေဘဲ ရှင်းလင်းစေသည်
-        data = pd.DataFrame(np.random.randn(25, 1), columns=['Val'])
-        if chart_style == "Line Chart": st.line_chart(data, height=170, use_container_width=True)
-        elif chart_style == "Area Chart": st.area_chart(data, height=170, use_container_width=True)
-        else: st.bar_chart(data, height=170, use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.divider()
+        st.markdown("### SYSTEM STATUS")
+        st.success("AI Analysis: ACTIVE")
+        st.info("Next Sync: 5 mins left")
+    return menu_choice
 
-    # Data Selection
-    metrics = {
-        "Facebook": [("Views", "85.2K", "↑12%"), ("Interactions", "3.2K", "↑8%"), ("Followers", "12.4K", "↑1%"), ("Page Visits", "4.5K", "↑15%"), ("Link Clicks", "920", "↑22%"), ("Conversations", "128", "↑5%")],
-        "TikTok": [("Video Views", "1.2M", "↑45%"), ("Shares", "12K", "↑30%"), ("Saves", "4.5K", "↑18%"), ("Profile Visits", "25K", "↑10%"), ("Bio Clicks", "1.5K", "↑25%"), ("Completion", "65%", "↑5%")],
-        "YouTube": [("Impressions", "2.5M", "↑5%"), ("Watch Time", "14K h", "↑12%"), ("Subscribers", "420", "↑2%"), ("Avg Duration", "4:32", "↑0:45"), ("CTR", "8.5%", "↑1.2%"), ("Comments", "850", "↑15%")]
-    }
+# --- 3. INTELLIGENCE INTERFACE (CEO READABLE) ---
+def render_intelligence_page():
+    st.markdown('<h1 style="font-size:40px; font-weight:900;">Intelligence Command Center</h1>', unsafe_allow_html=True)
+    st.caption("2026 February Real-time Strategy & Market Pulse")
+    st.write("")
+
+    # --- TOP ROW: MARKET PULSE (သတင်းဖတ်ခြင်းအပိုင်း) ---
+    st.markdown("### 🌐 Market Pulse: AI & Industry News")
+    col1, col2, col3 = st.columns(3)
     
-    selected_metrics = metrics[platform]
+    with col1:
+        st.markdown("""<div class="news-card">
+            <span class="status-pill">AI BREAKTHROUGH</span>
+            <p style="margin-top:10px; font-weight:bold;">OpenAI starts testing Ads in ChatGPT free tier.</p>
+            <p style="font-size:13px; color:#8b949e;">Impact: B2B Brand Discovery နယ်ပယ်မှာ လမ်းစသစ်တွေ ပေါ်လာနိုင်ပါတယ်။</p>
+        </div>""", unsafe_allow_html=True)
+        
+    with col2:
+        st.markdown("""<div class="news-card">
+            <span class="status-pill" style="background:#da3633;">ALGORITHM UPDATE</span>
+            <p style="margin-top:10px; font-weight:bold;">Meta's Andromeda AI: Dwell Time is the new Like.</p>
+            <p style="font-size:13px; color:#8b949e;">Impact: Content ကို Click လုပ်တာထက် ကြည့်ရှုချိန် (Retention) ကို ပိုဦးစားပေးတော့မှာပါ။</p>
+        </div>""", unsafe_allow_html=True)
+        
+    with col3:
+        st.markdown("""<div class="news-card">
+            <span class="status-pill" style="background:#1f6feb;">CONSUMER TREND</span>
+            <p style="margin-top:10px; font-weight:bold;">Voice Search is now core to SEO visibility in 2026.</p>
+            <p style="font-size:13px; color:#8b949e;">Impact: Conversational Keywords တွေကို Strategy မှာ အမြန်ပေါင်းစပ်ရပါမယ်။</p>
+        </div>""", unsafe_allow_html=True)
 
-    # Grid Render (3x2)
-    col_group1 = st.columns(3)
-    for i in range(3):
-        with col_group1[i]: render_balanced_card(selected_metrics[i][0], selected_metrics[i][1], selected_metrics[i][2])
+    st.write("")
+
+    # --- MIDDLE ROW: ANALYSIS & AUDIT (အခြေအနေသုံးသပ်ခြင်းအပိုင်း) ---
+    c_audit, c_forecast = st.columns([1, 1])
     
-    col_group2 = st.columns(3)
-    for i in range(3, 6):
-        with col_group2[i-3]: render_balanced_card(selected_metrics[i][0], selected_metrics[i][1], selected_metrics[i][2])
+    with c_audit:
+        st.markdown('<p class="ai-title">🎭 Sentiment & Competitor Audit</p>', unsafe_allow_html=True)
+        # Mock Analysis Data
+        audit_data = {
+            'Metric': ['Our Sentiment', 'Competitor A', 'Competitor B', 'Market Gap'],
+            'Score': ['78% (Positive)', '62% (Neutral)', '85% (Strong)', 'High Opportunity']
+        }
+        st.table(pd.DataFrame(audit_data))
+        st.caption("AI Note: ပြိုင်ဘက် B သည် Video Long-form တွင် အားသာနေသော်လည်း Community Engagement တွင် အားနည်းနေသည်။")
 
-# --- 5. EXECUTION ---
+    with c_forecast:
+        st.markdown('<p class="ai-title">🔮 Trend Forecast (Next 14 Days)</p>', unsafe_allow_html=True)
+        forecast_df = pd.DataFrame({'Growth': np.random.randint(20, 100, 7)}, index=['Video', 'Audio', 'Ads', 'Image', 'Blog', 'Live', 'AR'])
+        st.bar_chart(forecast_df, height=180)
+
+    # --- BOTTOM ROW: SAYAR GYI'S ADVICE (အကြံပေးချက်အပိုင်း) ---
+    st.write("")
+    st.markdown('<p class="ai-title">🤖 Sayar Gyi\'s Strategic Advice</p>', unsafe_allow_html=True)
+    st.markdown("""
+        <div class="advice-box">
+            <b>လက်ရှိသုံးသပ်ချက်:</b> Meta ရဲ့ Andromeda Update အရ ကျွန်တော်တို့ရဲ့ Content တွေဟာ Click တော့များပေမယ့် Dwell Time (ကြည့်ရှုချိန်) နည်းနေတာကို တွေ့ရပါတယ်။ <br><br>
+            <b>အကြံပြုချက် (Action Plan):</b>
+            <ul>
+                <li>Content ရဲ့ ပထမ ၃ စက္ကန့်မှာ "Hook" ပြင်းပြင်းထည့်ပါ။ </li>
+                <li>စကားပြောတဲ့ပုံစံကို Voice Search နဲ့ အံဝင်ခွင်ကျဖြစ်အောင် Conversational Tone ပြောင်းပါ။</li>
+                <li>Competitor B ထက်သာအောင် Community Group များအတွင်း Discussion Content များ တိုးမြှင့်တင်ပါ။</li>
+            </ul>
+            <p style="color:#58a6ff; font-weight:bold;">Expected Result: Next week engagement could rise by 15-20%.</p>
+        </div>
+    """, unsafe_allow_html=True)
+    st.write("") # Graceful bottom space
+
+# --- 4. EXECUTION ---
 if __name__ == "__main__":
-    apply_v88_styles()
-    current_page = render_sidebar()
-    if "Dashboard" in current_page: render_dashboard()
-    else: st.title(current_page); st.info("SAYAR GYI Module Syncing...")
+    apply_intelligence_styles()
+    choice = render_sidebar()
+    
+    if choice == "🧠 Sayar Gyi's Intelligence":
+        render_intelligence_page()
+    elif choice == "📊 Dashboard":
+        st.title("Main Dashboard")
+        st.info("အရင်က Dashboard Page ကို ဒီနေရာမှာ မြင်ရပါမယ်။")
+    else:
+        st.title(choice)
+        st.info("Developing Module...")
