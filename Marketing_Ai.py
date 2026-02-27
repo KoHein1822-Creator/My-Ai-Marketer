@@ -95,4 +95,16 @@ elif st.session_state.menu == "Project Archive":
     st.table(pd.DataFrame({"Client Name": ["Diamond Star"], "Status": ["Completed"], "Budget": ["$2,500"]}))
 
 elif st.session_state.menu == "Asset Library":
-    st.markdown('
+    st.markdown('<h1 class="header-blue">Asset Library</h1>', unsafe_allow_html=True)
+    st.tabs(["Media", "Copywriting", "Legal"])
+
+elif st.session_state.menu == "Market Intelligence Hub":
+    st.markdown('<h1 class="header-blue">🌐 Market Intelligence Hub</h1>', unsafe_allow_html=True)
+    st.tabs(["📰 Industry News", "📊 Market Research", "🕵️ Spy Mode"])
+
+elif st.session_state.menu == "Creator Mode":
+    st.markdown('<h1 class="header-blue">🎬 Creator Mode Active</h1>', unsafe_allow_html=True)
+    st.info("AI Workspace for high-speed content generation.")
+
+else:
+    st.title(st.session_state.menu)
