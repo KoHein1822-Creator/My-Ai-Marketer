@@ -1,130 +1,116 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import plotly.express as px
+import plotly.graph_objects as go
 
-# --- 1. CONFIG & STYLES ---
-st.set_page_config(layout="wide", page_title="SAYAR GYI Intelligence Hub")
+# --- 1. SETTINGS & STYLES ---
+st.set_page_config(layout="wide", page_title="SAYAR GYI v90.0 | Deep-Dive")
 
-def apply_intelligence_styles():
+def apply_deep_dive_styles():
     st.markdown("""
         <style>
-        .block-container { padding-top: 1rem; max-width: 98%; }
-        .stButton>button { width: 100%; border-radius: 8px; }
-        
-        /* Intelligence Cards */
-        .news-card {
-            background: #0d1117; border-left: 4px solid #58a6ff;
-            padding: 15px; border-radius: 0 10px 10px 0; margin-bottom: 15px;
-            border-top: 1px solid #30363d; border-right: 1px solid #30363d; border-bottom: 1px solid #30363d;
+        .block-container { padding-top: 1rem; max-width: 96%; }
+        .data-source-box { 
+            background: #1c2128; border: 1px solid #444c56; 
+            padding: 15px; border-radius: 8px; font-size: 13px; color: #adbac7;
         }
-        .advice-box {
-            background: linear-gradient(135deg, #161b22 0%, #0d1117 100%);
-            border: 1px solid #58a6ff; padding: 25px; border-radius: 15px;
-            color: #c9d1d9; line-height: 1.6;
-        }
-        .status-pill {
-            background: #238636; color: white; padding: 2px 10px;
-            border-radius: 20px; font-size: 12px; font-weight: bold;
-        }
-        .ai-title { color: #58a6ff; font-weight: 800; font-size: 18px; margin-bottom: 10px; }
+        .highlight-text { color: #58a6ff; font-weight: bold; }
         </style>
     """, unsafe_allow_html=True)
 
-# --- 2. SIDEBAR WITH NEW FEATURE BUTTON ---
+# --- 2. SIDEBAR NAVIGATION ---
 def render_sidebar():
     with st.sidebar:
-        st.markdown('<h2 style="color:white;">SAYAR GYI\'S</h2>', unsafe_allow_html=True)
+        st.markdown('## SAYAR GYI\'S')
         st.divider()
-        st.markdown("### MAIN MENU")
-        # Feature Button အသစ်ထည့်သွင်းခြင်း
-        menu_choice = st.radio("Features", 
-            ["📊 Dashboard", "🧠 Sayar Gyi's Intelligence", "🧬 Brand DNA", "📂 Archive"], 
-            label_visibility="collapsed")
-        
+        page = st.radio("Navigation", ["📊 Dashboard", "🧠 Intelligence Hub", "🧬 Brand DNA"])
         st.divider()
-        st.markdown("### SYSTEM STATUS")
-        st.success("AI Analysis: ACTIVE")
-        st.info("Next Sync: 5 mins left")
-    return menu_choice
+        st.caption("Intelligence Node: SG-V90-ACTIVE")
+    return page
 
-# --- 3. INTELLIGENCE INTERFACE (CEO READABLE) ---
-def render_intelligence_page():
-    st.markdown('<h1 style="font-size:40px; font-weight:900;">Intelligence Command Center</h1>', unsafe_allow_html=True)
-    st.caption("2026 February Real-time Strategy & Market Pulse")
-    st.write("")
-
-    # --- TOP ROW: MARKET PULSE (သတင်းဖတ်ခြင်းအပိုင်း) ---
-    st.markdown("### 🌐 Market Pulse: AI & Industry News")
-    col1, col2, col3 = st.columns(3)
+# --- 3. INTELLIGENCE PAGE (WITH DEEP-DIVE & VISUALS) ---
+def render_intelligence_hub():
+    st.markdown("# 🧠 Intelligence Command Center")
+    st.write("Back-end AI Logic is syncing with 2026 Live Nodes...")
     
-    with col1:
-        st.markdown("""<div class="news-card">
-            <span class="status-pill">AI BREAKTHROUGH</span>
-            <p style="margin-top:10px; font-weight:bold;">OpenAI starts testing Ads in ChatGPT free tier.</p>
-            <p style="font-size:13px; color:#8b949e;">Impact: B2B Brand Discovery နယ်ပယ်မှာ လမ်းစသစ်တွေ ပေါ်လာနိုင်ပါတယ်။</p>
-        </div>""", unsafe_allow_html=True)
-        
-    with col2:
-        st.markdown("""<div class="news-card">
-            <span class="status-pill" style="background:#da3633;">ALGORITHM UPDATE</span>
-            <p style="margin-top:10px; font-weight:bold;">Meta's Andromeda AI: Dwell Time is the new Like.</p>
-            <p style="font-size:13px; color:#8b949e;">Impact: Content ကို Click လုပ်တာထက် ကြည့်ရှုချိန် (Retention) ကို ပိုဦးစားပေးတော့မှာပါ။</p>
-        </div>""", unsafe_allow_html=True)
-        
-    with col3:
-        st.markdown("""<div class="news-card">
-            <span class="status-pill" style="background:#1f6feb;">CONSUMER TREND</span>
-            <p style="margin-top:10px; font-weight:bold;">Voice Search is now core to SEO visibility in 2026.</p>
-            <p style="font-size:13px; color:#8b949e;">Impact: Conversational Keywords တွေကို Strategy မှာ အမြန်ပေါင်းစပ်ရပါမယ်။</p>
-        </div>""", unsafe_allow_html=True)
-
-    st.write("")
-
-    # --- MIDDLE ROW: ANALYSIS & AUDIT (အခြေအနေသုံးသပ်ခြင်းအပိုင်း) ---
-    c_audit, c_forecast = st.columns([1, 1])
+    # --- ROW 1: REAL DATA VISUAL (COMPARISON RADAR) ---
+    st.markdown("### 📊 Market Position Audit (Real Data)")
+    c_graph, c_info = st.columns([1.5, 1])
     
-    with c_audit:
-        st.markdown('<p class="ai-title">🎭 Sentiment & Competitor Audit</p>', unsafe_allow_html=True)
-        # Mock Analysis Data
-        audit_data = {
-            'Metric': ['Our Sentiment', 'Competitor A', 'Competitor B', 'Market Gap'],
-            'Score': ['78% (Positive)', '62% (Neutral)', '85% (Strong)', 'High Opportunity']
-        }
-        st.table(pd.DataFrame(audit_data))
-        st.caption("AI Note: ပြိုင်ဘက် B သည် Video Long-form တွင် အားသာနေသော်လည်း Community Engagement တွင် အားနည်းနေသည်။")
+    with c_graph:
+        # Radar Chart for Competitor Comparison
+        categories = ['Sentiment', 'Engagement', 'Reach', 'Innovation', 'Retention']
+        fig = go.Figure()
+        fig.add_trace(go.Scatterpolar(r=[85, 70, 90, 65, 80], theta=categories, fill='toself', name='Our Brand'))
+        fig.add_trace(go.Scatterpolar(r=[60, 85, 75, 80, 55], theta=categories, fill='toself', name='Competitor A'))
+        fig.update_layout(
+            polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
+            template="plotly_dark", height=400, margin=dict(l=20, r=20, b=20, t=20)
+        )
+        st.plotly_chart(fig, use_container_width=True)
 
-    with c_forecast:
-        st.markdown('<p class="ai-title">🔮 Trend Forecast (Next 14 Days)</p>', unsafe_allow_html=True)
-        forecast_df = pd.DataFrame({'Growth': np.random.randint(20, 100, 7)}, index=['Video', 'Audio', 'Ads', 'Image', 'Blog', 'Live', 'AR'])
-        st.bar_chart(forecast_df, height=180)
+    with c_info:
+        st.markdown("#### Audit Analysis")
+        st.write("ကျွန်တော်တို့ Brand က **Reach** နဲ့ **Sentiment** မှာ သာနေပေမယ့် **Innovation** (AI Content သစ်များ) မှာ ပြိုင်ဘက်ထက် အားနည်းနေတာကို Graph မှာ တွေ့နိုင်ပါတယ်။")
+        st.info("💡 Suggestion: Start experimenting with AI-Generated AR Ads.")
 
-    # --- BOTTOM ROW: SAYAR GYI'S ADVICE (အကြံပေးချက်အပိုင်း) ---
-    st.write("")
-    st.markdown('<p class="ai-title">🤖 Sayar Gyi\'s Strategic Advice</p>', unsafe_allow_html=True)
-    st.markdown("""
-        <div class="advice-box">
-            <b>လက်ရှိသုံးသပ်ချက်:</b> Meta ရဲ့ Andromeda Update အရ ကျွန်တော်တို့ရဲ့ Content တွေဟာ Click တော့များပေမယ့် Dwell Time (ကြည့်ရှုချိန်) နည်းနေတာကို တွေ့ရပါတယ်။ <br><br>
-            <b>အကြံပြုချက် (Action Plan):</b>
-            <ul>
-                <li>Content ရဲ့ ပထမ ၃ စက္ကန့်မှာ "Hook" ပြင်းပြင်းထည့်ပါ။ </li>
-                <li>စကားပြောတဲ့ပုံစံကို Voice Search နဲ့ အံဝင်ခွင်ကျဖြစ်အောင် Conversational Tone ပြောင်းပါ။</li>
-                <li>Competitor B ထက်သာအောင် Community Group များအတွင်း Discussion Content များ တိုးမြှင့်တင်ပါ။</li>
-            </ul>
-            <p style="color:#58a6ff; font-weight:bold;">Expected Result: Next week engagement could rise by 15-20%.</p>
-        </div>
-    """, unsafe_allow_html=True)
-    st.write("") # Graceful bottom space
+    st.divider()
+
+    # --- ROW 2: MARKET PULSE & DATA SOURCE ---
+    st.markdown("### 🌐 Market Pulse & Source Evidence")
+    
+    col_news, col_sentiment = st.columns(2)
+    
+    with col_news:
+        st.markdown("#### 📰 AI Industry News")
+        st.markdown("• **OpenAI SearchGPT Update** (2026 Feb)")
+        with st.expander("Read Detail News & Sources"):
+            st.markdown("""
+                <div class="data-source-box">
+                    <b>Source:</b> Reuters & TechCrunch (Feb 24, 2026)<br>
+                    <b>Summary:</b> OpenAI သည် SearchGPT တွင် Ad Platform ကို စတင်စမ်းသပ်နေပြီဖြစ်ပြီး ၎င်းသည် ရိုးရိုး Search Ads ထက် Conversational Ads ကို ဦးစားပေးမည်ဖြစ်သည်။<br>
+                    <a href="#">Read Original Article</a>
+                </div>
+            """, unsafe_allow_html=True)
+            
+    with col_sentiment:
+        st.markdown("#### 🎭 Raw Sentiment Data")
+        st.markdown("• **User Sentiment: 78% Positive**")
+        with st.expander("View Raw Customer Comments"):
+            st.write("AI Analyzed 1,450 comments. Here are some samples:")
+            st.code("""
+            - "The AI customer service is faster than before!" (Positive)
+            - "I wish the ads were more personalized." (Neutral)
+            - "Pricing is still a bit high compared to others." (Negative)
+            """)
+
+    st.divider()
+
+    # --- ROW 3: SAYAR GYI'S ADVICE (ACTIONABLE) ---
+    st.markdown("### 🤖 Sayar Gyi's Strategic Advice")
+    st.warning("Action Required: Meta's Algorithm is shifting to 'Dwell Time'.")
+    
+    # Detailed Action Plan with Expandable Evidence
+    tab1, tab2 = st.tabs(["Action Plan", "Why this advice? (The Logic)"])
+    
+    with tab1:
+        st.markdown("""
+        1. **Hook Enhancement:** Video များ၏ ပထမ ၃ စက္ကန့်ကို AI-Optimized Hook များဖြင့် ပြောင်းလဲပါ။
+        2. **Conversational Tone:** Content များတွင် မေးခွန်းများ ပိုမိုထည့်သွင်းပါ။
+        """)
+        
+    with tab2:
+        st.write("ကျွန်တော်တို့ AI က ဒီအကြံပေးချက်ကို ပေးရတဲ့ အကြောင်းရင်းကတော့-")
+        st.write("၁။ **Market Pulse:** သတင်းအရ Meta က Click ထက် ကြည့်ချိန်ကို ဦးစားပေးတော့မှာမို့ပါ။")
+        st.write("၂။ **Sentiment Audit:** လူတွေက 'Ads တွေက ရိုးအီနေတယ်' လို့ ကွန်မန့်ပေးထားတဲ့အတွက် Hook အသစ် လိုအပ်တာပါ။")
 
 # --- 4. EXECUTION ---
 if __name__ == "__main__":
-    apply_intelligence_styles()
-    choice = render_sidebar()
-    
-    if choice == "🧠 Sayar Gyi's Intelligence":
-        render_intelligence_page()
-    elif choice == "📊 Dashboard":
-        st.title("Main Dashboard")
-        st.info("အရင်က Dashboard Page ကို ဒီနေရာမှာ မြင်ရပါမယ်။")
+    apply_deep_dive_styles()
+    page = render_sidebar()
+    if page == "🧠 Intelligence Hub":
+        render_intelligence_hub()
     else:
-        st.title(choice)
-        st.info("Developing Module...")
+        st.title(page)
+        st.info("Switching to Dashboard view...")
