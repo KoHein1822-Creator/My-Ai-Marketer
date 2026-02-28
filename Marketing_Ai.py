@@ -1,143 +1,117 @@
 import streamlit as st
 import numpy as np
 
-# --- 1. SETTINGS & V88.0 AUTHENTIC STYLES ---
-st.set_page_config(layout="wide", page_title="SAYAR GYI v138.0", initial_sidebar_state="expanded")
+# --- 1. SETTINGS (V88.0 EXACT) ---
+st.set_page_config(layout="wide", page_title="SAYAR GYI v88.0 | Balanced", initial_sidebar_state="expanded")
 
-def apply_v88_authentic_styles():
+def apply_v88_styles():
     st.markdown("""
         <style>
-        /* Main Theme Recovery */
+        /* Exact V88.0 Background & Text Colors */
         .main { background-color: #0d1117; color: #ffffff; }
-        .block-container { padding-top: 1rem; max-width: 96%; }
+        .block-container { padding-top: 1.5rem; max-width: 95%; }
         
         /* Sidebar Professional Look */
         [data-testid="stSidebar"] {
             background-color: #0d1117 !important;
             border-right: 1px solid #30363d !important;
-            width: 320px !important;
         }
-        .sidebar-header { font-size: 14px; font-weight: bold; color: #8b949e; letter-spacing: 1px; margin-top: 20px; }
-        .sidebar-divider { margin: 15px 0; border-top: 1px solid #30363d; }
         
-        /* Dashboard Metric Cards */
-        .status-card {
-            background: #161b22; border: 1px solid #30363d; border-radius: 6px;
-            padding: 15px; text-align: center; height: 100px;
+        /* Side Panel Headers & Dividers */
+        .sb-header { font-size: 13px; font-weight: 800; color: #8b949e; letter-spacing: 0.5px; margin-top: 10px; }
+        .sb-sub-header { font-size: 10px; color: #1f6feb; margin-bottom: 20px; }
+        .sidebar-divider { margin: 15px 0; border-top: 1px solid #21262d; }
+
+        /* V88.0 Metric & Insight Cards */
+        .metric-container {
+            background: #161b22; border: 1px solid #30363d; border-radius: 4px;
+            padding: 20px; text-align: center;
         }
         .insight-card {
-            background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+            background: #161b22; border: 1px solid #30363d; border-radius: 4px;
             padding: 15px; margin-bottom: 10px;
         }
+        .delta-tag { color: #3fb950; font-size: 12px; background: rgba(63, 185, 80, 0.1); padding: 2px 6px; border-radius: 3px; }
         
-        /* Custom Button Styling */
-        .stButton > button {
-            width: 100%; border-radius: 6px; background: #21262d; border: 1px solid #30363d;
-            color: #c9d1d9; transition: 0.3s; text-align: left; padding: 8px 15px;
-        }
-        .stButton > button:hover { background: #30363d; border-color: #8b949e; color: white; }
-        
-        /* Highlight for Intelligence Button */
-        div[data-testid="stVerticalBlock"] > div:nth-child(3) .stButton > button {
-            background: linear-gradient(90deg, #1f6feb 0%, #161b22 100%);
-            border-left: 4px solid #58a6ff; font-weight: bold; color: white;
-        }
+        /* Section Title */
+        .section-title { color: #58a6ff; font-weight: bold; font-size: 14px; border-left: 3px solid #1f6feb; padding-left: 10px; margin: 20px 0; }
         </style>
     """, unsafe_allow_html=True)
 
-# --- 2. UPGRADED SIDEBAR ---
+# --- 2. SIDE PANEL (V88.0 + NEW BUTTON) ---
 def render_sidebar():
     with st.sidebar:
-        # Section 1: Command Center Header
-        st.markdown('<p class="sidebar-header">SAYAR GYI\'S</p>', unsafe_allow_html=True)
-        st.caption("AI MARKETING AGENCY")
-        st.markdown('<div class="sidebar-divider"></div>', unsafe_allow_html=True)
+        # Header Section
+        st.markdown('<p class="sb-header">SAYAR GYI\'S</p>', unsafe_allow_html=True)
+        st.markdown('<p class="sb-sub-header">AI MARKETING AGENCY</p>', unsafe_allow_html=True)
         
-        # Section 2: Sayar Gyi's Intelligence (Primary Action)
-        if st.button("🧠 Sayar Gyi's Intelligence"):
+        # --- NEW: Sayar Gyi's Intelligence Button (Section Break ခွဲထားသည်) ---
+        st.markdown('<div class="sidebar-divider"></div>', unsafe_allow_html=True)
+        if st.button("🧠 Sayar Gyi's Intelligence", use_container_width=True):
             st.session_state.page = "intelligence"
-            
         st.markdown('<div class="sidebar-divider"></div>', unsafe_allow_html=True)
         
-        # Section 3: Menu
-        st.markdown('<p class="sidebar-header">MENU</p>', unsafe_allow_html=True)
-        if st.button("📊 Interactive Dashboard"):
+        # Menu Section
+        st.markdown('<p class="sb-header">MENU</p>', unsafe_allow_html=True)
+        if st.button("📊 Interactive Dashboard", use_container_width=True):
             st.session_state.page = "dashboard"
-        st.button("🧬 Brand DNA")
-        st.button("📂 Project Archive")
-        st.button("📚 Asset Library")
+        st.button("🧬 Brand DNA", use_container_width=True)
+        st.button("📂 Project Archive", use_container_width=True)
+        st.button("📚 Asset Library", use_container_width=True)
         
         st.markdown('<div class="sidebar-divider"></div>', unsafe_allow_html=True)
         
-        # Section 4: Creator Mode
-        st.button("✨ Switch to Creator Mode")
+        # Creator Mode Section
+        st.button("✨ Switch to Creator Mode", use_container_width=True)
         st.markdown('<div class="sidebar-divider"></div>', unsafe_allow_html=True)
         
-        # Section 5: System Status
-        st.markdown('<p class="sidebar-header">SYSTEM STATUS</p>', unsafe_allow_html=True)
+        # System Status Section
+        st.markdown('<p class="sb-header">SYSTEM STATUS</p>', unsafe_allow_html=True)
         st.success("Core Engine: Online")
         st.caption("Model: Gemini 1.5 Pro & GPT-4o")
 
-# --- 3. THE 100% AUTHENTIC V88 DASHBOARD ---
+# --- 3. THE ORIGINAL V88.0 DASHBOARD ---
 def render_dashboard():
-    st.markdown("### Strategic Dashboard")
+    st.title("Strategic Dashboard")
     
-    # Content Creation Status Row
-    st.markdown("#### ┃ CONTENT CREATION STATUS")
+    # 1. Content Creation Status
+    st.markdown('<p class="section-title">CONTENT CREATION STATUS</p>', unsafe_allow_html=True)
     c1, c2, c3, c4 = st.columns(4)
-    statuses = [("DRAFTING", "12", "#1f6feb"), ("PENDING", "5", "#f1e05a"), 
-                ("SCHEDULED", "18", "#58a6ff"), ("PUBLISHED", "145", "#238636")]
+    data = [("DRAFTING", "12"), ("PENDING", "5"), ("SCHEDULED", "18"), ("PUBLISHED", "145")]
     for i, col in enumerate([c1, c2, c3, c4]):
-        label, val, color = statuses[i]
-        col.markdown(f'<div class="status-card" style="border-top: 3px solid {color}"><p style="font-size:12px; color:#8b949e; margin:0;">{label}</p><h2 style="margin:0;">{val}</h2></div>', unsafe_allow_html=True)
+        label, val = data[i]
+        col.markdown(f'<div class="metric-container"><p style="color:#8b949e; font-size:10px;">{label}</p><h2>{val}</h2></div>', unsafe_allow_html=True)
 
-    # Facebook Deep Insights (6-Grid with Charts)
-    st.markdown("#### ┃ FACEBOOK DEEP INSIGHTS & TRENDS")
+    # 2. Facebook Deep Insights (The 6-Grid)
+    st.markdown('<p class="section-title">FACEBOOK DEEP INSIGHTS & TRENDS</p>', unsafe_allow_html=True)
     
-    # First Row of Metrics
-    r1_c1, r1_c2, r1_c3 = st.columns(3)
-    metrics_r1 = [("VIEWS", "85.2K", "+12%"), ("INTERACTIONS", "3.2K", "+8%"), ("FOLLOWERS", "12.4K", "+1%")]
-    for i, col in enumerate([r1_c1, r1_c2, r1_c3]):
-        label, val, delta = metrics_r1[i]
+    # Row 1
+    r1c1, r1c2, r1c3 = st.columns(3)
+    insights_r1 = [("VIEWS", "85.2K", "+12%"), ("INTERACTIONS", "3.2K", "+8%"), ("FOLLOWERS", "12.4K", "+1%")]
+    for i, col in enumerate([r1c1, r1c2, r1c3]):
+        label, val, delta = insights_r1[i]
         with col:
-            st.markdown(f'<div class="insight-card"><p style="font-size:12px; color:#8b949e; margin:0;">{label}</p><h3>{val} <span style="color:#3fb950; font-size:14px;">{delta}</span></h3></div>', unsafe_allow_html=True)
-            st.line_chart(np.random.randn(15), height=80, use_container_width=True)
+            st.markdown(f'<div class="insight-card"><p style="font-size:10px; color:#8b949e;">{label}</p><h3>{val} <span class="delta-tag">{delta}</span></h3></div>', unsafe_allow_html=True)
+            st.line_chart(np.random.randn(20), height=80)
 
-    # Second Row of Metrics
-    r2_c1, r2_c2, r2_c3 = st.columns(3)
-    metrics_r2 = [("PAGE VISITS", "4.5K", "+15%"), ("LINK CLICKS", "920", "+22%"), ("CONVERSATIONS", "128", "+5%")]
-    for i, col in enumerate([r2_c1, r2_c2, r2_c3]):
-        label, val, delta = metrics_r2[i]
+    # Row 2
+    r2c1, r2c2, r2c3 = st.columns(3)
+    insights_r2 = [("PAGE VISITS", "4.5K", "+15%"), ("LINK CLICKS", "920", "+22%"), ("CONVERSATIONS", "128", "+5%")]
+    for i, col in enumerate([r2c1, r2c2, r2c3]):
+        label, val, delta = insights_r2[i]
         with col:
-            st.markdown(f'<div class="insight-card"><p style="font-size:12px; color:#8b949e; margin:0;">{label}</p><h3>{val} <span style="color:#3fb950; font-size:14px;">{delta}</span></h3></div>', unsafe_allow_html=True)
-            st.line_chart(np.random.randn(15), height=80, use_container_width=True)
+            st.markdown(f'<div class="insight-card"><p style="font-size:10px; color:#8b949e;">{label}</p><h3>{val} <span class="delta-tag">{delta}</span></h3></div>', unsafe_allow_html=True)
+            st.line_chart(np.random.randn(20), height=80)
 
 # --- 4. THE INTELLIGENCE INTERFACE ---
 def render_intelligence():
-    st.markdown("### Sayar Gyi's Intelligence")
+    st.title("Sayar Gyi's Intelligence")
     tabs = st.tabs(["🧠 Deep Insights", "📄 Weekly Report"])
-    
     with tabs[0]:
-        st.markdown("#### Strategic Insights")
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown('<div class="insight-card" style="border-left: 4px solid #58a6ff;"><b>AEO Strategy:</b> AI Search Citation ရရှိရန် Content များကို ပြင်ဆင်ပါ။</div>', unsafe_allow_html=True)
-        with col2:
-            st.markdown('<div class="insight-card" style="border-left: 4px solid #f85149;"><b>Ads Strategy:</b> AI Algorithms အတွက် Signal Data ကို မြှင့်တင်ပါ။</div>', unsafe_allow_html=True)
-            
-    with tabs[1]:
-        st.markdown("#### Weekly Performance")
-        st.markdown('<div class="insight-card" style="border-left: 4px solid #3fb950;">Performance Summary: ယခုအပတ်အတွင်း Ads Reach 15% တိုးတက်လာပါသည်။</div>', unsafe_allow_html=True)
+        st.markdown('<p class="section-title">STRATEGIC INTELLIGENCE</p>', unsafe_allow_html=True)
+        # CEO Confirm ထားသော UI များ ဤနေရာတွင် ပေါ်လာမည်
+        st.info("CEO ပို့ပေးမည့် Main Interface ပုံများကို စောင့်ဆိုင်းနေပါသည်...")
 
 # --- MAIN ---
 def main():
-    apply_v88_authentic_styles()
-    if 'page' not in st.session_state: st.session_state.page = "dashboard"
-    render_sidebar()
-    
-    if st.session_state.page == "dashboard":
-        render_dashboard()
-    else:
-        render_intelligence()
-
-if __name__ == "__main__": main()
+    apply_v8
