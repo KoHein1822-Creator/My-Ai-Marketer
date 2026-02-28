@@ -1,82 +1,57 @@
 import streamlit as st
 
-# --- 1. SETTINGS ---
-st.set_page_config(layout="wide", page_title="SAYAR GYI v130.0")
+# --- 1. SETTINGS & STABLE UI ---
+st.set_page_config(layout="wide", page_title="SAYAR GYI v131.0")
 
-def apply_v130_master_styles():
+def apply_final_styles():
     st.markdown("""
         <style>
-        /* Main UI Restore */
-        .block-container { padding-top: 2rem; max-width: 94%; background-color: #0d1117; }
+        /* Restore all Main Dashboard visibility */
+        .main .block-container { 
+            display: block !important; 
+            visibility: visible !important; 
+            padding-top: 2rem; 
+        }
         
-        /* Premium Insight Cards */
+        /* v101 Premium Insight Cards */
         .v101-card {
             background: #161b22; border: 1px solid #30363d; border-radius: 12px;
             padding: 25px; margin-bottom: 25px; border-left: 5px solid #58a6ff;
         }
 
-        /* --- THE UNSHAKABLE FAB OVERRIDE --- */
-        /* မလိုလားအပ်သော Widget များနှင့် ခလုတ်များအားလုံးကို အမြစ်ဖြတ်ဖျောက်ခြင်း */
-        .stButton, div[data-testid="stButton"], button, .stCheckbox, div[data-testid="stCheckbox"] {
-            display: none !important;
-            visibility: hidden !important;
+        /* --- THE CLEAN FLOATING ROBOT (STRICTLY NO "AI" TEXT) --- */
+        div.stButton > button[key="final_robot_trigger"] {
+            position: fixed !important;
+            bottom: 40px !important;
+            right: 40px !important;
+            width: 75px !important;
+            height: 75px !important;
+            border-radius: 50% !important;
+            background: linear-gradient(135deg, #1f6feb 0%, #58a6ff 100%) !important;
+            border: 2px solid #ffffff !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+            z-index: 1000000 !important;
+            font-size: 35px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 0 !important;
+            color: white !important;
         }
 
-        /* Create a secure Floating Action Button Layer */
-        #master-robot-layer {
-            position: fixed;
-            bottom: 50px;
-            right: 50px;
-            width: 90px;
-            height: 90px;
-            z-index: 9999999;
+        div.stButton > button[key="final_robot_trigger"]:hover {
+            transform: scale(1.1) !important;
+            box-shadow: 0 15px 40px rgba(88, 166, 255, 0.4) !important;
         }
+
+        /* Remove all other experimental toggles/buttons */
+        .stCheckbox, .stToggle, div[data-testid="stCheckbox"] { display: none !important; }
         </style>
-
-        <div id="master-robot-layer">
-            <button id="real-robot-btn" onclick="triggerStreamlit()">
-                🤖
-            </button>
-        </div>
-
-        <style>
-        #real-robot-btn {
-            width: 85px;
-            height: 85px;
-            background: linear-gradient(135deg, #1f6feb 0%, #58a6ff 100%);
-            border-radius: 50%;
-            border: 3px solid #ffffff;
-            font-size: 45px;
-            cursor: pointer;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        #real-robot-btn:hover {
-            transform: scale(1.1) rotate(10deg);
-            box-shadow: 0 15px 50px rgba(88, 166, 255, 0.6);
-        }
-        </style>
-
-        <script>
-        function triggerStreamlit() {
-            // Streamlit ၏ URL parameter ကို အသုံးပြု၍ Dialog ကို Trigger လုပ်ခြင်း
-            const currentUrl = new URL(window.location.href);
-            currentUrl.searchParams.set('action', 'chat');
-            window.parent.location.hash = 'ai-chat-' + Math.random(); 
-            
-            // Hidden Link ကို နှိပ်စေခြင်း
-            const link = window.parent.document.getElementById('hidden-trigger-link');
-            if (link) { link.click(); }
-        }
-        </script>
     """, unsafe_allow_html=True)
 
 # --- 2. THE STRATEGIC DIALOG ---
 @st.dialog("🛡️ SAYAR GYI COMMAND CENTER")
-def open_strategic_portal():
+def open_ai_dialog():
     st.markdown("### CEO Strategic Intelligence Access")
     if "messages" not in st.session_state:
         st.session_state.messages = []
@@ -96,10 +71,11 @@ def open_strategic_portal():
 
 # --- 3. MAIN DASHBOARD ---
 def main():
-    apply_v130_master_styles()
+    apply_final_styles()
     
     st.title("Sayar Gyi Mastermind Suite")
     
+    # 100% Guaranteed to show Tabs back
     tabs = st.tabs(["🌐 Global News", "🇲🇲 Local Pulse", "🧠 Deep Insights", "📄 Weekly Report"])
 
     with tabs[2]:
@@ -110,22 +86,9 @@ def main():
         with col2:
             st.markdown('<div class="v101-card" style="border-left-color:#f85149;"><b>Ads Strategy:</b> AI Algorithms အတွက် Signal Data ကို မြှင့်တင်ပါ။</div>', unsafe_allow_html=True)
 
-    # --- THE INVISIBLE BRIDGE (SECURE) ---
-    # ဤနေရာတွင် မည်သည့် Button မှ မသုံးတော့ဘဲ Query Param ပြောင်းလဲမှုကို စောင့်ကြည့်မည်
-    if "chat_open" not in st.session_state:
-        st.session_state.chat_open = False
-
-    # Hidden Toggle for JavaScript to click
-    if st.checkbox("Chat Trigger", key="hidden_checkbox", label_visibility="hidden"):
-        open_strategic_portal()
-
-    # Link for JS to trigger checkbox
-    st.markdown("""
-        <a id="hidden-trigger-link" style="display:none;" 
-           href="javascript:document.querySelector('input[aria-label=\\'Chat Trigger\\']').click();">
-           Trigger
-        </a>
-    """, unsafe_allow_html=True)
+    # --- THE DIRECT TRIGGER ---
+    # ခလုတ်နာမည်ကို Emoji တိုက်ရိုက်ပေးထားလို့ စာသားကြီး ပေါ်မလာနိုင်တော့ပါ
+    st.button("🤖", key="final_robot_trigger", on_click=open_ai_dialog)
 
 if __name__ == "__main__":
     main()
