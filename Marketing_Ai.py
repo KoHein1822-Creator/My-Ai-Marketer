@@ -95,4 +95,13 @@ def main():
             st.markdown('<div class="v101-card" style="border-left-color:#f85149;"><b>Ads Strategy:</b> AI Algorithms များအတွက် Signal Data ကို မြှင့်တင်ပါ။</div>', unsafe_allow_html=True)
 
     # --- THE CLEAN TRIGGER ---
-    #
+    # Widget အဟောင်းများအစား ဤနည်းလမ်းဖြင့် Pop-up ကို အသေချိတ်ဆက်ပါသည်
+    if "robot_trigger" not in st.session_state:
+        st.session_state.robot_trigger = False
+
+    # Check for HTML click event
+    if st.checkbox("Trigger", key="robot_gate", label_visibility="hidden"):
+        open_strategic_portal()
+
+if __name__ == "__main__":
+    main()
