@@ -1,12 +1,17 @@
 import streamlit as st
 
-# --- 1. GLOBAL SETTINGS & CLEAN UI ---
-st.set_page_config(layout="wide", page_title="SAYAR GYI v121.0")
+# --- 1. GLOBAL SETTINGS & STABLE UI ---
+st.set_page_config(layout="wide", page_title="SAYAR GYI v122.0")
 
-def apply_v121_styles():
+def apply_v122_styles():
+    # ဒီ HTML/JS က "AI" စာသားခလုတ်ကို အသုံးမပြုဘဲ 🤖 ကို ညာဘက်အောက်ခြေမှာ အသေနေရာချပေးမှာပါ
     st.markdown("""
+        <div id="robot-trigger" onclick="window.parent.postMessage({type: 'streamlit:setComponentValue', value: true}, '*')">
+            🤖
+        </div>
+
         <style>
-        /* Dashboard Container */
+        /* Main UI Setup */
         .block-container { padding-top: 2rem; max-width: 94%; background-color: #0d1117; }
         
         /* v101 Premium Insight Cards */
@@ -15,43 +20,34 @@ def apply_v121_styles():
             padding: 25px; margin-bottom: 25px; border-left: 5px solid #58a6ff;
         }
 
-        /* --- THE ULTIMATE FLOATING ROBOT --- */
-        /* Streamlit Button ကို ညာဘက်အောက်ခြေတွင် 🤖 အဖြစ် ပုံဖော်ခြင်း */
-        div.stButton > button[key="v121_robot_trigger"] {
+        /* --- THE UNSHAKABLE ROBOT FAB (NO BUTTON USED) --- */
+        #robot-trigger {
             position: fixed !important;
             bottom: 60px !important;
             right: 60px !important;
-            left: auto !important;
             width: 85px !important;
             height: 85px !important;
-            border-radius: 50% !important;
             background: linear-gradient(135deg, #1f6feb 0%, #58a6ff 100%) !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 45px !important;
+            cursor: pointer !important;
+            z-index: 9999999 !important;
             border: 3px solid #ffffff !important;
             box-shadow: 0 10px 40px rgba(0,0,0,0.8) !important;
-            z-index: 999999 !important;
-            color: transparent !important;
-            font-size: 0px !important;
-            padding: 0 !important;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+            user-select: none !important;
         }
 
-        /* စက်ရုပ် Emoji အား ခလုတ်အလယ်တွင် ထည့်ခြင်း */
-        div.stButton > button[key="v121_robot_trigger"]::after {
-            content: "🤖";
-            position: absolute;
-            left: 0; top: 0; width: 100%; height: 100%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 45px; color: white; visibility: visible;
-        }
-
-        div.stButton > button[key="v121_robot_trigger"]:hover {
-            transform: scale(1.1) rotate(5deg) !important;
+        #robot-trigger:hover {
+            transform: scale(1.1) rotate(10deg) !important;
             box-shadow: 0 15px 50px rgba(88, 166, 255, 0.6) !important;
         }
 
-        /* မလိုလားအပ်သော On/Off Toggle Button များအားလုံးကို ဖျောက်ခြင်း */
-        div[data-testid="stCheckbox"], div[data-testid="stWidgetLabel"] {
-            display: none !important;
-        }
+        /* Streamlit ရဲ့ မလိုလားအပ်တဲ့ Standard Button တွေအားလုံးကို အမြစ်ဖြတ်ဖျောက်ခြင်း */
+        .stButton, button { display: none !important; }
         </style>
     """, unsafe_allow_html=True)
 
@@ -77,7 +73,7 @@ def open_strategic_portal():
 
 # --- 3. MAIN DASHBOARD ---
 def main():
-    apply_v121_styles()
+    apply_v122_styles()
     
     st.title("Sayar Gyi Mastermind Suite")
     
@@ -91,9 +87,12 @@ def main():
         with col2:
             st.markdown('<div class="v101-card" style="border-left-color:#f85149;"><b>Ads Strategy:</b> AI Algorithms အတွက် Signal Data ကို မြှင့်တင်ပါ။</div>', unsafe_allow_html=True)
 
-    # --- THE DIRECT TRIGGER ---
-    # ဤ Button ကိုနှိပ်လျှင် Dialog တိုက်ရိုက်ပွင့်မည်။ On/Off Toggle လုံးဝ မပါတော့ပါ။
-    st.button("AI", key="v121_robot_trigger", on_click=open_strategic_portal)
+    # --- THE INVISIBLE TRIGGER ---
+    # HTML Robot ကို နှိပ်လိုက်ရင် ဒီ toggle က 'True' ဖြစ်သွားပြီး Dialog ပွင့်လာမှာပါ
+    if st.checkbox("Trigger", key="robot_gate", label_visibility="hidden"):
+        open_strategic_portal()
+        # Dialog ပိတ်သွားရင် ပြန် Reset လုပ်ဖို့ (Optional)
+        # st.session_state.robot_gate = False
 
 if __name__ == "__main__":
     main()
