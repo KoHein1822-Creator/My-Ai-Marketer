@@ -114,3 +114,11 @@ def render_main():
 
     with tab4:
         st.markdown("### 📄 Weekly Executive Report (Burmese)")
+        if st.button("Generate Burmese Report"):
+            full_report = generate_burmese_report()
+            st.markdown(f'<div class="report-paper"><pre style="white-space: pre-wrap; color:#1e293b;">{full_report}</pre></div>', unsafe_allow_html=True)
+            st.download_button("Download Report (TXT)", full_report, file_name=f"SayarGyi_Burmese_Report_{datetime.now().strftime('%Y%m%d')}.txt")
+
+if __name__ == "__main__":
+    apply_master_styles()
+    render_main()
