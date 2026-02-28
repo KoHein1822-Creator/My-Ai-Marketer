@@ -103,3 +103,13 @@ def main():
         st.session_state.current_page = "dashboard"
     
     render_sidebar()
+    
+    if st.session_state.current_page == "dashboard":
+        render_dashboard()
+    elif st.session_state.current_page == "intelligence":
+        st.title("Sayar Gyi's Intelligence")
+        st.info("Waiting for Main Interface details from CEO...")
+        # ဤနေရာတွင် CEO ပို့ပေးမည့် confirmed UI နှစ်ခုကို ပေါင်းစပ်ထည့်သွင်းပါမည်
+
+if __name__ == "__main__":
+    main()
