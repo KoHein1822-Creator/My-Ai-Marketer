@@ -2,14 +2,14 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-# --- 1. GLOBAL CONFIGURATION (V88.0 EXACT) ---
+# --- 1. GLOBAL CONFIGURATION ---
 st.set_page_config(
     layout="wide", 
     page_title="SAYAR GYI v88.0 | Balanced Executive",
     page_icon="⚖️"
 )
 
-# --- 2. PREMIUM CSS (V88.0 EXACT) ---
+# --- 2. PREMIUM CSS ---
 def apply_v88_styles():
     st.markdown("""
         <style>
@@ -43,33 +43,36 @@ def apply_v88_styles():
         </style>
     """, unsafe_allow_html=True)
 
-# --- 3. MASTER SIDE PANEL ---
+# --- 3. MASTER SIDE PANEL (FIXED STATE LOGIC) ---
 def render_sidebar():
+    # Session State စတင်သတ်မှတ်ခြင်း
     if 'page' not in st.session_state:
-        st.session_state.page = "Interactive Dashboard" # Default Page
+        st.session_state.page = "📊 Interactive Dashboard"
 
     with st.sidebar:
         st.markdown('<h2 style="margin-bottom:0; color:white;">SAYAR GYI\'S</h2>', unsafe_allow_html=True)
         st.markdown('<p style="color:#58a6ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">AI Marketing Agency</p>', unsafe_allow_html=True)
         st.write("")
         
-        # --- REPLACED SECTION: Industry News to Intelligence ---
         st.markdown("### SAYAR GYI'S INTELLIGENCE")
+        # Intelligence Button နှိပ်လျှင် State ပြောင်းရန် Logic
         if st.button("🧠 Deep Strategy & Reports", use_container_width=True):
             st.session_state.page = "Intelligence"
         
         st.divider()
         st.markdown("### MENU")
         
-        # Navigation using Radio to maintain state purely
         nav_options = ["📊 Interactive Dashboard", "🧬 Brand DNA", "📂 Project Archive", "🎨 Asset Library"]
-        # radio selection ကို session state နဲ့ ချိတ်ဆက်လိုက်သည်
-        selection = st.radio("Nav", nav_options, label_visibility="collapsed", 
-                             index=nav_options.index(st.session_state.page) if st.session_state.page in nav_options else 0)
         
-        # Update session state only if radio is touched
-        if selection != st.session_state.page and selection in nav_options:
-            st.session_state.page = selection
+        # FIX: အကယ်၍ Intelligence Page ရောက်နေလျှင် Menu Radio ကို Unselect လုပ်ထားမည် (index=None)
+        # သို့မှသာ Button နှင့် Radio အချင်းချင်း ငြိခြင်း (Conflict) ဖြစ်မည်မဟုတ်ပါ။
+        current_idx = nav_options.index(st.session_state.page) if st.session_state.page in nav_options else None
+        
+        def on_nav_change():
+            st.session_state.page = st.session_state.menu_radio
+
+        # Callback သုံးပြီး Radio ရဲ့ အပြောင်းအလဲကို ဖမ်းယူခြင်း
+        st.radio("Nav", nav_options, index=current_idx, key="menu_radio", on_change=on_nav_change, label_visibility="collapsed")
 
         st.divider()
         st.markdown("### MY AGENTS")
@@ -82,7 +85,7 @@ def render_sidebar():
         st.markdown("### MODEL")
         st.radio("Engine", ["Gemini 1.5 Pro", "GPT-4o", "Claude 3.5"], horizontal=True, label_visibility="collapsed")
 
-# --- 4. BALANCED DASHBOARD ENGINE (ONLY FOR INTERACTIVE DASHBOARD) ---
+# --- 4. BALANCED DASHBOARD ENGINE ---
 def render_dashboard():
     h_col, f_col = st.columns([1.5, 1])
     with h_col:
@@ -139,7 +142,7 @@ if __name__ == "__main__":
     apply_v88_styles()
     render_sidebar()
     
-    # Logic: Interactive Dashboard မှာပဲ Dashboard UI ပေါ်မည်
+    # ရှင်းလင်းပြတ်သားသော Page Display Logic
     if st.session_state.page == "📊 Interactive Dashboard":
         render_dashboard()
     elif st.session_state.page == "Intelligence":
@@ -147,7 +150,7 @@ if __name__ == "__main__":
         st.divider()
         st.info("Ready for Deep Insights & Weekly Reports Integration...")
     else:
-        # အခြားစာမျက်နှာများတွင် Dashboard UI ကွယ်သွားမည်
+        # အခြား Menu များ (Brand DNA, Project Archive, etc.)
         st.markdown(f'<h1 style="font-weight:900; margin:0; font-size:38px;">{st.session_state.page}</h1>', unsafe_allow_html=True)
         st.write("")
-        st.info(f"{st.session_state.page} Content coming soon...")
+        st.info(f"{st.session_state.page} Module syncing...")
