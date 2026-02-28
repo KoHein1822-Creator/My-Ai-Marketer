@@ -1,75 +1,73 @@
 import streamlit as st
-import streamlit.components.v1 as components
 from datetime import datetime
 
-# --- 1. GLOBAL SETTINGS ---
-st.set_page_config(layout="wide", page_title="SAYAR GYI v114.0")
+# --- 1. SETTINGS & ABSOLUTE CSS INJECTION ---
+st.set_page_config(layout="wide", page_title="SAYAR GYI v115.0")
 
-def apply_v114_ui():
+def apply_v115_styles():
     st.markdown("""
         <style>
+        /* Main Dashboard Spacing */
         .block-container { padding-top: 2rem; max-width: 94%; background-color: #0d1117; }
+        
+        /* v101 Card Style */
         .v101-card {
             background: #161b22; border: 1px solid #30363d; border-radius: 12px;
             padding: 25px; margin-bottom: 25px; border-left: 5px solid #58a6ff;
         }
-        /* Streamlit ရဲ့ မူရင်း Button တွေကို ဖျောက်ထားခြင်း (Floating အတွက် အသုံးမပြုတော့ပါ) */
-        .stButton button[key="hidden_trigger"] { display: none; }
+
+        /* --- THE ABSOLUTE FLOATING ROBOT FIX --- */
+        /* Streamlit Button ကို အခြေခံပြီး ညာဘက်အောက်ခြေမှာ အသေနေရာချခြင်း */
+        div.stButton > button[key="robot_final"] {
+            position: fixed !important;
+            bottom: 45px !important;
+            right: 45px !important;
+            left: auto !important;
+            width: 85px !important;
+            height: 85px !important;
+            border-radius: 50% !important;
+            background: linear-gradient(135deg, #1f6feb 0%, #58a6ff 100%) !important;
+            border: 3px solid #ffffff !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6) !important;
+            z-index: 1000000 !important;
+            cursor: pointer !important;
+            color: transparent !important; /* "AI" စာသားကို ဖျောက်ခြင်း */
+            overflow: visible !important;
+        }
+
+        /* စက်ရုပ် Emoji ကို ခလုတ်အလယ်မှာ အစားထိုးခြင်း */
+        div.stButton > button[key="robot_final"]::after {
+            content: "🤖";
+            position: absolute;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            font-size: 45px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            color: white !important;
+            visibility: visible !important;
+        }
+
+        div.stButton > button[key="robot_final"]:hover {
+            transform: scale(1.1) rotate(5deg) !important;
+            box-shadow: 0 15px 40px rgba(88, 166, 255, 0.5) !important;
+        }
         </style>
     """, unsafe_allow_html=True)
 
-# --- 2. THE INFALLIBLE FLOATING ROBOT COMPONENT ---
-def render_robot_fab():
-    # ညာဘက်အောက်ခြေမှာ အမြဲတမ်းရှိနေမယ့် Custom HTML/JS Button
-    robot_html = """
-    <div id="robot-fab" style="
-        position: fixed;
-        bottom: 40px;
-        right: 40px;
-        width: 80px;
-        height: 80px;
-        background: linear-gradient(135deg, #1f6feb 0%, #58a6ff 100%);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 45px;
-        cursor: pointer;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        z-index: 999999;
-        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        border: 3px solid #ffffff;
-    " onmouseover="this.style.transform='scale(1.1) rotate(10deg)'" 
-      onmouseout="this.style.transform='scale(1) rotate(0deg)'">
-        🤖
-    </div>
-
-    <script>
-        // Parent Streamlit app ဆီကို ခလုတ်နှိပ်လိုက်တဲ့အချက်ပြမှု ပေးပို့ခြင်း
-        const fab = document.getElementById('robot-fab');
-        fab.addEventListener('click', function() {
-            window.parent.postMessage({
-                type: 'streamlit:setComponentValue',
-                value: Math.random() // Unique value to trigger update
-            }, '*');
-        });
-    </script>
-    """
-    # Component ကို Dashboard ထဲ ထည့်သွင်းခြင်း
-    return components.html(robot_html, height=0)
-
-# --- 3. THE STRATEGIC DIALOG ---
-@st.dialog("🦾 SAYAR GYI COMMAND CENTER")
-def open_ai_command():
-    st.markdown("### CEO Strategic Intelligence Access")
-    query = st.chat_input("ဗျူဟာမြောက် မေးခွန်းများ မေးမြန်းပါ...")
+# --- 2. THE STRATEGIC DIALOG ---
+@st.dialog("🛡️ SAYAR GYI COMMAND CENTER")
+def open_strategic_ai():
+    st.markdown("### CEO Intelligence Access")
+    query = st.chat_input("Ask Sayar Gyi...")
     if query:
-        with st.chat_message("assistant"):
-            st.write(f"CEO ခင်ဗျာ၊ '{query}' အတွက် ကျွန်တော့်ရဲ့ ဗျူဟာမြောက် အကြံပြုချက်ကတော့...")
+        st.write(f"**CEO:** {query}")
+        st.info(f"**Sayar Gyi 🤖:** CEO ခင်ဗျာ၊ ဗျူဟာမြောက် သုံးသပ်ချက်မှာ...")
 
-# --- 4. MAIN DASHBOARD ---
+# --- 3. MAIN DASHBOARD ---
 def main():
-    apply_v114_ui()
+    apply_v115_styles()
     st.title("Sayar Gyi Mastermind Suite")
     
     tabs = st.tabs(["🌐 Global News", "🇲🇲 Local Pulse", "🧠 Deep Insights", "📄 Weekly Report"])
@@ -78,16 +76,14 @@ def main():
         st.markdown("### 🧠 Sayar Gyi's Strategic Intelligence")
         col1, col2 = st.columns(2)
         with col1:
-            st.markdown('<div class="v101-card"><b>Content Strategy:</b> AI Search Optimization ကို အာရုံစိုက်ပါ။</div>', unsafe_allow_html=True)
+            st.markdown('<div class="v101-card"><b>AEO Strategy:</b> AI Answers မှာ နေရာရဖို့ ပြင်ဆင်ပါ။</div>', unsafe_allow_html=True)
         with col2:
-            st.markdown('<div class="v101-card" style="border-left-color:#f85149;"><b>Ad Strategy:</b> Data Signal Quality ကို မြှင့်တင်ပါ။</div>', unsafe_allow_html=True)
+            st.markdown('<div class="v101-card" style="border-left-color:#f85149;"><b>Ads Strategy:</b> Signal Data ကို မြှင့်တင်ပါ။</div>', unsafe_allow_html=True)
 
-    # Robot FAB ကို Render လုပ်ခြင်း
-    clicked = render_robot_fab()
-    
-    # ခလုတ်နှိပ်လိုက်ရင် Dialog ပွင့်စေမယ့် Logic
-    if clicked:
-        open_ai_command()
+    # --- THE TRIGGER ---
+    # ဤနေရာရှိ Button သည် CSS ကြောင့် ညာဘက်အောက်ခြေတွင် 🤖 အဖြစ် ပေါ်နေပါမည်။
+    if st.button("AI", key="robot_final"):
+        open_strategic_ai()
 
 if __name__ == "__main__":
     main()
