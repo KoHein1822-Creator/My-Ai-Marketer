@@ -132,4 +132,10 @@ def main():
     ])
 
     with tab_insight:
-        render_v
+        render_v101_insights()
+    
+    with tab_report:
+        render_v101_report()
+
+if __name__ == "__main__":
+    main()
