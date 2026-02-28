@@ -1,85 +1,99 @@
 import streamlit as st
-import streamlit.components.v101 as components
 from datetime import datetime
 
 # --- 1. SETTINGS & CSS ---
-st.set_page_config(layout="wide", page_title="SAYAR GYI v109.0")
+st.set_page_config(layout="wide", page_title="SAYAR GYI v110.0")
 
-def apply_v109_styles():
+def apply_v110_styles():
     st.markdown("""
         <style>
+        /* Container Setup */
         .block-container { padding-top: 2rem; max-width: 94%; background-color: #0d1117; }
+        
+        /* v101 Restored Insight Cards */
         .v101-card {
             background: #161b22; border: 1px solid #30363d; border-radius: 12px;
             padding: 25px; margin-bottom: 25px; border-left: 5px solid #58a6ff;
         }
-        .v101-header { color: #58a6ff; font-weight: 800; font-size: 20px; }
+        .v101-header { color: #58a6ff; font-weight: 800; font-size: 20px; margin-bottom: 10px; }
+
+        /* --- THE BULLETPROOF FLOATING ROBOT BUTTON --- */
+        /* Streamlit ရဲ့ Key-based button ကို တိုက်ရိုက် Target ထားပြီး ညာဘက်အောက်ခြေမှာ Fix လုပ်ခြင်း */
+        div[data-testid="stButton"] > button[key="robot_trigger_btn"] {
+            position: fixed !important;
+            bottom: 40px !important;   /* အောက်ခြေကနေ 40px */
+            right: 40px !important;    /* ညာဘက်ကနေ 40px (Screenshot 53 အမှားကိုပြင်ရန်) */
+            width: 80px !important;
+            height: 80px !important;
+            border-radius: 20px !important;
+            background-color: #1f6feb !important;
+            border: 2px solid #58a6ff !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6) !important;
+            z-index: 999999 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: all 0.3s ease !important;
+        }
+
+        /* Robot Icon ကို စာသားအစား Emoji နဲ့ အစားထိုးခြင်း */
+        div[data-testid="stButton"] > button[key="robot_trigger_btn"] p {
+            display: none !important; /* "AI" ဆိုတဲ့ စာသားကို ဖျောက်ထားရန် */
+        }
+        div[data-testid="stButton"] > button[key="robot_trigger_btn"]::after {
+            content: "🤖";
+            font-size: 40px;
+        }
+
+        div[data-testid="stButton"] > button[key="robot_trigger_btn"]:hover {
+            transform: scale(1.1) !important;
+            background-color: #388bfd !important;
+            box-shadow: 0 15px 40px rgba(56, 139, 253, 0.4) !important;
+        }
+
+        /* Report Style */
+        .v101-report-box {
+            background: #0d1117; border: 1px solid #30363d; padding: 40px;
+            border-radius: 12px; color: #adbac7; line-height: 1.8;
+        }
         </style>
     """, unsafe_allow_html=True)
 
-# --- 2. THE FLOATING ROBOT BUTTON (STABLE VERSION) ---
-def render_robot_button():
-    # CSS နဲ့ HTML ကို တိုက်ရိုက် Component အနေနဲ့ သုံးပြီး နေရာကို ညှိပါမယ်
-    # ညာဘက်အောက်ခြေကနေ ၄၀ pixels စီ ခွာထားပါတယ်
-    button_html = """
-    <div id="robot-container" style="position: fixed; bottom: 40px; right: 40px; z-index: 999999; cursor: pointer;">
-        <div style="background: #1f6feb; width: 80px; height: 80px; border-radius: 20px; 
-                    display: flex; align-items: center; justify-content: center; 
-                    font-size: 40px; border: 2px solid #58a6ff; 
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-            🤖
-        </div>
-    </div>
-    <script>
-        const robot = document.getElementById('robot-container');
-        robot.addEventListener('click', function() {
-            window.parent.postMessage({type: 'streamlit:setComponentValue', value: true}, '*');
-        });
-    </script>
-    """
-    # နေရာအသေဖြစ်အောင် Component အနေနဲ့ ထည့်သွင်းခြင်း
-    return components.html(button_html, height=0)
+# --- 2. THE STRATEGIC AI DIALOG ---
+@st.dialog("🛡️ SAYAR GYI COMMAND CENTER")
+def open_ai_dialog():
+    st.markdown("### CEO Direct Line")
+    st.write("ဗျူဟာမြောက် မေးခွန်းများကို ဤနေရာတွင် မေးမြန်းနိုင်ပါသည်။")
+    
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
 
-# --- 3. THE STRATEGIC DIALOG ---
-@st.dialog("🛡️ SAYAR GYI AI COMMAND CENTER")
-def open_ai():
-    st.markdown("<p style='color:#adbac7;'>CEO ခင်ဗျာ၊ မည်သည့်ဗျူဟာကို ဆွေးနွေးလိုပါသနည်း?</p>", unsafe_allow_html=True)
-    query = st.chat_input("Ask Sayar Gyi...")
-    if query:
-        st.info(f"**Sayar Gyi 🤖:** CEO ခင်ဗျာ၊ '{query}' အတွက် ကျွန်တော်၏ သုံးသပ်ချက်မှာ...")
+    for msg in st.session_state.messages:
+        with st.chat_message(msg["role"]):
+            st.write(msg["content"])
 
-# --- 4. MAIN INTERFACE ---
+    if prompt := st.chat_input("Ask Sayar Gyi..."):
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.write(prompt)
+        
+        with st.chat_message("assistant"):
+            response = f"CEO ခင်ဗျာ၊ '{prompt}' နှင့် ပတ်သက်၍ ကျွန်တော်၏ ဗျူဟာမြောက် သုံးသပ်ချက်မှာ..."
+            st.write(response)
+            st.session_state.messages.append({"role": "assistant", "content": response})
+
+# --- 3. MAIN APP ---
 def main():
-    apply_v109_styles()
+    apply_v110_styles()
+    
     st.title("Sayar Gyi Mastermind Suite")
     
-    tab1, tab2, tab3, tab4 = st.tabs(["🌐 Global News", "🇲🇲 Local Pulse", "🧠 Deep Insights", "📄 Weekly Report"])
+    tabs = st.tabs(["🌐 Global News", "🇲🇲 Local Pulse", "🧠 Deep Insights", "📄 Weekly Report"])
 
-    with tab3:
+    with tabs[2]:
         st.markdown("### 🧠 Sayar Gyi's Strategic Intelligence")
         col1, col2 = st.columns(2)
         with col1:
             st.markdown('<div class="v101-card"><div class="v101-header">🖋️ Content & AEO Mastery</div><p>AI Answers မှာ နေရာရဖို့ Q&A Content တွေ ပြင်ဆင်ပါ။</p></div>', unsafe_allow_html=True)
         with col2:
-            st.markdown('<div class="v101-card" style="border-left-color:#f85149;"><div class="v101-header">🎯 Media Buying: Signals</div><p>Creative အရည်အသွေးနဲ့ Signal Data ကို ဦးစားပေးပါ။</p></div>', unsafe_allow_html=True)
-
-    # Robot Button ကို Render လုပ်ပြီး အလုပ်လုပ်အောင် Logic ချိတ်ပါမယ်
-    # အကယ်၍ အောက်က button ကို နှိပ်လိုက်ရင် Dialog ပွင့်လာမှာပါ
-    st.write("---")
-    # Floating Button အစစ်
-    if st.button("Open AI Assistant 🤖", key="fallback_btn"):
-        open_ai()
-    
-    # CSS-based Floating Robot (Visual only for now due to Streamlit limitations)
-    st.markdown("""
-        <style>
-        div[data-testid="stButton"] > button:first-child {
-            position: fixed; bottom: 50px; right: 50px; width: 80px; height: 80px;
-            border-radius: 20px; font-size: 35px; background: #1f6feb; z-index: 1000;
-            border: 2px solid #58a6ff; color: white;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-
-if __name__ == "__main__":
-    main()
+            st.markdown('<div class="v101-card" style="border-left-color:#f85149;"><div class="v101-header">🎯 Media Buying: Signals</div><p>Creative အရည်အသွေးနဲ့ Signal Data ကို ဦးစားပေးပါ။</p></div>', unsafe_allow_html
