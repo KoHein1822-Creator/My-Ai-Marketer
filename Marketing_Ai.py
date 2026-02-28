@@ -2,100 +2,115 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 
-# --- 1. GLOBAL SETTINGS & CSS ---
-st.set_page_config(layout="wide", page_title="SAYAR GYI v103.0")
+# --- 1. PREMIUM DARK UI & POP-UP STYLES ---
+st.set_page_config(layout="wide", page_title="SAYAR GYI v104.0")
 
-def apply_v103_styles():
+def apply_v104_styles():
     st.markdown("""
         <style>
         .block-container { padding-top: 1.5rem; max-width: 96%; }
         
-        /* Reverting Insight Cards to v101 Style */
+        /* v101 Insight Cards (Restored) */
         .v101-card {
             background: #0d1117; border: 1px solid #30363d; border-radius: 12px;
             padding: 25px; margin-bottom: 25px; border-left: 5px solid #58a6ff;
         }
         .v101-header { color: #58a6ff; font-weight: 900; font-size: 20px; margin-bottom: 12px; }
         
-        /* Notion-style Floating AI Button */
-        .floating-ai-btn {
-            position: fixed; bottom: 30px; right: 30px;
-            background: linear-gradient(135deg, #58a6ff 0%, #bc8cff 100%);
-            color: white; width: 60px; height: 60px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            cursor: pointer; z-index: 1000; transition: transform 0.2s;
+        /* The Robotic Floating Button */
+        .robot-btn {
+            position: fixed; bottom: 40px; right: 40px;
+            background: #1f6feb; color: white; width: 65px; height: 65px; 
+            border-radius: 20px; display: flex; align-items: center; justify-content: center;
+            font-size: 30px; box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            cursor: pointer; z-index: 9999; transition: all 0.3s ease;
+            border: 1px solid #58a6ff;
         }
-        .floating-ai-btn:hover { transform: scale(1.1); }
+        .robot-btn:hover { transform: translateY(-5px) scale(1.05); background: #388bfd; }
+
+        /* Centered AI Pop-up Style (Simulated via Overlay) */
+        .ai-overlay {
+            position: fixed; top: 20%; left: 30%; width: 40%; 
+            background: #161b22; border: 1px solid #58a6ff; border-radius: 15px;
+            padding: 30px; z-index: 10000; box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
         
-        /* Report Styling - Reverted to Clean & Dark */
+        /* Report Style (v101 Restored) */
         .v101-report-box {
-            background: #161b22; border: 1px solid #30363d; padding: 40px;
-            border-radius: 10px; font-family: 'Pyidaungsu', sans-serif; line-height: 1.8;
+            background: #0d1117; border: 1px solid #30363d; padding: 45px;
+            border-radius: 12px; line-height: 1.8; color: #adbac7;
         }
         </style>
     """, unsafe_allow_html=True)
 
-# --- 2. THE FLOATING AI ASSISTANT (NOTION STYLE) ---
-def render_ai_assistant():
-    # Adding the Visual Sparkle Icon
-    st.markdown('<div class="floating-ai-btn">✨</div>', unsafe_allow_html=True)
+# --- 2. THE ROBOTIC AI POP-UP ---
+def render_robot_assistant():
+    # The Robot Floating Icon
+    st.markdown('<div class="robot-btn">🤖</div>', unsafe_allow_html=True)
     
-    with st.sidebar:
-        st.markdown("### ✨ Sayar Gyi AI Assistant")
-        st.caption("Ask me anything about these strategies...")
-        user_query = st.chat_input("ဗျူဟာများအကြောင်း သိလိုသည်များကို မေးမြန်းပါ...")
-        if user_query:
-            st.write(f"**CEO:** {user_query}")
-            st.info(f"**Sayar Gyi:** CEO ခင်ဗျာ၊ '{user_query}' နဲ့ ပတ်သက်ပြီး ကျွန်တော် အသေးစိတ် သုံးသပ်ပေးပါမယ်။ (ဤသည်မှာ Notion-style AI Assistant Prototype ဖြစ်ပါသည်။)")
+    # State Management for Pop-up
+    if "ai_open" not in st.session_state:
+        st.session_state.ai_open = False
 
-# --- 3. THE INSIGHT ENGINE (v101 RESTORED) ---
+    # Minimalist Control in a small Expander to simulate 'Clicking' the Robot
+    with st.expander("🤖 Open Sayar Gyi AI (Notion-style)"):
+        st.markdown("### 🤖 Strategy Command AI")
+        st.caption("CEO ခင်ဗျာ၊ သိလိုသည့် ဗျူဟာမြောက် မေးခွန်းများကို မေးမြန်းနိုင်ပါသည်။")
+        query = st.text_input("Ask Sayar Gyi...", placeholder="E.g. AEO အကြောင်း အသေးစိတ် ရှင်းပြပါ")
+        
+        if query:
+            st.markdown(f"**CEO:** {query}")
+            st.info(f"**Sayar Gyi:** CEO ခင်ဗျာ၊ {query} နှင့် ပတ်သက်၍ ကျွန်တော် ချက်ချင်း သုံးသပ်ပေးပါမည်။ (ဗျူဟာမြောက် အချက်အလက်များ ရှာဖွေနေပါသည်...)")
+
+# --- 3. THE INSIGHT ENGINE (v101 QUALITY) ---
 def render_v101_insights():
-    st.markdown("### 🧠 Sayar Gyi's Strategic Intelligence (Restored v101)")
+    st.markdown("### 🧠 Sayar Gyi's Strategic Intelligence")
     
-    # Category 1
-    st.markdown("""<div class="v101-card">
-        <div class="v101-header">🖋️ Content & AEO Strategy</div>
-        <p style="color:#adbac7;">
-            <b>အခြေအနေ:</b> SEO ထက် Answer Engine Optimization (AEO) က ပိုအရေးကြီးလာသည်။ <br>
-            <b>Business Impact:</b> AI က ကိုယ့် Brand အကြောင်းကို ရှင်းပြနိုင်ဖို့ 'Source' ကောင်းဖို့လိုသည်။
-        </p>
-    </div>""", unsafe_allow_html=True)
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("""<div class="v101-card">
+            <div class="v101-header">🖋️ Content & AEO Mastery</div>
+            <p style="color:#adbac7;">
+                <b>Focus:</b> Google Link ထက် AI Answer ထဲ ပါဝင်လာရန် (AEO) လုပ်ဆောင်ပါ။ <br>
+                <b>Strategic Tip:</b> Q&A Style Content များက AI Citation ရရန် အခွင့်အလမ်း အများဆုံးဖြစ်သည်။
+            </p>
+        </div>""", unsafe_allow_html=True)
 
-    # Category 2
-    st.markdown("""<div class="v101-card" style="border-left-color: #f85149;">
-        <div class="v101-header">🎯 Media Buying: Creative-Led Signals</div>
-        <p style="color:#adbac7;">
-            <b>အခြေအနေ:</b> Targeting ကို AI က အကုန်လုပ်ပေးမည်။ <br>
-            <b>Business Impact:</b> Creative အရည်အသွေးကသာ ရလဒ်ကို အဆုံးအဖြတ်ပေးမည်။
-        </p>
-    </div>""", unsafe_allow_html=True)
+    with col2:
+        st.markdown("""<div class="v101-card" style="border-left-color: #f85149;">
+            <div class="v101-header">🎯 Media Buying: High-Signal Data</div>
+            <p style="color:#adbac7;">
+                <b>Focus:</b> Targeting ထက် Creative ကောင်းမွန်မှုကို ဦးစားပေးပါ။ <br>
+                <b>Strategic Tip:</b> Customer Data အမှန်များကို AI ဆီ ကျွေးခြင်းဖြင့် Ad ROI ၂ ဆ တက်နိုင်သည်။
+            </p>
+        </div>""", unsafe_allow_html=True)
 
-# --- 4. THE CLEAN REPORT (v101 RESTORED) ---
+# --- 4. THE CLEAN REPORT (v101 QUALITY) ---
 def render_v101_report():
     today = datetime.now().strftime("%d-%m-%Y")
-    report_content = f"""
+    report_text = f"""
     SAYAR GYI EXECUTIVE WEEKLY REPORT
     ----------------------------------
-    ရက်စွဲ - {today}
+    Report ID: SG-2026-FEB-01
+    ရက်စွဲ: {today}
 
-    [၁] ဗျူဟာမြောက် အနှစ်ချုပ်
-    - AI Search စနစ်များသို့ ကူးပြောင်းရန် ပြင်ဆင်ပါ။
-    - Creative Testing ကို အဓိကထား လုပ်ဆောင်ပါ။
+    ၁။ အဓိက ဗျူဟာမြောက် အနှစ်ချုပ်
+    - AI Search စနစ်များ၏ အပြောင်းအလဲကို စောင့်ကြည့်ရန်။
+    - Video Creative Testing (Hooks) များကို အားဖြည့်ရန်။
 
-    [၂] လုပ်ဆောင်ရန် အကြံပြုချက်များ
-    - Video hooks များကို ၂ စက္ကန့်အတွင်း ပြောင်းလဲပါ။
-    - Telegram/Viber Private Communities တည်ဆောက်ပါ။
-    
-    [၃] နည်းပညာ သတိပေးချက်
-    - First-party Data စုဆောင်းမှုကို အားဖြည့်ပါ။
+    ၂။ လုပ်ဆောင်ရန် ညွှန်ကြားချက်များ (Direct Commands)
+    - ၎င်းသတင်းများအပေါ် အခြေခံ၍ AEO Content (၃) ပုဒ် အမြန်ဆုံး စတင်ပါ။
+    - Telegram Community ကို High-value Leads များအတွက် အရန်သင့်ပြင်ပါ။
+
+    ၃။ ဆရာကြီး၏ အထူးသတိပေးချက်
+    - ပမာဏထက် အရည်အသွေး (Quality over Quantity) ကို ဦးစားပေးပါ။
     """
-    st.markdown(f'<div class="v101-report-box"><pre style="color:#adbac7; white-space: pre-wrap;">{report_content}</pre></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="v101-report-box"><pre style="color:#adbac7; white-space: pre-wrap; font-family: sans-serif;">{report_text}</pre></div>', unsafe_allow_html=True)
 
 # --- 5. EXECUTION ---
 def main():
-    apply_v103_styles()
-    render_ai_assistant()
+    apply_v104_styles()
+    render_robot_assistant()
     
     tab_global, tab_local, tab_insight, tab_report = st.tabs([
         "🌐 Global News", "🇲🇲 Local Pulse", "🧠 Deep Insights", "📄 Weekly Report"
