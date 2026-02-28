@@ -1,102 +1,114 @@
 import streamlit as st
 import pandas as pd
+from datetime import datetime
 
-# --- 1. GLOBAL SETTINGS & CSS ---
-st.set_page_config(layout="wide", page_title="SAYAR GYI v98.0")
+# --- 1. GLOBAL SETTINGS & STYLES ---
+st.set_page_config(layout="wide", page_title="SAYAR GYI v99.0")
 
-def apply_v98_styles():
+def apply_v99_styles():
     st.markdown("""
         <style>
         .block-container { padding-top: 1.5rem; max-width: 96%; }
-        .news-card-v98 { background: #0d1117; border: 1px solid #30363d; border-radius: 12px; margin-bottom: 20px; overflow: hidden; }
-        .burmese-summary { background: #161b22; padding: 12px; border-radius: 8px; font-size: 13px; margin-top: 10px; border-left: 3px solid #58a6ff; }
-        .impact-badge { background: #238636; color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; }
-        
-        /* Styled Table for Ranking */
-        .rank-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #0d1117; border-radius: 10px; overflow: hidden; }
-        .rank-table th { background: #161b22; color: #58a6ff; text-align: left; padding: 15px; border-bottom: 2px solid #30363d; }
-        .rank-table td { padding: 15px; border-bottom: 1px solid #21262d; color: #adbac7; font-size: 13px; }
-        .rank-id { font-weight: 800; color: #58a6ff; }
+        .insight-card {
+            background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid #334155; border-radius: 15px; padding: 25px; margin-bottom: 20px;
+        }
+        .insight-title { color: #38bdf8; font-size: 20px; font-weight: bold; margin-bottom: 10px; }
+        .impact-high { color: #f43f5e; font-weight: bold; }
+        .report-box {
+            background: #ffffff; color: #1e293b; padding: 40px; border-radius: 5px;
+            font-family: 'Courier New', Courier, monospace; line-height: 1.6;
+        }
+        .verified-pill { background: #064e3b; color: #34d399; padding: 2px 10px; border-radius: 20px; font-size: 10px; }
         </style>
     """, unsafe_allow_html=True)
 
-# --- 2. DATA ENGINE ---
-def render_ranking_table(data_list, is_local=False):
-    tbl_html = """<table class="rank-table">
-        <thead><tr><th>Rank</th><th>Topic / Source</th><th>Summary</th><th>Impact</th></tr></thead><tbody>"""
-    for item in data_list:
-        source_icon = "🔵 FB" if "facebook.com" in item['link'] else "🌐 Web"
-        summary_text = item['mm_summary']
-        tbl_html += f"""<tr>
-            <td class="rank-id">{item['rank']}</td>
-            <td><b>{item['topic']}</b><br><a href="{item['link']}" target="_blank" style="color:#58a6ff; text-decoration:none; font-size:11px;">{source_icon} Link 🔗</a></td>
-            <td>{summary_text}</td>
-            <td><span class="impact-badge">{item['impact']}</span></td>
-        </tr>"""
-    tbl_html += "</tbody></table>"
-    st.markdown(tbl_html, unsafe_allow_html=True)
+# --- 2. DATA CONSTANTS (FEB 2026) ---
+GLOBAL_NEWS = [
+    {"rank": "#1", "topic": "Agentic Commerce Shift", "link": "https://openai.com", "mm_summary": "AI Agent များက လူသားကိုယ်စား ဈေးဝယ်ဆုံးဖြတ်ချက်ချပေးလာခြင်း။", "impact": "98%"},
+    {"rank": "#2", "topic": "AEO (Answer Engine Optimization)", "link": "https://google.com", "mm_summary": "Search Engine ထက် AI Answer Engine များတွင် ကိုယ့်လုပ်ငန်းပေါ်အောင်လုပ်ရမည့်စနစ်။", "impact": "95%"}
+]
 
-# --- 3. INTERFACE ---
-def render_hub():
-    st.markdown('<h1 style="font-weight:900;">Intelligence Hub v98.0</h1>', unsafe_allow_html=True)
+LOCAL_NEWS = [
+    {"rank": "#1", "topic": "Telegram Commerce Growth", "link": "https://facebook.com/mm_biz", "mm_summary": "FB ကန့်သတ်ချက်များကြောင့် Telegram Community Marketing အားကောင်းလာခြင်း။", "impact": "97%"},
+    {"rank": "#2", "topic": "Reali-Tea Content Trend", "link": "https://facebook.com/agency_mm", "mm_summary": "အရမ်း Polished ဖြစ်သော Ads များထက် ရိုးရှင်းသော Behind-the-scenes များကို မြန်မာများ ပိုယုံကြည်ခြင်း။", "impact": "92%"}
+]
+
+# --- 3. REPORT GENERATOR LOGIC ---
+def generate_weekly_report():
+    report_date = datetime.now().strftime("%d %B %Y")
+    report_text = f"""
+    SAYAR GYI EXECUTIVE WEEKLY REPORT
+    Date: {report_date}
+    --------------------------------------------------
+    1. GLOBAL MARKET STATUS
+    - Most Critical: {GLOBAL_NEWS[0]['topic']} (Impact: {GLOBAL_NEWS[0]['impact']})
+    - Trend: Moving from Search to Agentic Intent.
     
-    tab_global, tab_local = st.tabs(["🌐 Global Market Pulse", "🇲🇲 Myanmar Local Pulse"])
+    2. MYANMAR LOCAL STATUS
+    - Key Platform: Telegram & Facebook (Hybrid Mode)
+    - Consumer Behavior: High trust in 'Authentic' content.
+    
+    3. SAYAR GYI'S STRATEGIC COMMANDS
+    - Transition to Answer Engine Optimization (AEO).
+    - Build Private Communities on Telegram as a backup.
+    - Leverage Human-Centric storytelling to counter 'AI Slop' fatigue.
+    
+    Verified by Sayar Gyi AI Logic Engine v99.0
+    --------------------------------------------------
+    """
+    return report_text
 
-    # --- TAB 1: GLOBAL PULSE ---
-    with tab_global:
-        st.markdown("### 🔥 High-Impact Global Highlights")
-        g1, g2, g3 = st.columns(3)
-        # (Top 3 Cards as per v97 style with Hyperlinks)
-        global_top = [
-            {"title": "OpenAI SearchGPT Ads 🔗", "url": "https://openai.com", "img": "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400", "mm": "Conversational SEO ပြောင်းလဲလာမှု။"},
-            {"title": "Meta Andromeda Update 🔗", "url": "https://about.fb.com", "img": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400", "mm": "Dwell time rank ပေးသည့် စနစ်သစ်။"},
-            {"title": "TikTok Discovery 2.0 🔗", "url": "https://newsroom.tiktok.com", "img": "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400", "mm": "Search-based discovery အားကောင်းလာမှု။"}
-        ]
-        cols = [g1, g2, g3]
-        for i, news in enumerate(global_top):
-            with cols[i]:
-                st.markdown(f"""<div class="news-card-v98"><img src="{news['img']}" style="width:100%; height:140px; object-fit:cover;">
-                <div style="padding:15px;"><a href="{news['url']}" target="_blank" style="color:white; text-decoration:none; font-weight:bold;">{news['title']}</a>
-                <div class="burmese-summary">🇲🇲 {news['mm']}</div></div></div>""", unsafe_allow_html=True)
+# --- 4. INTERFACE ---
+def render_dashboard():
+    st.markdown('<h1 style="font-weight:900; color:#f8fafc;">Sayar Gyi Intelligence Suite <span style="font-size:18px; color:#64748b;">v99.0</span></h1>', unsafe_allow_html=True)
+    
+    tab1, tab2, tab3, tab4 = st.tabs([
+        "🌐 Global Pulse", 
+        "🇲🇲 Local Pulse", 
+        "🧠 Sayar Gyi's Insight", 
+        "📄 Weekly Report"
+    ])
+
+    with tab1:
+        st.subheader("Global Strategic Topics")
+        st.table(pd.DataFrame(GLOBAL_NEWS))
+
+    with tab2:
+        st.subheader("Myanmar Verified Trends")
+        st.table(pd.DataFrame(LOCAL_NEWS))
+
+    with tab3:
+        st.markdown("### 🧠 Sayar Gyi's Professional Insight (Feb 2026)")
         
-        st.divider()
-        st.markdown("### 📊 Top 5 Related Global Topics (Translated)")
-        global_related = [
-            {"rank": "#1", "topic": "Agentic Commerce", "link": "https://techcrunch.com", "mm_summary": "AI က စျေးဝယ်သူကိုယ်စား ဆုံးဖြတ်ချက်ချပေးသည့် စနစ်သစ်။", "impact": "98%"},
-            {"rank": "#2", "topic": "SLM Optimization", "link": "https://openai.com", "mm_summary": "ကုန်ကျစရိတ်သက်သာသော AI Model ငယ်များ လုပ်ငန်းသုံးလာခြင်း။", "impact": "92%"},
-            {"rank": "#3", "topic": "Voice-First SEO", "link": "https://searchengineland.com", "mm_summary": "စကားပြောရှာဖွေမှုအတွက် Keyword Strategy ပြောင်းလဲခြင်း။", "impact": "89%"},
-            {"rank": "#4", "topic": "Ethical AI Policy", "link": "https://reuters.com", "mm_summary": "AI Content များကို အမှတ်အသားပြုလုပ်ရန် ဥပဒေသစ်များ။", "impact": "85%"},
-            {"rank": "#5", "topic": "Video Personalization", "link": "https://meta.com", "mm_summary": "User တစ်ဦးချင်းစီအတွက် AI က Video ဖန်တီးပေးသည့် နည်းပညာ။", "impact": "82%"}
-        ]
-        render_ranking_table(global_related)
+        c1, c2 = st.columns(2)
+        with c1:
+            st.markdown(f"""
+                <div class="insight-card">
+                    <div class="insight-title">၁။ AI-Centric Operations သို့ ကူးပြောင်းခြင်း</div>
+                    <p style="font-size:14px; color:#cbd5e1;"><b>Business Impact:</b> အခု ၂၀၂၆ မှာ AI က Tool တစ်ခုမဟုတ်တော့ဘဲ အခြေခံအဆောက်အအုံ ဖြစ်သွားပါပြီ။ မူလက လုပ်ငန်းစဉ်တွေကို AI နဲ့ အစားထိုးတာထက် (Optimization)၊ လုပ်ငန်းစဉ်တစ်ခုလုံးကို AI နဲ့ပဲ စတင်တည်ဆောက်တာ (Process Design) က ပိုပြီး ROI တက်စေပါတယ်။</p>
+                    <span class="impact-high">Critical Action:</span> ဝန်ထမ်းတွေကို AI သုံးတတ်အောင်တင်မကဘဲ AI Agents တွေကို စီမံခန့်ခွဲတတ်တဲ့ Manager တွေဖြစ်လာအောင် လေ့ကျင့်ပေးရပါမယ်။
+                </div>
+            """, unsafe_allow_html=True)
+            
+        with c2:
+            st.markdown(f"""
+                <div class="insight-card">
+                    <div class="insight-title">၂။ Human-Led Marketing as a Differentiator</div>
+                    <p style="font-size:14px; color:#cbd5e1;"><b>Market Shift:</b> AI က Content တွေ အမြောက်အမြား ထုတ်ပေးနိုင်လာတဲ့အခါ လူတွေက "AI Slop" (အနှစ်မပါတဲ့ AI စာသားတွေ) ကို ငြီးငွေ့လာကြပါတယ်။ ဒီနေရာမှာ ကိုယ့် Brand ရဲ့ <b>Distinctive POV</b> (ထူးခြားတဲ့ အမြင်) နဲ့ <b>Empathy</b> (စာနာနားလည်မှု) ကသာ ပြိုင်ဘက်ထက် သာလွန်စေမှာပါ။</p>
+                    <span class="impact-high">Strategic Command:</span> Video တွေမှာ အရမ်းကြီး Perfect ဖြစ်နေတာထက် "ရိုးသားမှု" ကို ဦးစားပေးပါ။ မြန်မာပြည်အတွက် 'Authentic Behind-the-scenes' က အထိရောက်ဆုံးပါ။
+                </div>
+            """, unsafe_allow_html=True)
 
-    # --- TAB 2: MYANMAR LOCAL PULSE ---
-    with tab_local:
-        st.markdown("### 🇲🇲 Myanmar Verified High-Impact")
-        l1, l2, l3 = st.columns(3)
-        local_top = [
-            {"title": "Reali-Tea Trend 🔗", "url": "https://facebook.com/marketing_news_mm", "img": "https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=400", "mm": "Authentic content များက Engagement ပိုရနေသည်။"},
-            {"title": "Telegram Shift 🔗", "url": "https://facebook.com/tech_mm", "img": "https://images.unsplash.com/photo-1611606063065-ee7946f0787a?w=400", "mm": "လုပ်ငန်းများ Telegram Community သို့ ပြောင်းရွှေ့လာခြင်း။"},
-            {"title": "AI Burmese Voice 🔗", "url": "https://ai_myanmar_web.com", "img": "https://images.unsplash.com/photo-1589254065878-42c9da997008?w=400", "mm": "မြန်မာသံဖြင့် AI နောက်ခံစကားပြောစနစ် ခေတ်စားလာခြင်း။"}
-        ]
-        l_cols = [l1, l2, l3]
-        for i, news in enumerate(local_top):
-            with l_cols[i]:
-                st.markdown(f"""<div class="news-card-v98"><img src="{news['img']}" style="width:100%; height:140px; object-fit:cover;">
-                <div style="padding:15px;"><a href="{news['url']}" target="_blank" style="color:white; text-decoration:none; font-weight:bold;">{news['title']}</a>
-                <div class="burmese-summary">🇲🇲 {news['mm']}</div></div></div>""", unsafe_allow_html=True)
-
-        st.divider()
-        st.markdown("### 🏆 Top 5 Ranked Myanmar Topics (Verified)")
-        local_related = [
-            {"rank": "#1", "topic": "FB Marketplace Shift", "link": "https://facebook.com/groups/mm_business", "mm_summary": "Facebook Marketplace Algorithm အပြောင်းအလဲနှင့် ရောင်းသူများ၏ ပြင်ဆင်မှု။", "impact": "97%"},
-            {"rank": "#2", "topic": "Kpay Integration Trends", "link": "https://mm_biz_web.com/fintech", "mm_summary": "Digital Payment များ Content ထဲတွင် တိုက်ရိုက်ချိတ်ဆက်လာမှု။", "impact": "94%"},
-            {"rank": "#3", "topic": "Local Influencer ROI", "link": "https://facebook.com/agency_insight_mm", "mm_summary": "မြန်မာ Influencer များ၏ တကယ့် ROI ကို AI ဖြင့် တွက်ချက်ပြသခြင်း။", "impact": "90%"},
-            {"rank": "#4", "topic": "Content Copyright MM", "link": "https://law_mm_web.org", "mm_summary": "မြန်မာပြည်တွင်း Content ခိုးယူမှုများအတွက် ဥပဒေပိုင်းဆိုင်ရာ သတိပေးချက်များ။", "impact": "88%"},
-            {"rank": "#5", "topic": "Messenger Bot 2026", "link": "https://facebook.com/bot_strategy_mm", "mm_summary": "အလိုအလျောက်ပြန်ကြားပေးသည့် AI Bot များ ပိုမိုတွင်ကျယ်လာခြင်း။", "impact": "85%"}
-        ]
-        render_ranking_table(local_related, is_local=True)
+    with tab4:
+        st.markdown("### 📄 Weekly Executive Report Generator")
+        st.info("အပတ်စဉ် အချက်အလက်များကို စုစည်းပြီး အောက်ပါခလုတ်ကို နှိပ်၍ Report ထုတ်ယူနိုင်ပါသည်။")
+        
+        if st.button("Generate & Preview Report"):
+            report_content = generate_weekly_report()
+            st.markdown(f'<div class="report-box"><pre>{report_content}</pre></div>', unsafe_allow_html=True)
+            st.download_button(label="Download Full Report (TXT)", data=report_content, file_name=f"SayarGyi_Report_{datetime.now().strftime('%Y%m%d')}.txt")
 
 if __name__ == "__main__":
-    apply_v98_styles()
-    render_hub()
+    apply_v99_styles()
+    render_dashboard()
