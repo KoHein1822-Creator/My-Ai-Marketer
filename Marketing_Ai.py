@@ -96,4 +96,15 @@ def main():
         with col1:
             st.markdown('<div class="v101-card"><div class="v101-header">🖋️ Content & AEO Mastery</div><p>AI Answers မှာ နေရာရဖို့ Q&A Content တွေ ပြင်ဆင်ပါ။</p></div>', unsafe_allow_html=True)
         with col2:
-            st.markdown('<div class="v101-card" style="border-left-color:#f85149;"><div class="v101-header">🎯 Media Buying: Signals</div><p>Creative အရည်အသွေးနဲ့ Signal Data ကို ဦးစားပေးပါ။</p></div>', unsafe_allow_html
+            st.markdown('<div class="v101-card" style="border-left-color:#f85149;"><div class="v101-header">🎯 Media Buying: Signals</div><p>Creative အရည်အသွေးနဲ့ Signal Data ကို ဦးစားပေးပါ။</p></div>', unsafe_allow_html=True)
+
+    with tabs[3]:
+        st.markdown('<div class="v101-report-box">Weekly Report Summary: v101 Design Restored.</div>', unsafe_allow_html=True)
+
+    # --- THE FLOATING ROBOT TRIGGER ---
+    # CSS က ဒီ Button ကို ဖမ်းပြီး ညာဘက်အောက်ခြေမှာ 🤖 အနေနဲ့ ပြပေးမှာပါ။
+    if st.button("AI", key="robot_trigger_btn"):
+        open_ai_dialog()
+
+if __name__ == "__main__":
+    main()
