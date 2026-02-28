@@ -2,119 +2,155 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 
-# --- 1. SETTINGS & CSS ---
-st.set_page_config(layout="wide", page_title="SAYAR GYI v101.0")
+# --- 1. PREMIUM STYLES & LAYOUT ---
+st.set_page_config(layout="wide", page_title="SAYAR GYI v102.0")
 
-def apply_master_styles():
+def apply_v102_styles():
     st.markdown("""
         <style>
         .block-container { padding-top: 1.5rem; max-width: 96%; }
-        .perspective-card {
+        
+        /* Insight Card Styling */
+        .insight-card {
             background: #0d1117; border: 1px solid #30363d; border-radius: 12px;
-            padding: 25px; margin-bottom: 25px; border-left: 5px solid #58a6ff;
+            padding: 25px; margin-bottom: 20px; border-top: 5px solid #58a6ff;
         }
-        .perspective-header { color: #58a6ff; font-weight: 900; font-size: 22px; margin-bottom: 15px; border-bottom: 1px solid #30363d; padding-bottom: 10px; }
-        .action-point { background: rgba(56, 189, 248, 0.1); border-radius: 8px; padding: 15px; margin-top: 15px; border: 1px dashed #38bdf8; }
-        .report-paper {
-            background: #ffffff; color: #1e293b; padding: 60px; border-radius: 4px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4); line-height: 1.8; font-family: 'Pyidaungsu', 'Segoe UI', serif;
+        .insight-header { color: #58a6ff; font-weight: 800; font-size: 20px; margin-bottom: 12px; }
+        
+        /* Deep Dive Box (Detailed Mode) */
+        .deep-dive-box {
+            background: rgba(88, 166, 255, 0.05); border: 1px dashed #58a6ff;
+            padding: 20px; border-radius: 10px; margin-top: 15px; font-size: 14px; color: #adbac7;
         }
-        .highlight-red { color: #f85149; font-weight: bold; }
+
+        /* Executive Report Visual Style */
+        .executive-report {
+            background: #ffffff; color: #1e293b; padding: 60px; border-radius: 8px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3); border-top: 10px solid #1e293b;
+            font-family: 'Inter', 'Pyidaungsu', sans-serif; max-width: 900px; margin: auto;
+        }
+        .report-header { border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 30px; text-align: center; }
+        .report-section-title { color: #1e40af; border-left: 5px solid #1e40af; padding-left: 15px; font-weight: bold; margin-top: 25px; margin-bottom: 15px; font-size: 18px; }
+        .action-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .action-table th { background: #f8fafc; text-align: left; padding: 10px; border: 1px solid #e2e8f0; }
+        .action-table td { padding: 10px; border: 1px solid #e2e8f0; font-size: 14px; }
         </style>
     """, unsafe_allow_html=True)
 
-# --- 2. THE DEEP INSIGHT ENGINE ---
-def render_deep_insights():
-    st.markdown("### 🧠 Sayar Gyi's Strategic Intelligence (February 2026 Edition)")
-    st.info("Industry အပြောင်းအလဲများအပေါ် အခြေခံထားသော အသေးစိတ် ဗျူဟာမြောက် သုံးသပ်ချက်များ")
-
-    # PERSPECTIVE 1: CONTENT & AEO
-    st.markdown("""<div class="perspective-card">
-        <div class="perspective-header">🖋️ Content Strategy: From SEO to AEO (Answer Engine Optimization)</div>
-        <p style="color:#adbac7;">
-            <b>အခြေအနေ:</b> ၂၀၂၆ မှာ Google Search ထက် SearchGPT နဲ့ Gemini တို့လို Answer Engines တွေက နေရာယူလာပါပြီ။ User တွေက Website ထဲကို ဝင်မကြည့်တော့ဘဲ AI ရဲ့ အဖြေကိုပဲ တိုက်ရိုက်ဖတ်တော့မှာပါ။<br><br>
-            <b>Business Impact:</b> ကိုယ့်ရဲ့ Content တွေဟာ 'Keywords' ပေါ်မှာ အခြေမခံဘဲ AI က 'နားလည်နိုင်တဲ့' <b>Structured Data</b> ဖြစ်ဖို့ လိုပါတယ်။ Generic ဆန်တဲ့ AI Content တွေဟာ Algorithm ရဲ့ ဒဏ်ခတ်မှုကို ခံရပါလိမ့်မယ်။
-        </p>
-        <div class="action-point">
-            <b>💡 CEO လုပ်ဆောင်ရန်:</b> ကိုယ့်လုပ်ငန်းရဲ့ Expert Opinion ပါတဲ့ Case Studies တွေကို အားဖြည့်ပါ။ AI က မပေးနိုင်တဲ့ 'ကိုယ်တွေ့ အတွေ့အကြုံ' (First-hand Experience) ကသာ ၂၀၂၆ ရဲ့ အဖိုးတန်ဆုံး Content ဖြစ်ပါတယ်။
-        </div>
-    </div>""", unsafe_allow_html=True)
-
-    # PERSPECTIVE 2: MEDIA BUYING & AI SIGNALS
-    st.markdown("""<div class="perspective-card" style="border-left-color: #f85149;">
-        <div class="perspective-header">🎯 Media Buying: The Creative-Led AI Era</div>
-        <p style="color:#adbac7;">
-            <b>အခြေအနေ:</b> Facebook နဲ့ Google တို့ရဲ့ Targeting စနစ်တွေက 'Black-box' ဖြစ်သွားပါပြီ။ လူကိုယ်တိုင် Audience ရွေးစရာမလိုဘဲ AI ကပဲ အကုန်လုပ်ပေးနေတာပါ။ <br><br>
-            <b>Business Impact:</b> အခုခေတ်မှာ Target ရွေးတာထက် <b>'Creative Quality'</b> က ပိုအရေးကြီးလာပါတယ်။ Creative မကောင်းရင် AI က Target မှားရှာပေးတတ်ပါတယ်။
-        </p>
-        <div class="action-point">
-            <b>💡 CEO လုပ်ဆောင်ရန်:</b> Media Buying Budget ရဲ့ ၄၀% ကို Creative Testing (Video variations များများစမ်းခြင်း) မှာ သုံးခိုင်းပါ။ Targeting ထက် Hook နဲ့ Visual အပေါ်မှာပဲ အာရုံစိုက်ခိုင်းပါ။
-        </div>
-    </div>""", unsafe_allow_html=True)
-
-    # PERSPECTIVE 3: COMMUNITY & BRAND SAFETY
-    st.markdown("""<div class="perspective-card" style="border-left-color: #d2a8ff;">
-        <div class="perspective-header">📱 Social & Community: Digital Resilience</div>
-        <p style="color:#adbac7;">
-            <b>အခြေအနေ:</b> မြန်မာပြည်မှာ Facebook ရဲ့ Reach က ပိုပြီးခန့်မှန်းရခက်လာပါတယ်။ Algorithm က User တွေရဲ့ <b>'Dwell Time'</b> (တစ်နေရာတည်းမှာ ကြာကြာနေမှု) ကိုပဲ ဦးစားပေးနေပါတယ်။ <br><br>
-            <b>Business Impact:</b> Facebook ပေါ်မှာပဲ ပုံအောထားရင် လုပ်ငန်းက အန္တရာယ်ရှိပါတယ်။ Community ကို ပိုင်ဆိုင်ဖို့ (Own your audience) လိုအပ်ပါတယ်။
-        </p>
-        <div class="action-point">
-            <b>💡 CEO လုပ်ဆောင်ရန်:</b> Telegram နှင့် Viber Community ကို 'VIP Loyalty Space' အဖြစ် အမြန်ဆုံး အကောင်အထည်ဖော်ပါ။ Facebook သည် 'Traffic' အတွက်သာဖြစ်ပြီး Community သည် 'Sales' အတွက်ဖြစ်ရပါမည်။
-        </div>
-    </div>""", unsafe_allow_html=True)
-
-# --- 3. PROFESSIONAL BURMESE REPORT ---
-def generate_master_report():
-    today = datetime.now().strftime("%d-%m-%Y")
-    return f"""
-    SAYAR GYI EXECUTIVE WEEKLY REPORT
-    (လျှို့ဝှက် - အမှုဆောင်အဆင့်သာ ကြည့်ရှုရန်)
-    ထုတ်ပြန်သည့်ရက်စွဲ - {today}
-
-    ၁။ လုပ်ငန်းအနှစ်ချုပ် (WEEKLY SUMMARY)
-    ယခုအပတ်တွင် ကမ္ဘာ့အဆင့်တွင် Agentic Commerce (AI က လူကိုယ်စား ဝယ်ယူပေးခြင်း) စနစ် အားကောင်းလာပြီး၊ 
-    ပြည်တွင်းတွင် 'Authentic Human Content' ကိုသာ ပိုမိုယုံကြည်သည့် Digital Fatigue လက္ခဏာများ တွေ့ရပါသည်။
-
-    ၂။ ဗျူဟာမြောက် သုံးသပ်ချက် (STRATEGIC INSIGHTS)
-
-    [Content Marketing]
-    AI က ရေးထားသည့် Generic စာသားများကို ရှောင်ကြဉ်ပါ။ ၂၀၂၆ တွင် AI သည် Answer Engine Optimization (AEO) သို့ 
-    ကူးပြောင်းနေပြီဖြစ်ရာ၊ တိကျသော အချက်အလက်နှင့် ခိုင်မာသော ကိုးကားချက်များပါသည့် Content Ecosystem ကို တည်ဆောက်ရန် လိုအပ်ပါသည်။
-
-    [Media Buying & ROI]
-    Manual Targeting ထက် Creative Testing ကို အလေးထားပါ။ Signal Data (Customer အချက်အလက်) များအား 
-    စနစ်တကျစုဆောင်းပြီး AI Ad Tools များသို့ ကျွေးပေးခြင်းဖြင့် ပြိုင်ဘက်ထက် သာလွန်သော ROI ကို ရရှိစေပါမည်။
-
-    [Social & Resilience]
-    Facebook Reach ကျဆင်းမှုသည် အမြဲတမ်းဖြစ်စဉ် ဖြစ်လာပါသည်။ ကိုယ်ပိုင် Telegram/Viber Channel များမှတစ်ဆင့် 
-    Direct-to-Consumer (D2C) ဆက်ဆံရေးကို အားဖြည့်ရန် ညွှန်ကြားလိုပါသည်။
-
-    ၃။ ဆောင်ရွက်ရန် အကြံပြုချက် (RECOMMENDED ACTIONS)
-    - SEO Strategy ကို 'Answer Engine-friendly' ဖြစ်အောင် ပြန်လည်စစ်ဆေးပါ။
-    - Video Content များတွင် ၂ စက္ကန့်အတွင်း User ကို ဖမ်းစားနိုင်မည့် 'Hook' ၃ မျိုးထက်မနည်း စမ်းသပ်ပါ။
-    - CRM Data (First-party Data) စုဆောင်းမှုကို ဦးစားပေးလုပ်ဆောင်ပါ။
-
-    SAYAR GYI AI STRATEGY ENGINE (v101.0)
-    ----------------------------------------------------------------------
-    """
-
-# --- 4. MAIN INTERFACE ---
-def render_main():
-    st.markdown('<h1 style="font-weight:900;">Sayar Gyi Mastermind Suite</h1>', unsafe_allow_html=True)
+# --- 2. THE INTELLIGENT INSIGHT ENGINE ---
+def render_insight_hub():
+    st.markdown("### 🧠 Sayar Gyi's Strategic Insights")
+    st.caption("Detailed Mode ကိုနှိပ်၍ နည်းပညာပိုင်းဆိုင်ရာ အကျယ်တဝင့် လေ့လာနိုင်ပါသည်။")
     
-    t1, t2, t3, t4 = st.tabs(["🌐 Global News", "🇲🇲 Local Pulse", "🧠 Deep Insights", "📄 Weekly Report"])
+    col1, col2 = st.columns(2)
 
-    with t3:
-        render_deep_insights()
+    with col1:
+        # Perspective: AEO
+        with st.container():
+            st.markdown("""<div class="insight-card">
+                <div class="insight-header">🖋️ Content Strategy: The AEO Shift</div>
+                <p style="color:#adbac7;">Search Engine Optimization မှ <b>Answer Engine Optimization (AEO)</b> သို့ ကူးပြောင်းခြင်း။</p>
+                <p style="font-size:13px; color:#8b949e;"><b>Impact:</b> User များသည် Google Link များအစား AI ၏ အဖြေကိုသာ တိုက်ရိုက်ဖတ်တော့မည်။</p>
+            </div>""", unsafe_allow_html=True)
+            with st.expander("🔍 Detailed Explanation Mode (အကျယ်တဝင့်ရှင်းပြချက်)"):
+                st.markdown("""
+                <div class="deep-dive-box">
+                    <b>ဘာကြောင့် ဒါက အရေးကြီးတာလဲ?</b><br>
+                    AI Answer Engines (ChatGPT, Perplexity) တွေက ကိုယ့် Website ထဲက အချက်အလက်တွေကို ဆွဲယူပြီး အဖြေထုတ်ပေးတာပါ။ 
+                    အကယ်၍ ကိုယ့် Content က 'Structured' မဖြစ်ရင် AI က ကိုယ့် Brand အကြောင်းကို ချန်လှပ်ထားခဲ့ပါလိမ့်မယ်။<br><br>
+                    <b>ဘယ်လိုပြင်ဆင်မလဲ?</b><br>
+                    ၁။ Content တွေကို Q&A ပုံစံ (မေးခွန်းနှင့်အဖြေ) များများရေးပါ။<br>
+                    ၂။ Schema Markup လို့ခေါ်တဲ့ နည်းပညာပိုင်းဆိုင်ရာ အချက်အလက်တွေကို Website ထဲမှာ ထည့်သွင်းပါ။<br>
+                    ၃။ AI က ကိုးကားလို့ရမယ့် ခိုင်မာတဲ့ အချက်အလက် (Statistics) တွေ ပါဝင်ပါစေ။
+                </div>
+                """, unsafe_allow_html=True)
 
-    with t4:
-        st.markdown("### 📄 Professional Weekly Report (Burmese)")
-        if st.button("Generate & Preview Executive Report"):
-            report = generate_master_report()
-            st.markdown(f'<div class="report-paper"><pre style="white-space: pre-wrap; color:#1e293b; font-size:15px;">{report}</pre></div>', unsafe_allow_html=True)
-            st.download_button("Download Official Report", report, file_name=f"Executive_Report_{today}.txt")
+    with col2:
+        # Perspective: Media Buying
+        with st.container():
+            st.markdown("""<div class="insight-card" style="border-top-color: #f85149;">
+                <div class="perspective-title">🎯 Media Buying: Signal over Targeting</div>
+                <p style="color:#adbac7;">Targeting ရွေးချယ်ခြင်းထက် <b>Data Signals</b> ကျွေးခြင်းက ပိုမိုအရေးကြီးလာသည်။</p>
+                <p style="font-size:13px; color:#8b949e;"><b>Impact:</b> AI ကောင်းကောင်း အလုပ်လုပ်နိုင်ရန် Customer အမှန်များ၏ Data (Signals) လိုအပ်သည်။</p>
+            </div>""", unsafe_allow_html=True)
+            with st.expander("🔍 Detailed Explanation Mode (အကျယ်တဝင့်ရှင်းပြချက်)"):
+                st.markdown("""
+                <div class="deep-dive-box">
+                    <b>Targeting မလိုတော့ဘူးဆိုတာ ဟုတ်လား?</b><br>
+                    ဟုတ်ပါတယ်။ Meta ရဲ့ Advantage+ လိုစနစ်တွေမှာ လူကိုယ်တိုင် Target သွားရွေးတာထက် AI ကို လွှတ်ထားတာက ပိုထိရောက်ပါတယ်။ ဒါပေမယ့် AI က ဘယ်သူ့ကိုရှာရမလဲ သိဖို့အတွက် <b>'Signals'</b> လိုပါတယ်။<br><br>
+                    <b>CEO အနေနဲ့ ဘာကို စစ်ဆေးရမလဲ?</b><br>
+                    - Marketing Team က Website Pixel တွေ၊ API တွေ ကောင်းကောင်းတပ်ထားရဲ့လား?<br>
+                    - ကိုယ့်ဆီမှာရှိတဲ့ ဖောက်သည်ဖုန်းနံပါတ်စာရင်း (Offline Conversions) တွေကို AI ထဲ ပြန်ကျွေးနေရဲ့လား? ဆိုတာကို စစ်ဆေးရပါမယ်။
+                </div>
+                """, unsafe_allow_html=True)
+
+# --- 3. THE EXECUTIVE VISUAL REPORT ---
+def render_visual_report():
+    today = datetime.now().strftime("%d %B %Y")
+    
+    st.markdown(f"""
+    <div class="executive-report">
+        <div class="report-header">
+            <h1 style="margin:0; color:#1e293b;">EXECUTIVE INTELLIGENCE MEMO</h1>
+            <p style="color:#64748b; font-weight:bold;">CONFIDENTIAL | DATE: {today}</p>
+        </div>
+        
+        <div class="report-section-title">၁။ အမှုဆောင်အနှစ်ချုပ် (EXECUTIVE SUMMARY)</div>
+        <p>ယခုအပတ်အတွင်း AI နည်းပညာ၏ အပြောင်းအလဲများသည် Marketing ကဏ္ဍတွင် <b>Answer Engine Optimization</b> ကို မဖြစ်မနေ လုပ်ဆောင်ရန် တွန်းအားပေးနေပါသည်။ ပြည်တွင်း၌ <b>Digital Fatigue</b> ကြောင့် User များသည် ပုံသေကြော်ငြာများထက် ရိုးသားသော တင်ဆက်မှု (Authentic Content) ကို ပိုမိုတုံ့ပြန်လျက်ရှိသည်။</p>
+
+        <div class="report-section-title">၂။ ဗျူဟာမြောက် လုပ်ဆောင်ချက်များ (ACTION GRID)</div>
+        <table class="action-table">
+            <tr style="background:#f1f5f9;">
+                <th>Strategic Pillar</th>
+                <th>Priority Action</th>
+                <th>Expected Impact</th>
+            </tr>
+            <tr>
+                <td><b>Content</b></td>
+                <td>Transition to AEO (Q&A style)</td>
+                <td>Higher AI Citation</td>
+            </tr>
+            <tr>
+                <td><b>Media Buying</b></td>
+                <td>Signal Data Integration</td>
+                <td>30% Better Ad Efficiency</td>
+            </tr>
+            <tr>
+                <td><b>Community</b></td>
+                <td>Telegram/Viber VIP Group</td>
+                <td>Owned Audience Resilience</td>
+            </tr>
+        </table>
+
+        <div class="report-section-title">၃။ ဆရာကြီး၏ အကြံပြုချက် (SAYAR GYI'S COMMAND)</div>
+        <p style="background:#f0f9ff; padding:15px; border-radius:5px; border:1px solid #bae6fd;">
+            "နည်းပညာတွေ ဘယ်လောက်ပြောင်းပြောင်း လူသားတွေရဲ့ <b>ယုံကြည်မှု (Trust)</b> ကသာ အရောင်းကို အဆုံးအဖြတ်ပေးမှာပါ။ AI ကို အသုံးချပြီး အလုပ်လုပ်ပါ၊ ဒါပေမယ့် Content မှာတော့ လူသားဆန်တဲ့ စိတ်ခံစားမှုကို မပျောက်ပျက်ပါစေနဲ့။"
+        </p>
+        
+        <div style="margin-top:40px; text-align:right; color:#64748b; font-style:italic;">
+            <p>Certified by Sayar Gyi Strategy Engine v102.0</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Download functionality
+    st.write("")
+    st.download_button("📩 Download Professional Report (PDF/Print Ready)", "Report Content Placeholder", file_name="Executive_Report.txt")
+
+# --- 4. EXECUTION ---
+def main():
+    apply_v102_styles()
+    st.markdown('<h1 style="font-weight:900;">Sayar Gyi Intelligence Suite</h1>', unsafe_allow_html=True)
+    
+    tab_news, tab_local, tab_insight, tab_report = st.tabs([
+        "🌐 Global News", "🇲🇲 Local Pulse", "🧠 Sayar Gyi's Insight", "📄 Executive Report"
+    ])
+
+    with tab_insight:
+        render_insight_hub()
+    
+    with tab_report:
+        render_visual_report()
 
 if __name__ == "__main__":
-    apply_master_styles()
-    render_main()
+    main()
