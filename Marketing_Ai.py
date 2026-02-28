@@ -2,113 +2,115 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 
-# --- 1. GLOBAL SETTINGS & STYLES ---
-st.set_page_config(layout="wide", page_title="SAYAR GYI v99.0")
+# --- 1. SETTINGS & CSS ---
+st.set_page_config(layout="wide", page_title="SAYAR GYI v100.0")
 
-def apply_v99_styles():
+def apply_master_styles():
     st.markdown("""
         <style>
         .block-container { padding-top: 1.5rem; max-width: 96%; }
         .insight-card {
-            background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
-            border: 1px solid #334155; border-radius: 15px; padding: 25px; margin-bottom: 20px;
+            background: #0d1117; border: 1px solid #30363d; border-radius: 12px;
+            padding: 20px; height: 100%; border-top: 4px solid #58a6ff;
         }
-        .insight-title { color: #38bdf8; font-size: 20px; font-weight: bold; margin-bottom: 10px; }
-        .impact-high { color: #f43f5e; font-weight: bold; }
-        .report-box {
-            background: #ffffff; color: #1e293b; padding: 40px; border-radius: 5px;
-            font-family: 'Courier New', Courier, monospace; line-height: 1.6;
+        .perspective-title { color: #58a6ff; font-weight: 800; font-size: 18px; margin-bottom: 10px; text-transform: uppercase; }
+        .report-paper {
+            background: #ffffff; color: #1e293b; padding: 50px; border-radius: 2px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); line-height: 1.8; font-family: 'Pyidaungsu', serif;
         }
-        .verified-pill { background: #064e3b; color: #34d399; padding: 2px 10px; border-radius: 20px; font-size: 10px; }
+        .impact-tag { background: #238636; color: white; padding: 2px 8px; border-radius: 5px; font-size: 10px; }
         </style>
     """, unsafe_allow_html=True)
 
-# --- 2. DATA CONSTANTS (FEB 2026) ---
-GLOBAL_NEWS = [
-    {"rank": "#1", "topic": "Agentic Commerce Shift", "link": "https://openai.com", "mm_summary": "AI Agent များက လူသားကိုယ်စား ဈေးဝယ်ဆုံးဖြတ်ချက်ချပေးလာခြင်း။", "impact": "98%"},
-    {"rank": "#2", "topic": "AEO (Answer Engine Optimization)", "link": "https://google.com", "mm_summary": "Search Engine ထက် AI Answer Engine များတွင် ကိုယ့်လုပ်ငန်းပေါ်အောင်လုပ်ရမည့်စနစ်။", "impact": "95%"}
-]
+# --- 2. THE INSIGHT ENGINE (PERSPECTIVES) ---
+def render_sayar_gyi_insights():
+    st.markdown("### 🧠 Sayar Gyi's Multi-Perspective Analysis (Feb 2026)")
+    st.caption("AI & Industry အပြောင်းအလဲများက Marketing ကဏ္ဍအလိုက် သက်ရောက်မှုများ")
+    st.write("")
+    
+    row1_c1, row1_c2 = st.columns(2)
+    row2_c1, row2_c2 = st.columns(2)
+    
+    with row1_c1:
+        st.markdown("""<div class="insight-card">
+            <div class="perspective-title">🖋️ Content Marketing Perspective</div>
+            <p style="font-size:14px; color:#adbac7;">
+                <b>Impact:</b> AI ကြောင့် Content အမြောက်အမြား ထွက်လာသော်လည်း 2026 တွင် "AI Slop" ကို လူများငြီးငွေ့လာသည်။ <br><br>
+                <b>Strategy:</b> SearchGPT ကဲ့သို့ <b>Answer Engines</b> များတွင် ပါဝင်လာရန် Q&A-style content နှင့် Deep Insights များကို ဦးစားပေးပါ။ မြန်မာပြည်အတွက် 'Authentic Storytelling' က လူယုံကြည်မှု (Trust) ကို ရရှိစေမည့် တစ်ခုတည်းသော လမ်းစဖြစ်သည်။
+            </p>
+        </div>""", unsafe_allow_html=True)
 
-LOCAL_NEWS = [
-    {"rank": "#1", "topic": "Telegram Commerce Growth", "link": "https://facebook.com/mm_biz", "mm_summary": "FB ကန့်သတ်ချက်များကြောင့် Telegram Community Marketing အားကောင်းလာခြင်း။", "impact": "97%"},
-    {"rank": "#2", "topic": "Reali-Tea Content Trend", "link": "https://facebook.com/agency_mm", "mm_summary": "အရမ်း Polished ဖြစ်သော Ads များထက် ရိုးရှင်းသော Behind-the-scenes များကို မြန်မာများ ပိုယုံကြည်ခြင်း။", "impact": "92%"}
-]
+    with row1_c2:
+        st.markdown("""<div class="insight-card" style="border-top-color: #f85149;">
+            <div class="perspective-title">🎯 Media Buying & Performance</div>
+            <p style="font-size:14px; color:#adbac7;">
+                <b>Impact:</b> Manual Targeting စနစ် ပျောက်ကွယ်လုနီးပါးဖြစ်ပြီး Meta ၏ Advantage+ နှင့် Google ၏ PMax တို့ကဲ့သို့ <b>Black-box AI</b> များက နေရာယူလာသည်။ <br><br>
+                <b>Strategy:</b> Media Buyer များသည် Targeting ထက် <b>Creative Quality</b> နှင့် <b>Signal Data</b> (Customer Data အမှန်များ ကျွေးခြင်း) ကိုသာ အဓိက ကိုင်တွယ်ရမည်။ Cost-per-result ထက် Customer Lifetime Value (LTV) ကို ကြည့်၍ Bid လုပ်ပါ။
+            </p>
+        </div>""", unsafe_allow_html=True)
 
-# --- 3. REPORT GENERATOR LOGIC ---
-def generate_weekly_report():
-    report_date = datetime.now().strftime("%d %B %Y")
-    report_text = f"""
-    SAYAR GYI EXECUTIVE WEEKLY REPORT
-    Date: {report_date}
-    --------------------------------------------------
-    1. GLOBAL MARKET STATUS
-    - Most Critical: {GLOBAL_NEWS[0]['topic']} (Impact: {GLOBAL_NEWS[0]['impact']})
-    - Trend: Moving from Search to Agentic Intent.
+    with row2_c1:
+        st.markdown("""<div class="insight-card" style="border-top-color: #d2a8ff;">
+            <div class="perspective-title">📱 Social Media & Community</div>
+            <p style="font-size:14px; color:#adbac7;">
+                <b>Impact:</b> Algorithm များသည် Like/Share ထက် <b>Dwell Time</b> (ကြည့်ရှုချိန်) ကိုသာ ဦးစားပေးတော့သည်။ <br><br>
+                <b>Strategy:</b> Video Content များတွင် Hook ကို ၂ စက္ကန့်အတွင်း ထည့်ပါ။ Facebook ၏ Reach ကျဆင်းမှုကို ကာကွယ်ရန် Telegram သို့မဟုတ် Viber ကဲ့သို့ <b>Private Communities</b> များသို့ Audience ကို ရွှေ့ပြောင်းထိန်းသိမ်းထားပါ။
+            </p>
+        </div>""", unsafe_allow_html=True)
+
+    with row2_c2:
+        st.markdown("""<div class="insight-card" style="border-top-color: #3fb950;">
+            <div class="perspective-title">📊 Data & Analytics</div>
+            <p style="font-size:14px; color:#adbac7;">
+                <b>Impact:</b> Privacy ဥပဒေများကြောင့် Third-party Cookies များ သုံးမရတော့ပေ။ <br><br>
+                <b>Strategy:</b> ကိုယ်ပိုင် <b>First-party Data</b> (Customer Phone/Email) စုဆောင်းမှုကို အားဖြည့်ပါ။ AI ကပေးသော Predictive Analytics (နောင်တွင် ဘာဖြစ်မည်ကို ခန့်မှန်းခြင်း) ကို သုံး၍ Budget ကို ကြိုတင်ခွဲဝေပါ။
+            </p>
+        </div>""", unsafe_allow_html=True)
+
+# --- 3. BURMESE REPORT GENERATOR ---
+def generate_burmese_report():
+    today = datetime.now().strftime("%d-%m-%Y")
+    report = f"""
+    SAYAR GYI EXECUTIVE WEEKLY REPORT (မြန်မာဘာသာ)
+    ထုတ်ပြန်သည့်ရက်စွဲ - {today}
     
-    2. MYANMAR LOCAL STATUS
-    - Key Platform: Telegram & Facebook (Hybrid Mode)
-    - Consumer Behavior: High trust in 'Authentic' content.
+    ၁။ အမှုဆောင်အနှစ်ချုပ် (EXECUTIVE SUMMARY)
+    ယခုအပတ်တွင် AI လောက၌ SearchGPT ၏ ကြော်ငြာစနစ်သစ်နှင့် Meta ၏ Algorithm အပြောင်းအလဲများမှာ အဓိကဖြစ်သည်။ 
+    ပြည်တွင်းဈေးကွက်တွင်လည်း Telegram Commerce အားကောင်းလာသည်ကို တွေ့ရပါသည်။
     
-    3. SAYAR GYI'S STRATEGIC COMMANDS
-    - Transition to Answer Engine Optimization (AEO).
-    - Build Private Communities on Telegram as a backup.
-    - Leverage Human-Centric storytelling to counter 'AI Slop' fatigue.
+    ၂။ ကဏ္ဍအလိုက် ဗျူဟာမြောက် ညွှန်ကြားချက်များ
     
-    Verified by Sayar Gyi AI Logic Engine v99.0
-    --------------------------------------------------
+    [CONTENT MARKETING]
+    - AI-generated content သက်သက်ထက် လူသားဆန်သော (Authentic) Content များကို ဦးစားပေးပါ။
+    - Answer Engine Optimization (AEO) အတွက် ပြင်ဆင်ပါ။
+    
+    [MEDIA BUYING]
+    - Creative is the new Targeting. ကြော်ငြာ၏ Creative ကောင်းမွန်မှုအပေါ် မူတည်၍ AI က Audience ရှာပေးပါလိမ့်မည်။
+    - Signal Efficiency ကို မြှင့်တင်ရန် First-party data များကို စနစ်တကျသုံးပါ။
+    
+    [COMMUNITY & SOCIAL]
+    - Facebook တစ်ခုတည်းကို မကိုးစားဘဲ Telegram Community ကို အရန်အဖြစ် တည်ဆောက်ပါ။
+    - Dwell Time မြှင့်တင်ရန် Video hooks များကို အားဖြည့်ပါ။
+    
+    ၃။ အရေးကြီးသော သတိပေးချက် (CRITICAL ALERT)
+    လက်ရှိ Algorithm များသည် User ၏ စိတ်ဝင်စားမှု (Interest) ကို အချိန်နှင့်အမျှ ပြောင်းလဲခန့်မှန်းနေသောကြောင့် 
+    Content များကို ပုံသေ (Static) မထားဘဲ Dynamic ဖြစ်အောင် ပြင်ဆင်ရန် လိုအပ်ပါသည်။
+    
+    SAYAR GYI AI STRATEGY ENGINE (v100.0) မှ အတည်ပြုပြီး။
+    ----------------------------------------------------------------------
     """
-    return report_text
+    return report
 
-# --- 4. INTERFACE ---
-def render_dashboard():
-    st.markdown('<h1 style="font-weight:900; color:#f8fafc;">Sayar Gyi Intelligence Suite <span style="font-size:18px; color:#64748b;">v99.0</span></h1>', unsafe_allow_html=True)
+# --- 4. MAIN INTERFACE ---
+def render_main():
+    st.markdown('<h1 style="font-weight:900;">Sayar Gyi Intelligence Suite 100</h1>', unsafe_allow_html=True)
     
     tab1, tab2, tab3, tab4 = st.tabs([
-        "🌐 Global Pulse", 
-        "🇲🇲 Local Pulse", 
-        "🧠 Sayar Gyi's Insight", 
-        "📄 Weekly Report"
+        "🌐 Global Pulse", "🇲🇲 Local Pulse", "🧠 Sayar Gyi's Insight", "📄 Weekly Report"
     ])
 
-    with tab1:
-        st.subheader("Global Strategic Topics")
-        st.table(pd.DataFrame(GLOBAL_NEWS))
-
-    with tab2:
-        st.subheader("Myanmar Verified Trends")
-        st.table(pd.DataFrame(LOCAL_NEWS))
-
     with tab3:
-        st.markdown("### 🧠 Sayar Gyi's Professional Insight (Feb 2026)")
-        
-        c1, c2 = st.columns(2)
-        with c1:
-            st.markdown(f"""
-                <div class="insight-card">
-                    <div class="insight-title">၁။ AI-Centric Operations သို့ ကူးပြောင်းခြင်း</div>
-                    <p style="font-size:14px; color:#cbd5e1;"><b>Business Impact:</b> အခု ၂၀၂၆ မှာ AI က Tool တစ်ခုမဟုတ်တော့ဘဲ အခြေခံအဆောက်အအုံ ဖြစ်သွားပါပြီ။ မူလက လုပ်ငန်းစဉ်တွေကို AI နဲ့ အစားထိုးတာထက် (Optimization)၊ လုပ်ငန်းစဉ်တစ်ခုလုံးကို AI နဲ့ပဲ စတင်တည်ဆောက်တာ (Process Design) က ပိုပြီး ROI တက်စေပါတယ်။</p>
-                    <span class="impact-high">Critical Action:</span> ဝန်ထမ်းတွေကို AI သုံးတတ်အောင်တင်မကဘဲ AI Agents တွေကို စီမံခန့်ခွဲတတ်တဲ့ Manager တွေဖြစ်လာအောင် လေ့ကျင့်ပေးရပါမယ်။
-                </div>
-            """, unsafe_allow_html=True)
-            
-        with c2:
-            st.markdown(f"""
-                <div class="insight-card">
-                    <div class="insight-title">၂။ Human-Led Marketing as a Differentiator</div>
-                    <p style="font-size:14px; color:#cbd5e1;"><b>Market Shift:</b> AI က Content တွေ အမြောက်အမြား ထုတ်ပေးနိုင်လာတဲ့အခါ လူတွေက "AI Slop" (အနှစ်မပါတဲ့ AI စာသားတွေ) ကို ငြီးငွေ့လာကြပါတယ်။ ဒီနေရာမှာ ကိုယ့် Brand ရဲ့ <b>Distinctive POV</b> (ထူးခြားတဲ့ အမြင်) နဲ့ <b>Empathy</b> (စာနာနားလည်မှု) ကသာ ပြိုင်ဘက်ထက် သာလွန်စေမှာပါ။</p>
-                    <span class="impact-high">Strategic Command:</span> Video တွေမှာ အရမ်းကြီး Perfect ဖြစ်နေတာထက် "ရိုးသားမှု" ကို ဦးစားပေးပါ။ မြန်မာပြည်အတွက် 'Authentic Behind-the-scenes' က အထိရောက်ဆုံးပါ။
-                </div>
-            """, unsafe_allow_html=True)
+        render_sayar_gyi_insights()
 
     with tab4:
-        st.markdown("### 📄 Weekly Executive Report Generator")
-        st.info("အပတ်စဉ် အချက်အလက်များကို စုစည်းပြီး အောက်ပါခလုတ်ကို နှိပ်၍ Report ထုတ်ယူနိုင်ပါသည်။")
-        
-        if st.button("Generate & Preview Report"):
-            report_content = generate_weekly_report()
-            st.markdown(f'<div class="report-box"><pre>{report_content}</pre></div>', unsafe_allow_html=True)
-            st.download_button(label="Download Full Report (TXT)", data=report_content, file_name=f"SayarGyi_Report_{datetime.now().strftime('%Y%m%d')}.txt")
-
-if __name__ == "__main__":
-    apply_v99_styles()
-    render_dashboard()
+        st.markdown("### 📄 Weekly Executive Report (Burmese)")
