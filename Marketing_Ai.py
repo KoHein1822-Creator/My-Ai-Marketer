@@ -1,23 +1,22 @@
 import streamlit as st
 
 # --- 1. SETTINGS & RECOVERY ---
-st.set_page_config(layout="wide", page_title="SAYAR GYI v127.0")
+st.set_page_config(layout="wide", page_title="SAYAR GYI v128.0")
 
-def apply_v127_final_fix():
-    # ဤ HTML သည် 🤖 Icon ကို ဖန်တီးပြီး Invisible Button နှင့် ချိတ်ပေးမည်
+def apply_v128_ghost_styles():
     st.markdown("""
         <style>
-        /* Restore Main UI */
-        .block-container { padding-top: 2rem; max-width: 94%; background-color: #0d1117; opacity: 1 !important; visibility: visible !important; }
+        /* Main UI Restore */
+        .block-container { padding-top: 2rem; max-width: 94%; background-color: #0d1117; }
         
-        /* Premium Cards */
+        /* Premium Insight Cards */
         .v101-card {
             background: #161b22; border: 1px solid #30363d; border-radius: 12px;
             padding: 25px; margin-bottom: 25px; border-left: 5px solid #58a6ff;
         }
 
-        /* --- THE UNSHAKABLE FAB --- */
-        #final-robot-fab {
+        /* --- THE UNSHAKABLE ROBOT FAB --- */
+        #ghost-robot-fab {
             position: fixed !important;
             bottom: 60px !important;
             right: 60px !important;
@@ -36,64 +35,68 @@ def apply_v127_final_fix():
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
         }
 
-        #final-robot-fab:hover { transform: scale(1.1) rotate(10deg) !important; }
+        #ghost-robot-fab:hover { transform: scale(1.1) rotate(10deg) !important; }
 
-        /* Hide specific Streamlit artifacts only */
-        div[data-testid="stCheckbox"], .stCheckbox { display: none !important; }
-        button[key="hidden_launcher"] { display: none !important; }
+        /* မလိုလားအပ်သော Widget အားလုံး (Open button, Checkbox) ကို အမြစ်ဖြတ်ဖျောက်ခြင်း */
+        div[data-testid="stButton"], .stButton, div[data-testid="stCheckbox"], .stCheckbox {
+            display: none !important;
+            visibility: hidden !important;
+        }
         </style>
 
-        <div id="final-robot-fab" onclick="document.getElementById('robot-link').click()">
+        <div id="ghost-robot-fab" onclick="clickHiddenButton()">
             🤖
         </div>
+
+        <script>
+        function clickHiddenButton() {
+            // Streamlit ၏ မမြင်ရသော ခလုတ်ကို JavaScript ဖြင့် လှမ်းနှိပ်ခြင်း
+            const btn = window.parent.document.querySelector('button[key="ghost_trigger"]');
+            if (btn) btn.click();
+        }
+        </script>
     """, unsafe_allow_html=True)
 
 # --- 2. THE STRATEGIC DIALOG ---
 @st.dialog("🛡️ SAYAR GYI COMMAND CENTER")
-def open_sayar_gyi():
+def open_sayar_gyi_portal():
     st.markdown("### CEO Strategic Intelligence Access")
-    if "chat_history" not in st.session_state:
-        st.session_state.chat_history = []
+    if "chat_log" not in st.session_state:
+        st.session_state.chat_log = []
 
-    for msg in st.session_state.chat_history:
+    for msg in st.session_state.chat_log:
         with st.chat_message(msg["role"]):
             st.write(msg["content"])
 
-    if prompt := st.chat_input("Ask Sayar Gyi..."):
-        st.session_state.chat_history.append({"role": "user", "content": prompt})
+    if query := st.chat_input("Ask Sayar Gyi..."):
+        st.session_state.chat_log.append({"role": "user", "content": query})
         with st.chat_message("user"):
-            st.write(prompt)
+            st.write(query)
         with st.chat_message("assistant"):
-            ans = f"CEO ခင်ဗျာ၊ '{prompt}' အတွက် ကျွန်တော့်ရဲ့ ဗျူဟာမြောက် အကြံပြုချက်ကတော့..."
+            ans = f"CEO ခင်ဗျာ၊ '{query}' အတွက် ကျွန်တော့်ရဲ့ ဗျူဟာမြောက် သုံးသပ်ချက်ကတော့..."
             st.write(ans)
-            st.session_state.chat_history.append({"role": "assistant", "content": ans})
+            st.session_state.chat_log.append({"role": "assistant", "content": ans})
 
 # --- 3. MAIN DASHBOARD ---
 def main():
-    apply_v127_final_fix()
+    apply_v128_ghost_styles()
     
     st.title("Sayar Gyi Mastermind Suite")
     
-    # Dashboard Tabs
+    # UI Content များ ပြန်လည်ဖော်ပြခြင်း
     tabs = st.tabs(["🌐 Global News", "🇲🇲 Local Pulse", "🧠 Deep Insights", "📄 Weekly Report"])
 
     with tabs[2]:
         st.markdown("### 🧠 Sayar Gyi's Strategic Intelligence")
         col1, col2 = st.columns(2)
         with col1:
-            st.markdown('<div class="v101-card"><b>AEO Strategy:</b> AI Search Citation ရရှိရန် Content များကို ပြင်ဆင်ပါ။</div>', unsafe_allow_html=True)
+            st.markdown('<div class="v101-card"><b>AEO Strategy:</b> AI Search Citation ရရှိရန် Content များကို Q&A ပုံစံ ပြင်ဆင်ပါ။</div>', unsafe_allow_html=True)
         with col2:
-            st.markdown('<div class="v101-card" style="border-left-color:#f85149;"><b>Ads Strategy:</b> AI Algorithms အတွက် Signal Data ကို မြှင့်တင်ပါ။</div>', unsafe_allow_html=True)
+            st.markdown('<div class="v101-card" style="border-left-color:#f85149;"><b>Ads Strategy:</b> Conversion Data Signal ကို မြှင့်တင်ပါ။</div>', unsafe_allow_html=True)
 
-    # --- THE MAGIC TRIGGER ---
-    # UI တွင် မမြင်ရသော ခလုတ်မှတစ်ဆင့် Dialog ကို ခေါ်ယူခြင်း
-    if st.button("OPEN", key="hidden_launcher"):
-        open_sayar_gyi()
-
-    # JavaScript Link for Connection
-    st.markdown("""
-        <a id="robot-link" style="display:none;" href="javascript:document.querySelector('button[key=\\'hidden_launcher\\']').click();">Trigger</a>
-    """, unsafe_allow_html=True)
+    # --- THE INVISIBLE CONNECTION ---
+    # ဤ Button သည် UI တွင် လုံးဝ မပေါ်ဘဲ စက်ရုပ် Icon အတွက် Pop-up ကို ချိတ်ပေးထားပါသည်
+    st.button("HIDDEN", key="ghost_trigger", on_click=open_sayar_gyi_portal)
 
 if __name__ == "__main__":
     main()
