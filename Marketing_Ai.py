@@ -1,92 +1,139 @@
 import streamlit as st
+import pandas as pd
+import numpy as np
 
-# --- SIDE PANEL CONFIGURATION ---
-def render_sidebar():
-    # v72.0 Core Styling
+# --- 1. GLOBAL CONFIGURATION ---
+st.set_page_config(
+    layout="wide", 
+    page_title="SAYAR GYI v88.0 | Balanced Executive",
+    page_icon="⚖️"
+)
+
+# --- 2. PREMIUM CSS (BALANCED SPACING) ---
+def apply_v88_styles():
     st.markdown("""
         <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-        html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
+        /* အပေါ်နဲ့ ဘေး Space များကို အချိုးကျအောင် ညှိထားသည် */
+        .block-container { padding-top: 1.5rem; max-width: 96%; padding-bottom: 5rem; }
+        [data-testid="stSidebar"] { background-color: #0d1117; border-right: 1px solid #30363d; }
         
-        /* Sidebar Sizing & Background */
-        section[data-testid="stSidebar"] { 
-            background-color: #010409 !important; 
-            min-width: 320px !important; 
-            border-right: 1px solid #30363d; 
+        .main-header {
+            color: #58a6ff; font-size: 13px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 2px;
+            margin-bottom: 15px; border-left: 5px solid #58a6ff; padding-left: 15px;
         }
 
-        /* Section Headers */
-        .sidebar-header {
-            font-size: 13px; font-weight: 700; color: #58a6ff;
-            margin-top: 25px; margin-bottom: 12px;
-            letter-spacing: 1.5px; text-transform: uppercase;
+        /* Status Box Style - ရှင်းလင်းပြတ်သားသော ပုံစံ */
+        .status-box-v88 {
+            background: #161b22; border: 1px solid #30363d;
+            padding: 30px 15px; border-radius: 12px; text-align: center;
         }
-
-        /* The Brain Buttons Style */
-        div.stButton > button {
-            height: 48px !important; font-size: 15px !important; font-weight: 600 !important;
-            border-radius: 8px !important; background-color: #161b22 !important;
-            border: 1px solid #30363d !important; color: #ffffff !important;
+        
+        /* Metric Card - ပြည့်ကြပ်မနေစေရန် Padding နှင့် Margin ညှိထားသည် */
+        .insight-card-v88 {
+            background: #161b22; border: 1px solid #30363d;
+            padding: 22px; border-radius: 15px; margin-bottom: 15px;
         }
-        div.stButton > button:hover { border-color: #58a6ff !important; color: #58a6ff !important; }
-
-        /* Status Panel Logic */
-        .status-panel { 
-            background: #0d1117; border: 1px solid #30363d; 
-            padding: 18px; border-radius: 10px; margin-top: 10px; 
-        }
-        .status-node-info { 
-            font-size: 10px; color: #8b949e; margin-top: 8px; 
-            border-top: 1px solid #21262d; padding-top: 8px; 
-            display: flex; justify-content: space-between; 
+        
+        .m-label-v88 { color: #8b949e; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px; }
+        .m-value-v88 { color: #ffffff; font-size: 34px; font-weight: 800; line-height: 1.1; }
+        .m-delta-v88 { color: #3fb950; font-size: 14px; font-weight: 700; background: rgba(63, 185, 80, 0.1); padding: 3px 8px; border-radius: 5px; }
+        
+        .header-flex {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 18px;
         }
         </style>
-        """, unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
+# --- 3. MASTER SIDE PANEL (UP-TO-DATE) ---
+def render_sidebar():
     with st.sidebar:
-        # 1. Branding
-        st.markdown('<h1 style="color:white; margin-bottom:0; font-size:28px;">Sayar Gyi\'s</h1>', unsafe_allow_html=True)
-        st.markdown('<p style="color:#58a6ff; font-weight:600; letter-spacing:3px; font-size:12px; margin-top:-5px;">COMMAND CENTER</p>', unsafe_allow_html=True)
+        st.markdown('<h2 style="margin-bottom:0; color:white;">SAYAR GYI\'S</h2>', unsafe_allow_html=True)
+        st.markdown('<p style="color:#58a6ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">AI Marketing Agency</p>', unsafe_allow_html=True)
+        st.write("")
+        st.markdown("### INDUSTRY NEWS")
+        st.button("🌐 Read Industry Trends", use_container_width=True)
         st.divider()
-
-        # 2. The Brain
-        st.markdown('<p class="sidebar-header">The Brain</p>', unsafe_allow_html=True)
-        m_col1, m_col2 = st.columns(2)
-        with m_col1:
-            if st.button("Gemini 💎", key="gem_side", use_container_width=True): st.session_state.model_choice = "Gemini"
-            if st.button("Claude 🧠", key="cla_side", use_container_width=True): st.session_state.model_choice = "Claude"
-        with m_col2:
-            if st.button("GPT 🤖", key="gpt_side", use_container_width=True): st.session_state.model_choice = "ChatGPT"
-        
-        # Choice Display
-        current_model = st.session_state.get('model_choice', 'Gemini')
-        st.markdown(f'<div style="background:rgba(88,166,255,0.1); border:1px solid rgba(88,166,255,0.3); padding:8px; border-radius:6px; text-align:center; margin-top:10px; font-size:12px; color:#58a6ff;">Active Core: <b>{current_model}</b></div>', unsafe_allow_html=True)
+        st.markdown("### MENU")
+        nav = st.radio("Nav", ["📊 Interactive Dashboard", "🧬 Brand DNA", "📂 Project Archive", "🎨 Asset Library"], label_visibility="collapsed")
         st.divider()
-
-        # 3. System Menu
-        st.markdown('<p class="sidebar-header">System Menu</p>', unsafe_allow_html=True)
-        nav_choice = st.radio("Nav", ["Interactive Dashboard", "Brand DNA", "Project Archive", "Asset Library"], label_visibility="collapsed")
-        st.session_state.menu = nav_choice
+        st.markdown("### MY AGENTS")
+        st.caption("🤖 Intel | 🎨 Creative | ⚖️ Auditor | ⚙️ Ops")
+        st.write("")
+        st.button("🔥 Switch to Creator Mode", use_container_width=True)
         st.divider()
+        st.success("Core Engine: Online")
+        st.write("")
+        st.markdown("### MODEL")
+        st.radio("Engine", ["Gemini 1.5 Pro", "GPT-4o", "Claude 3.5"], horizontal=True, label_visibility="collapsed")
+    return nav
 
-        # 4. Special Functions
-        st.markdown('<p class="sidebar-header">Special Functions</p>', unsafe_allow_html=True)
-        if st.button("🌐 Intelligence Hub", use_container_width=True): st.session_state.menu = "Intelligence Hub"
-        if st.button("🔥 Creator Mode", use_container_width=True): st.session_state.menu = "Creator Mode"
-        st.divider()
+# --- 4. BALANCED DASHBOARD ENGINE ---
+def render_dashboard():
+    # --- TOP CONTROLS ---
+    h_col, f_col = st.columns([1.5, 1])
+    with h_col:
+        st.markdown('<h1 style="font-weight:900; margin:0; font-size:38px;">Strategic Dashboard</h1>', unsafe_allow_html=True)
+    with f_col:
+        c1, c2, c3 = st.columns(3)
+        with c1: platform = st.selectbox("Platform", ["Facebook", "TikTok", "YouTube"])
+        with c2: timeframe = st.selectbox("Timeframe", ["Weekly", "Monthly", "Yearly"])
+        with c3: chart_style = st.selectbox("View Style", ["Line Chart", "Area Chart", "Bar Chart"])
 
-        # 5. System Status
-        st.markdown('<p class="sidebar-header" style="margin-top:10px;">System Status</p>', unsafe_allow_html=True)
+    # --- 1. CONTENT CREATION STATUS ---
+    st.markdown('<p class="main-header" style="margin-top:20px;">Content Creation Status</p>', unsafe_allow_html=True)
+    p1, p2, p3, p4 = st.columns(4)
+    pipeline = [("Drafting", "12"), ("Pending", "5"), ("Scheduled", "18"), ("Published", "145")]
+    for i, (label, val) in enumerate(pipeline):
+        with [p1, p2, p3, p4][i]:
+            st.markdown(f'<div class="status-box-v88"><div class="m-label-v88">{label}</div>'
+                        f'<div style="font-size:42px; font-weight:900; color:#58a6ff; margin-top:10px;">{val}</div></div>', unsafe_allow_html=True)
+
+    st.write("")
+    st.write("")
+
+    # --- 2. DEEP INSIGHTS (ADJUSTED FOR BREATHING SPACE) ---
+    st.markdown(f'<p class="main-header">{platform} Deep Insights & Trends</p>', unsafe_allow_html=True)
+
+    def render_balanced_card(label, value, delta):
         st.markdown(f"""
-            <div class="status-panel">
-                <p style="color:#3fb950; font-weight:700; font-size:15px; margin:0;">● Core Engine: Online</p>
-                <div class="status-node-info"><span>NODE: SG-MASTER-01</span><span>UPTIME: 99.9%</span></div>
-            </div>
+            <div class="insight-card-v88">
+                <div class="m-label-v88">{label}</div>
+                <div class="header-flex">
+                    <span class="m-value-v88">{value}</span>
+                    <span class="m-delta-v88">{delta}</span>
+                </div>
         """, unsafe_allow_html=True)
+        
+        # Chart Height ကို 170px တွင် ထားခြင်းဖြင့် အရမ်းမပြည့်ကြပ်စေဘဲ ရှင်းလင်းစေသည်
+        data = pd.DataFrame(np.random.randn(25, 1), columns=['Val'])
+        if chart_style == "Line Chart": st.line_chart(data, height=170, use_container_width=True)
+        elif chart_style == "Area Chart": st.area_chart(data, height=170, use_container_width=True)
+        else: st.bar_chart(data, height=170, use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
-# Calling Sidebar for Testing
-if 'menu' not in st.session_state: st.session_state.menu = "Interactive Dashboard"
-render_sidebar()
+    # Data Selection
+    metrics = {
+        "Facebook": [("Views", "85.2K", "↑12%"), ("Interactions", "3.2K", "↑8%"), ("Followers", "12.4K", "↑1%"), ("Page Visits", "4.5K", "↑15%"), ("Link Clicks", "920", "↑22%"), ("Conversations", "128", "↑5%")],
+        "TikTok": [("Video Views", "1.2M", "↑45%"), ("Shares", "12K", "↑30%"), ("Saves", "4.5K", "↑18%"), ("Profile Visits", "25K", "↑10%"), ("Bio Clicks", "1.5K", "↑25%"), ("Completion", "65%", "↑5%")],
+        "YouTube": [("Impressions", "2.5M", "↑5%"), ("Watch Time", "14K h", "↑12%"), ("Subscribers", "420", "↑2%"), ("Avg Duration", "4:32", "↑0:45"), ("CTR", "8.5%", "↑1.2%"), ("Comments", "850", "↑15%")]
+    }
+    
+    selected_metrics = metrics[platform]
 
-# Test Placeholder for Main Content
-st.write(f"Active Menu: {st.session_state.menu}")
+    # Grid Render (3x2)
+    col_group1 = st.columns(3)
+    for i in range(3):
+        with col_group1[i]: render_balanced_card(selected_metrics[i][0], selected_metrics[i][1], selected_metrics[i][2])
+    
+    col_group2 = st.columns(3)
+    for i in range(3, 6):
+        with col_group2[i-3]: render_balanced_card(selected_metrics[i][0], selected_metrics[i][1], selected_metrics[i][2])
+
+# --- 5. EXECUTION ---
+if __name__ == "__main__":
+    apply_v88_styles()
+    current_page = render_sidebar()
+    if "Dashboard" in current_page: render_dashboard()
+    else: st.title(current_page); st.info("SAYAR GYI Module Syncing...")
