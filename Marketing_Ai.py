@@ -1,66 +1,99 @@
 import streamlit as st
 
-# --- 1. SETTINGS ---
-st.set_page_config(layout="wide", page_title="SAYAR GYI v120.0")
+# --- 1. GLOBAL SETTINGS & CLEAN UI ---
+st.set_page_config(layout="wide", page_title="SAYAR GYI v121.0")
 
-def apply_v120_final_fix():
-    # ဤ HTML/JS သည် Dashboard ပေါ်တွင် 🤖 ကို ညာဘက်အောက်ခြေ၌ အသေနေရာချပေးမည်
-    # Streamlit Button မဟုတ်သောကြောင့် "AI" စာသား လုံးဝ ပေါ်မလာနိုင်ပါ
+def apply_v121_styles():
     st.markdown("""
-        <div id="robot-container">
-            <div id="robot-fab" onclick="document.dispatchEvent(new CustomEvent('openChat'))">
-                🤖
-            </div>
-        </div>
-
         <style>
-        /* Dashboard Spacing */
+        /* Dashboard Container */
         .block-container { padding-top: 2rem; max-width: 94%; background-color: #0d1117; }
         
-        /* Premium Cards */
+        /* v101 Premium Insight Cards */
         .v101-card {
             background: #161b22; border: 1px solid #30363d; border-radius: 12px;
             padding: 25px; margin-bottom: 25px; border-left: 5px solid #58a6ff;
         }
 
-        /* --- THE UNSHAKABLE ROBOT FAB --- */
-        #robot-fab {
+        /* --- THE ULTIMATE FLOATING ROBOT --- */
+        /* Streamlit Button ကို ညာဘက်အောက်ခြေတွင် 🤖 အဖြစ် ပုံဖော်ခြင်း */
+        div.stButton > button[key="v121_robot_trigger"] {
             position: fixed !important;
             bottom: 60px !important;
             right: 60px !important;
+            left: auto !important;
             width: 85px !important;
             height: 85px !important;
-            background: linear-gradient(135deg, #1f6feb 0%, #58a6ff 100%) !important;
             border-radius: 50% !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            font-size: 45px !important;
-            cursor: pointer !important;
-            z-index: 2147483647 !important; /* အပေါ်ဆုံး layer တွင်ရှိနေစေရန် */
+            background: linear-gradient(135deg, #1f6feb 0%, #58a6ff 100%) !important;
             border: 3px solid #ffffff !important;
             box-shadow: 0 10px 40px rgba(0,0,0,0.8) !important;
-            transition: all 0.3s ease !important;
+            z-index: 999999 !important;
+            color: transparent !important;
+            font-size: 0px !important;
+            padding: 0 !important;
         }
 
-        #robot-fab:hover {
-            transform: scale(1.1) rotate(10deg) !important;
+        /* စက်ရုပ် Emoji အား ခလုတ်အလယ်တွင် ထည့်ခြင်း */
+        div.stButton > button[key="v121_robot_trigger"]::after {
+            content: "🤖";
+            position: absolute;
+            left: 0; top: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 45px; color: white; visibility: visible;
+        }
+
+        div.stButton > button[key="v121_robot_trigger"]:hover {
+            transform: scale(1.1) rotate(5deg) !important;
             box-shadow: 0 15px 50px rgba(88, 166, 255, 0.6) !important;
         }
 
-        /* Streamlit ၏ မူရင်း Button များအားလုံးကို အမြစ်ဖြတ်ဖျောက်ခြင်း */
-        .stButton, button { display: none !important; }
+        /* မလိုလားအပ်သော On/Off Toggle Button များအားလုံးကို ဖျောက်ခြင်း */
+        div[data-testid="stCheckbox"], div[data-testid="stWidgetLabel"] {
+            display: none !important;
+        }
         </style>
-
-        <script>
-        // ခလုတ်နှိပ်လျှင် Streamlit သို့ အချက်ပြရန်
-        const fab = document.getElementById('robot-fab');
-        document.addEventListener('openChat', function() {
-            const btn = window.parent.document.querySelector('button[kind="primary"]');
-            if (btn) btn.click();
-        });
-        </script>
     """, unsafe_allow_html=True)
 
 # --- 2. THE STRATEGIC DIALOG ---
-@
+@st.dialog("🛡️ SAYAR GYI STRATEGIC COMMAND")
+def open_strategic_portal():
+    st.markdown("### CEO Intelligence Access")
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
+    for msg in st.session_state.messages:
+        with st.chat_message(msg["role"]):
+            st.write(msg["content"])
+
+    if query := st.chat_input("Ask Sayar Gyi..."):
+        st.session_state.messages.append({"role": "user", "content": query})
+        with st.chat_message("user"):
+            st.write(query)
+        with st.chat_message("assistant"):
+            ans = f"CEO ခင်ဗျာ၊ '{query}' အတွက် ကျွန်တော့်ရဲ့ ဗျူဟာမြောက် သုံးသပ်ချက်ကတော့..."
+            st.write(ans)
+            st.session_state.messages.append({"role": "assistant", "content": ans})
+
+# --- 3. MAIN DASHBOARD ---
+def main():
+    apply_v121_styles()
+    
+    st.title("Sayar Gyi Mastermind Suite")
+    
+    tabs = st.tabs(["🌐 Global News", "🇲🇲 Local Pulse", "🧠 Deep Insights", "📄 Weekly Report"])
+
+    with tabs[2]:
+        st.markdown("### 🧠 Sayar Gyi's Strategic Intelligence")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.markdown('<div class="v101-card"><b>AEO Strategy:</b> AI Search Citation ရရှိရန် Content များကို Q&A ပုံစံ ပြင်ဆင်ပါ။</div>', unsafe_allow_html=True)
+        with col2:
+            st.markdown('<div class="v101-card" style="border-left-color:#f85149;"><b>Ads Strategy:</b> AI Algorithms အတွက် Signal Data ကို မြှင့်တင်ပါ။</div>', unsafe_allow_html=True)
+
+    # --- THE DIRECT TRIGGER ---
+    # ဤ Button ကိုနှိပ်လျှင် Dialog တိုက်ရိုက်ပွင့်မည်။ On/Off Toggle လုံးဝ မပါတော့ပါ။
+    st.button("AI", key="v121_robot_trigger", on_click=open_strategic_portal)
+
+if __name__ == "__main__":
+    main()
