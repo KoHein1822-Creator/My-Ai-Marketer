@@ -1,86 +1,56 @@
 import streamlit as st
+import streamlit.components.v101 as components
 from datetime import datetime
 
-# --- 1. GLOBAL SETTINGS & TRUE FLOATING CSS ---
-st.set_page_config(layout="wide", page_title="SAYAR GYI v108.0")
+# --- 1. SETTINGS & CSS ---
+st.set_page_config(layout="wide", page_title="SAYAR GYI v109.0")
 
-def apply_v108_styles():
+def apply_v109_styles():
     st.markdown("""
         <style>
-        /* Container Spacing */
-        .block-container { padding-top: 2rem; max-width: 94%; }
-        
-        /* v101 Restored Cards */
+        .block-container { padding-top: 2rem; max-width: 94%; background-color: #0d1117; }
         .v101-card {
-            background: #0d1117; border: 1px solid #30363d; border-radius: 12px;
+            background: #161b22; border: 1px solid #30363d; border-radius: 12px;
             padding: 25px; margin-bottom: 25px; border-left: 5px solid #58a6ff;
         }
-        .v101-header { color: #58a6ff; font-weight: 800; font-size: 20px; margin-bottom: 10px; }
-
-        /* --- THE PERFECT FLOATING ROBOT BUTTON --- */
-        /* ဒေါင့်ကပ်နေတာကို ပြင်ဖို့ 'Right: 4vw' နဲ့ 'Bottom: 4vh' (Viewport based) ကို သုံးထားပါတယ် */
-        div[data-testid="stButton"] > button[key="master_ai_trigger"] {
-            position: fixed;
-            bottom: 50px !important;
-            right: 50px !important;
-            width: 90px !important;
-            height: 90px !important;
-            border-radius: 20px !important;
-            background: #161b22 !important;
-            border: 2px solid #58a6ff !important;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.7), 0 0 20px rgba(88, 166, 255, 0.4) !important;
-            z-index: 999999 !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            font-size: 45px !important;
-            transition: all 0.3s ease-in-out !important;
-        }
-
-        div[data-testid="stButton"] > button[key="master_ai_trigger"]:hover {
-            transform: translateY(-10px) scale(1.05) !important;
-            border-color: #bc8cff !important;
-            box-shadow: 0 20px 50px rgba(188, 140, 255, 0.5) !important;
-        }
-        
-        /* Button ထဲက စာသားတွေကို ဖျောက်ပြီး Icon ကိုပဲ အသားပေးခြင်း */
-        div[data-testid="stButton"] > button[key="master_ai_trigger"] p {
-            display: none !important;
-        }
-        div[data-testid="stButton"] > button[key="master_ai_trigger"]::after {
-            content: "🤖";
-            font-size: 45px;
-        }
+        .v101-header { color: #58a6ff; font-weight: 800; font-size: 20px; }
         </style>
     """, unsafe_allow_html=True)
 
-# --- 2. THE STRATEGIC DIALOG (NOTION STYLE) ---
-@st.dialog("🛡️ SAYAR GYI COMMAND CENTER")
-def open_strategic_ai():
-    st.markdown("<p style='color:#adbac7;'>CEO ခင်ဗျာ၊ လုပ်ငန်းဗျူဟာနှင့် ပတ်သက်သမျှ မေးမြန်းနိုင်ပါသည်။</p>", unsafe_allow_html=True)
-    
-    if "chat_history" not in st.session_state:
-        st.session_state.chat_history = []
+# --- 2. THE FLOATING ROBOT BUTTON (STABLE VERSION) ---
+def render_robot_button():
+    # CSS နဲ့ HTML ကို တိုက်ရိုက် Component အနေနဲ့ သုံးပြီး နေရာကို ညှိပါမယ်
+    # ညာဘက်အောက်ခြေကနေ ၄၀ pixels စီ ခွာထားပါတယ်
+    button_html = """
+    <div id="robot-container" style="position: fixed; bottom: 40px; right: 40px; z-index: 999999; cursor: pointer;">
+        <div style="background: #1f6feb; width: 80px; height: 80px; border-radius: 20px; 
+                    display: flex; align-items: center; justify-content: center; 
+                    font-size: 40px; border: 2px solid #58a6ff; 
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            🤖
+        </div>
+    </div>
+    <script>
+        const robot = document.getElementById('robot-container');
+        robot.addEventListener('click', function() {
+            window.parent.postMessage({type: 'streamlit:setComponentValue', value: true}, '*');
+        });
+    </script>
+    """
+    # နေရာအသေဖြစ်အောင် Component အနေနဲ့ ထည့်သွင်းခြင်း
+    return components.html(button_html, height=0)
 
-    # Simple Chat Interface
-    for chat in st.session_state.chat_history:
-        with st.chat_message(chat["role"]):
-            st.write(chat["content"])
+# --- 3. THE STRATEGIC DIALOG ---
+@st.dialog("🛡️ SAYAR GYI AI COMMAND CENTER")
+def open_ai():
+    st.markdown("<p style='color:#adbac7;'>CEO ခင်ဗျာ၊ မည်သည့်ဗျူဟာကို ဆွေးနွေးလိုပါသနည်း?</p>", unsafe_allow_html=True)
+    query = st.chat_input("Ask Sayar Gyi...")
+    if query:
+        st.info(f"**Sayar Gyi 🤖:** CEO ခင်ဗျာ၊ '{query}' အတွက် ကျွန်တော်၏ သုံးသပ်ချက်မှာ...")
 
-    if prompt := st.chat_input("ဗျူဟာမြောက် မေးခွန်းတစ်ခု မေးပါ..."):
-        st.session_state.chat_history.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.write(prompt)
-        
-        with st.chat_message("assistant"):
-            response = f"CEO ခင်ဗျာ၊ '{prompt}' နှင့် ပတ်သက်၍ ကျွန်တော်၏ သုံးသပ်ချက်မှာ..."
-            st.write(response)
-            st.session_state.chat_history.append({"role": "assistant", "content": response})
-
-# --- 3. MAIN DASHBOARD ---
+# --- 4. MAIN INTERFACE ---
 def main():
-    apply_v108_styles()
-    
+    apply_v109_styles()
     st.title("Sayar Gyi Mastermind Suite")
     
     tab1, tab2, tab3, tab4 = st.tabs(["🌐 Global News", "🇲🇲 Local Pulse", "🧠 Deep Insights", "📄 Weekly Report"])
@@ -89,14 +59,27 @@ def main():
         st.markdown("### 🧠 Sayar Gyi's Strategic Intelligence")
         col1, col2 = st.columns(2)
         with col1:
-            st.markdown('<div class="v101-card"><div class="v101-header">🖋️ Content & AEO Mastery</div><p>AI Answer Engine များတွင် ကိုယ်စီနေရာရစေရန် Q&A content များ အားဖြည့်ပါ။</p></div>', unsafe_allow_html=True)
+            st.markdown('<div class="v101-card"><div class="v101-header">🖋️ Content & AEO Mastery</div><p>AI Answers မှာ နေရာရဖို့ Q&A Content တွေ ပြင်ဆင်ပါ။</p></div>', unsafe_allow_html=True)
         with col2:
-            st.markdown('<div class="v101-card" style="border-left-color:#f85149;"><div class="v101-header">🎯 Media Buying: Signal Data</div><p>AI Algorithms များဆီသို့ Customer Signals အမှန်များ ပေးပို့ရန် အလေးထားပါ။</p></div>', unsafe_allow_html=True)
+            st.markdown('<div class="v101-card" style="border-left-color:#f85149;"><div class="v101-header">🎯 Media Buying: Signals</div><p>Creative အရည်အသွေးနဲ့ Signal Data ကို ဦးစားပေးပါ။</p></div>', unsafe_allow_html=True)
 
-    # --- THE TRIGGER BUTTON ---
-    # CSS နဲ့ 'fixed' ပေးထားလို့ ဘယ်နေရာမှာ ရေးရေး ညာဘက်အောက်ခြေမှာပဲ ပေါ်နေပါမယ်။
-    if st.button("AI", key="master_ai_trigger"):
-        open_strategic_ai()
+    # Robot Button ကို Render လုပ်ပြီး အလုပ်လုပ်အောင် Logic ချိတ်ပါမယ်
+    # အကယ်၍ အောက်က button ကို နှိပ်လိုက်ရင် Dialog ပွင့်လာမှာပါ
+    st.write("---")
+    # Floating Button အစစ်
+    if st.button("Open AI Assistant 🤖", key="fallback_btn"):
+        open_ai()
+    
+    # CSS-based Floating Robot (Visual only for now due to Streamlit limitations)
+    st.markdown("""
+        <style>
+        div[data-testid="stButton"] > button:first-child {
+            position: fixed; bottom: 50px; right: 50px; width: 80px; height: 80px;
+            border-radius: 20px; font-size: 35px; background: #1f6feb; z-index: 1000;
+            border: 2px solid #58a6ff; color: white;
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
