@@ -1,9 +1,9 @@
 import streamlit as st
 
-# --- 1. GLOBAL SETTINGS ---
-st.set_page_config(layout="wide", page_title="SAYAR GYI v124.0")
+# --- 1. GLOBAL SETTINGS & DESIGN ---
+st.set_page_config(layout="wide", page_title="SAYAR GYI v125.0")
 
-def apply_v124_master_styles():
+def apply_v125_styles():
     st.markdown("""
         <style>
         /* Dashboard Container */
@@ -15,39 +15,46 @@ def apply_v124_master_styles():
             padding: 25px; margin-bottom: 25px; border-left: 5px solid #58a6ff;
         }
 
-        /* --- THE PERMANENT ROBOT ICON (NO BUTTONS USED) --- */
-        #robot-anchor {
+        /* --- THE FLOATING ROBOT BUTTON (NO MORE AI TEXT) --- */
+        div.stButton > button[key="robot_final_trigger"] {
             position: fixed !important;
-            bottom: 60px !important;
+            bottom: 60px !important;  /* Screenshot 59 အတိုင်း ညာဘက်အောက်ခြေ */
             right: 60px !important;
+            left: auto !important;
             width: 85px !important;
             height: 85px !important;
-            background: linear-gradient(135deg, #1f6feb 0%, #58a6ff 100%) !important;
             border-radius: 50% !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            font-size: 45px !important;
-            cursor: pointer !important;
-            z-index: 9999999 !important;
+            background: linear-gradient(135deg, #1f6feb 0%, #58a6ff 100%) !important;
             border: 3px solid #ffffff !important;
             box-shadow: 0 10px 40px rgba(0,0,0,0.8) !important;
-            transition: all 0.3s ease !important;
-            text-decoration: none !important;
+            z-index: 1000000 !important;
+            color: transparent !important; /* "AI" စာသားကို အမြစ်ဖြတ်ဖျောက်ခြင်း */
+            font-size: 0px !important;
+            padding: 0 !important;
         }
 
-        #robot-anchor:hover {
-            transform: scale(1.1) rotate(10deg) !important;
+        /* စက်ရုပ် Emoji အား ခလုတ်အလယ်တွင် ထည့်ခြင်း */
+        div.stButton > button[key="robot_final_trigger"]::after {
+            content: "🤖";
+            position: absolute;
+            left: 0; top: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 45px; color: white; visibility: visible;
         }
 
-        /* Hide all default streamlit buttons to avoid "AI" text bug */
-        .stButton, button { display: none !important; }
+        div.stButton > button[key="robot_final_trigger"]:hover {
+            transform: scale(1.1) rotate(5deg) !important;
+            box-shadow: 0 15px 50px rgba(88, 166, 255, 0.6) !important;
+        }
+
+        /* မလိုလားအပ်သော Widget များနှင့် အမှန်ခြစ်များအားလုံးကို ဖျောက်ခြင်း */
+        .stCheckbox, div[data-testid="stCheckbox"], .stToggle, div[data-testid="stToggle"] {
+            display: none !important;
+        }
         </style>
-
-        <a id="robot-anchor" href="#ai-chat">🤖</a>
     """, unsafe_allow_html=True)
 
-# --- 2. THE STRATEGIC AI DIALOG ---
+# --- 2. THE STRATEGIC DIALOG ---
 @st.dialog("🛡️ SAYAR GYI COMMAND CENTER")
 def open_ai_portal():
     st.markdown("### CEO Strategic Intelligence Access")
@@ -58,18 +65,18 @@ def open_ai_portal():
         with st.chat_message(msg["role"]):
             st.write(msg["content"])
 
-    if query := st.chat_input("Ask Sayar Gyi..."):
+    if query := st.chat_input("ဗျူဟာမြောက် မေးခွန်းများ မေးမြန်းပါ..."):
         st.session_state.chat_history.append({"role": "user", "content": query})
         with st.chat_message("user"):
             st.write(query)
         with st.chat_message("assistant"):
-            ans = f"CEO ခင်ဗျာ၊ '{query}' အတွက် ကျွန်တော့်ရဲ့ ဗျူဟာမြောက် သုံးသပ်ချက်ကတော့..."
+            ans = f"CEO ခင်ဗျာ၊ '{query}' အတွက် ကျွန်တော့်ရဲ့ ဗျူဟာမြောက် အကြံပြုချက်ကတော့..."
             st.write(ans)
             st.session_state.chat_history.append({"role": "assistant", "content": ans})
 
 # --- 3. MAIN DASHBOARD ---
 def main():
-    apply_v124_master_styles()
+    apply_v125_styles()
     
     st.title("Sayar Gyi Mastermind Suite")
     
@@ -83,26 +90,10 @@ def main():
         with col2:
             st.markdown('<div class="v101-card" style="border-left-color:#f85149;"><b>Ads Strategy:</b> AI Algorithms အတွက် Signal Data ကို မြှင့်တင်ပါ။</div>', unsafe_allow_html=True)
 
-    # --- THE MAGIC TRIGGER ---
-    # URL Hash ပြောင်းလဲမှုကို စောင့်ကြည့်ပြီး Dialog ဖွင့်ပေးခြင်း
-    # ဤနည်းလမ်းသည် ခလုတ်နှိပ်ခြင်းကို ၁၀၀% တိကျစေပါသည်။
-    if st.context.query_params.get("ai-chat") is not None or "#ai-chat" in st.empty().anchor:
-        # Note: Streamlit development version ပေါ်မူတည်၍ hash trigger ကို ဖမ်းယူပုံ
-        open_ai_portal()
-
-    # Alternative stable trigger for Current Streamlit
-    if "robot_active" not in st.session_state:
-        st.session_state.robot_active = False
-
-    # JavaScript ကနေ URL ပြောင်းလိုက်တာကို ဖမ်းတဲ့ Logic
-    # ဤအပိုင်းသည် Pop-up ကို သေချာပေါက် ပွင့်စေပါမည်
-    st.markdown("""
-        <script>
-        window.addEventListener('hashchange', function() {
-            window.parent.location.reload(); 
-        });
-        </script>
-    """, unsafe_allow_html=True)
+    # --- THE DIRECT TRIGGER (NO REDIRECTION) ---
+    # Standard Button ကို သုံးထားသော်လည်း CSS ဖြင့် 🤖 အဖြစ် ပြောင်းလဲထားပါသည်
+    # Error မတက်စေရန် ရိုးရှင်းသော on_click ကိုသာ သုံးထားပါသည်
+    st.button("AI", key="robot_final_trigger", on_click=open_ai_portal)
 
 if __name__ == "__main__":
     main()
