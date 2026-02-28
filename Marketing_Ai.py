@@ -43,14 +43,17 @@ def apply_v88_styles():
         </style>
     """, unsafe_allow_html=True)
 
-# --- 3. MASTER SIDE PANEL (UPGRADED: INDUSTRY NEWS -> INTELLIGENCE) ---
+# --- 3. MASTER SIDE PANEL ---
 def render_sidebar():
+    if 'page' not in st.session_state:
+        st.session_state.page = "Interactive Dashboard" # Default Page
+
     with st.sidebar:
         st.markdown('<h2 style="margin-bottom:0; color:white;">SAYAR GYI\'S</h2>', unsafe_allow_html=True)
         st.markdown('<p style="color:#58a6ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">AI Marketing Agency</p>', unsafe_allow_html=True)
         st.write("")
         
-        # --- REPLACED SECTION: Industry News to Sayar Gyi's Intelligence ---
+        # --- REPLACED SECTION: Industry News to Intelligence ---
         st.markdown("### SAYAR GYI'S INTELLIGENCE")
         if st.button("🧠 Deep Strategy & Reports", use_container_width=True):
             st.session_state.page = "Intelligence"
@@ -58,14 +61,16 @@ def render_sidebar():
         st.divider()
         st.markdown("### MENU")
         
-        # Dashboard Navigation logic
+        # Navigation using Radio to maintain state purely
         nav_options = ["📊 Interactive Dashboard", "🧬 Brand DNA", "📂 Project Archive", "🎨 Asset Library"]
-        nav = st.radio("Nav", nav_options, label_visibility="collapsed")
+        # radio selection ကို session state နဲ့ ချိတ်ဆက်လိုက်သည်
+        selection = st.radio("Nav", nav_options, label_visibility="collapsed", 
+                             index=nav_options.index(st.session_state.page) if st.session_state.page in nav_options else 0)
         
-        # Page State Management
-        if nav == "📊 Interactive Dashboard":
-            st.session_state.page = "Dashboard"
-            
+        # Update session state only if radio is touched
+        if selection != st.session_state.page and selection in nav_options:
+            st.session_state.page = selection
+
         st.divider()
         st.markdown("### MY AGENTS")
         st.caption("🤖 Intel | 🎨 Creative | ⚖️ Auditor | ⚙️ Ops")
@@ -76,10 +81,8 @@ def render_sidebar():
         st.write("")
         st.markdown("### MODEL")
         st.radio("Engine", ["Gemini 1.5 Pro", "GPT-4o", "Claude 3.5"], horizontal=True, label_visibility="collapsed")
-    
-    return st.session_state.get('page', 'Dashboard')
 
-# --- 4. BALANCED DASHBOARD ENGINE (V88.0 EXACT) ---
+# --- 4. BALANCED DASHBOARD ENGINE (ONLY FOR INTERACTIVE DASHBOARD) ---
 def render_dashboard():
     h_col, f_col = st.columns([1.5, 1])
     with h_col:
@@ -134,13 +137,17 @@ def render_dashboard():
 # --- 5. EXECUTION ---
 if __name__ == "__main__":
     apply_v88_styles()
-    current_page = render_sidebar()
+    render_sidebar()
     
-    if current_page == "Dashboard":
+    # Logic: Interactive Dashboard မှာပဲ Dashboard UI ပေါ်မည်
+    if st.session_state.page == "📊 Interactive Dashboard":
         render_dashboard()
-    elif current_page == "Intelligence":
+    elif st.session_state.page == "Intelligence":
         st.markdown('<h1 style="font-weight:900; margin:0; font-size:38px;">Sayar Gyi\'s Intelligence</h1>', unsafe_allow_html=True)
-        st.info("Strategic Module Syncing (v101 Insights & v100 Reports Ready)...")
+        st.divider()
+        st.info("Ready for Deep Insights & Weekly Reports Integration...")
     else:
-        st.title(current_page)
-        st.info("Module Syncing...")
+        # အခြားစာမျက်နှာများတွင် Dashboard UI ကွယ်သွားမည်
+        st.markdown(f'<h1 style="font-weight:900; margin:0; font-size:38px;">{st.session_state.page}</h1>', unsafe_allow_html=True)
+        st.write("")
+        st.info(f"{st.session_state.page} Content coming soon...")
