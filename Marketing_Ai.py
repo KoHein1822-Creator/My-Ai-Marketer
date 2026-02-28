@@ -1,91 +1,75 @@
 import streamlit as st
+import streamlit.components.v1 as components
 from datetime import datetime
 
-# --- 1. GLOBAL SETTINGS & SMART FLOATING CSS ---
-st.set_page_config(layout="wide", page_title="SAYAR GYI v113.0")
+# --- 1. GLOBAL SETTINGS ---
+st.set_page_config(layout="wide", page_title="SAYAR GYI v114.0")
 
-def apply_v113_styles():
+def apply_v114_ui():
     st.markdown("""
         <style>
-        /* Overall Dashboard Setup */
         .block-container { padding-top: 2rem; max-width: 94%; background-color: #0d1117; }
-        
-        /* v101 Restored Cards */
         .v101-card {
             background: #161b22; border: 1px solid #30363d; border-radius: 12px;
             padding: 25px; margin-bottom: 25px; border-left: 5px solid #58a6ff;
         }
-
-        /* --- THE SMART FLOATING ROBOT (STABLE POSITION) --- */
-        /* div.stButton ကို တိုက်ရိုက်မကိုင်ဘဲ Button Element ကိုပဲ သီးသန့် Fixed လုပ်ခြင်း */
-        
-        button[key="robot_smart_trigger"] {
-            position: fixed !important;
-            bottom: 40px !important;
-            right: 40px !important;  /* ညာဘက်သို့ သေချာရွှေ့ထားခြင်း */
-            left: auto !important;   /* ဘယ်ဘက်ရောက်နေတဲ့ default ကို override လုပ်ခြင်း */
-            width: 85px !important;
-            height: 85px !important;
-            border-radius: 50% !important;
-            background: rgba(31, 111, 235, 0.2) !important;
-            backdrop-filter: blur(10px) !important; /* Glassmorphism Effect */
-            border: 2px solid #58a6ff !important;
-            box-shadow: 0 0 20px rgba(88, 166, 255, 0.4) !important;
-            z-index: 1000000 !important;
-            padding: 0 !important;
-            cursor: pointer !important;
-            animation: pulse-blue 2s infinite !important;
-        }
-
-        /* Pulse Animation for Smart Look */
-        @keyframes pulse-blue {
-            0% { box-shadow: 0 0 0 0 rgba(88, 166, 255, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(88, 166, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(88, 166, 255, 0); }
-        }
-
-        /* "AI" စာသားကို ဖျောက်ပြီး Robot Emoji တင်ခြင်း */
-        button[key="robot_smart_trigger"] p {
-            display: none !important;
-        }
-        button[key="robot_smart_trigger"]::after {
-            content: "🤖";
-            font-size: 45px !important;
-            line-height: 85px !important;
-            display: block !important;
-        }
-
-        button[key="robot_smart_trigger"]:hover {
-            transform: scale(1.1) !important;
-            background: rgba(31, 111, 235, 0.4) !important;
-            border-color: #bc8cff !important;
-        }
+        /* Streamlit ရဲ့ မူရင်း Button တွေကို ဖျောက်ထားခြင်း (Floating အတွက် အသုံးမပြုတော့ပါ) */
+        .stButton button[key="hidden_trigger"] { display: none; }
         </style>
     """, unsafe_allow_html=True)
 
-# --- 2. STRATEGIC AI DIALOG ---
-@st.dialog("🦾 SAYAR GYI STRATEGIC COMMAND")
+# --- 2. THE INFALLIBLE FLOATING ROBOT COMPONENT ---
+def render_robot_fab():
+    # ညာဘက်အောက်ခြေမှာ အမြဲတမ်းရှိနေမယ့် Custom HTML/JS Button
+    robot_html = """
+    <div id="robot-fab" style="
+        position: fixed;
+        bottom: 40px;
+        right: 40px;
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #1f6feb 0%, #58a6ff 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 45px;
+        cursor: pointer;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        z-index: 999999;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 3px solid #ffffff;
+    " onmouseover="this.style.transform='scale(1.1) rotate(10deg)'" 
+      onmouseout="this.style.transform='scale(1) rotate(0deg)'">
+        🤖
+    </div>
+
+    <script>
+        // Parent Streamlit app ဆီကို ခလုတ်နှိပ်လိုက်တဲ့အချက်ပြမှု ပေးပို့ခြင်း
+        const fab = document.getElementById('robot-fab');
+        fab.addEventListener('click', function() {
+            window.parent.postMessage({
+                type: 'streamlit:setComponentValue',
+                value: Math.random() // Unique value to trigger update
+            }, '*');
+        });
+    </script>
+    """
+    # Component ကို Dashboard ထဲ ထည့်သွင်းခြင်း
+    return components.html(robot_html, height=0)
+
+# --- 3. THE STRATEGIC DIALOG ---
+@st.dialog("🦾 SAYAR GYI COMMAND CENTER")
 def open_ai_command():
     st.markdown("### CEO Strategic Intelligence Access")
-    if "chat_log" not in st.session_state:
-        st.session_state.chat_log = []
-
-    for msg in st.session_state.chat_log:
-        with st.chat_message(msg["role"]):
-            st.write(msg["content"])
-
-    if query := st.chat_input("ဗျူဟာမြောက် မေးခွန်းများ မေးမြန်းပါ..."):
-        st.session_state.chat_log.append({"role": "user", "content": query})
-        with st.chat_message("user"):
-            st.write(query)
+    query = st.chat_input("ဗျူဟာမြောက် မေးခွန်းများ မေးမြန်းပါ...")
+    if query:
         with st.chat_message("assistant"):
-            ans = f"CEO ခင်ဗျာ၊ '{query}' အတွက် ကျွန်တော့်ရဲ့ ဗျူဟာမြောက် အကြံပြုချက်ကတော့..."
-            st.write(ans)
-            st.session_state.chat_log.append({"role": "assistant", "content": ans})
+            st.write(f"CEO ခင်ဗျာ၊ '{query}' အတွက် ကျွန်တော့်ရဲ့ ဗျူဟာမြောက် အကြံပြုချက်ကတော့...")
 
-# --- 3. DASHBOARD MAIN ---
+# --- 4. MAIN DASHBOARD ---
 def main():
-    apply_v113_styles()
+    apply_v114_ui()
     st.title("Sayar Gyi Mastermind Suite")
     
     tabs = st.tabs(["🌐 Global News", "🇲🇲 Local Pulse", "🧠 Deep Insights", "📄 Weekly Report"])
@@ -98,9 +82,12 @@ def main():
         with col2:
             st.markdown('<div class="v101-card" style="border-left-color:#f85149;"><b>Ad Strategy:</b> Data Signal Quality ကို မြှင့်တင်ပါ။</div>', unsafe_allow_html=True)
 
-    # --- THE TRIGGER BUTTON ---
-    # CSS မှာ 'left: auto' နဲ့ 'right: 40px' ပေးထားလို့ ညာဘက်အောက်ခြေမှာပဲ သေချာပေါက် ပေါ်နေပါမယ်။
-    st.button("AI", key="robot_smart_trigger", on_click=open_ai_command)
+    # Robot FAB ကို Render လုပ်ခြင်း
+    clicked = render_robot_fab()
+    
+    # ခလုတ်နှိပ်လိုက်ရင် Dialog ပွင့်စေမယ့် Logic
+    if clicked:
+        open_ai_command()
 
 if __name__ == "__main__":
     main()
