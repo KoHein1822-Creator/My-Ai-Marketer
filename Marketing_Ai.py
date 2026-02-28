@@ -3,9 +3,9 @@ import pandas as pd
 from datetime import datetime
 
 # --- 1. GLOBAL SETTINGS & CSS ---
-st.set_page_config(layout="wide", page_title="SAYAR GYI v105.0")
+st.set_page_config(layout="wide", page_title="SAYAR GYI v106.0")
 
-def apply_v105_styles():
+def apply_v106_styles():
     st.markdown("""
         <style>
         .block-container { padding-top: 1.5rem; max-width: 96%; }
@@ -24,54 +24,58 @@ def apply_v105_styles():
             border-radius: 12px; line-height: 1.8; color: #adbac7; font-family: 'Segoe UI', sans-serif;
         }
 
-        /* --- THE NEW WORKING ROBOT BUTTON --- */
-        .floating-robot-wrapper {
+        /* --- THE 100% WORKING FLOATING ROBOT BUTTON --- */
+        /* Streamlit ထဲက အောက်ဆုံးမှာရှိတဲ့ Button ကို Floating ဖြစ်အောင်လုပ်ခြင်း */
+        div[data-testid="stButton"]:last-of-type {
             position: fixed;
             bottom: 40px;
             right: 40px;
             z-index: 99999;
         }
         
-        /* We target the Streamlit button inside our wrapper and replace it with a sleek Robot Image */
-        .floating-robot-wrapper button {
-            background-image: url('https://img.icons8.com/nolan/96/bot.png') !important; 
-            background-size: cover !important;
-            background-position: center !important;
-            background-color: transparent !important;
-            color: transparent !important; /* Hides default text */
-            border: 2px solid #58a6ff !important;
-            border-radius: 50% !important;
-            width: 80px !important;
-            height: 80px !important;
-            box-shadow: 0 0 20px rgba(88, 166, 255, 0.4), inset 0 0 15px rgba(88, 166, 255, 0.2) !important;
-            transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+        div[data-testid="stButton"]:last-of-type > button {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1f6feb 0%, #58a6ff 100%);
+            border: 2px solid #79c0ff;
+            box-shadow: 0 8px 25px rgba(88, 166, 255, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 0;
         }
-        .floating-robot-wrapper button:hover {
-            transform: scale(1.1) !important;
-            box-shadow: 0 0 35px rgba(88, 166, 255, 0.8) !important;
-            border-color: #79c0ff !important;
+        
+        /* စက်ရုပ် Emoji ကို အလယ်တည့်တည့်နဲ့ အကြီးကြီးဖြစ်အောင်လုပ်ခြင်း */
+        div[data-testid="stButton"]:last-of-type > button p {
+            font-size: 38px;
+            margin: 0;
+            line-height: 1;
+        }
+        
+        div[data-testid="stButton"]:last-of-type > button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(88, 166, 255, 0.8);
+            border-color: #ffffff;
         }
         </style>
     """, unsafe_allow_html=True)
 
 # --- 2. THE WORKING CENTERED POP-UP (NOTION STYLE) ---
-# Streamlit Native Dialog (Works exactly like a centered modal popup)
-@st.dialog("✨ SAYAR GYI AI COMMAND CENTER")
+@st.dialog("🤖 SAYAR GYI AI COMMAND CENTER")
 def open_ai_assistant():
     st.markdown("<p style='color:#adbac7; font-size:14px;'>CEO ခင်ဗျာ၊ သိလိုသည့် ဗျူဟာမြောက် မေးခွန်းများကို ဤနေရာတွင် ရိုက်ထည့်ပါ။</p>", unsafe_allow_html=True)
     
-    # Notion-style Input
+    # User Input
     user_query = st.chat_input("E.g. AEO ဆိုတာကို မြန်မာလို အလွယ်ဆုံး ရှင်းပြပါ...")
     
     if user_query:
         st.markdown(f"**CEO:** {user_query}")
         with st.spinner("Analyzing Strategy..."):
-            st.success(f"**Sayar Gyi:** CEO ခင်ဗျာ၊ '{user_query}' နှင့် ပတ်သက်၍ အောက်ပါအတိုင်း ဆောင်ရွက်ရန် အကြံပြုအပ်ပါသည်။ (ဤနေရာတွင် AI ၏ ဉာဏ်ရည်တု အဖြေ ထွက်ပေါ်လာမည်ဖြစ်ပါသည်။)")
+            st.success(f"**Sayar Gyi 🤖:** CEO ခင်ဗျာ၊ '{user_query}' နှင့် ပတ်သက်၍ အောက်ပါအတိုင်း ဆောင်ရွက်ရန် အကြံပြုအပ်ပါသည်။ (ဤနေရာတွင် AI ၏ ဉာဏ်ရည်တု အဖြေ ထွက်ပေါ်လာမည်ဖြစ်ပါသည်။)")
 
 # --- 3. THE INSIGHT ENGINE (v101 QUALITY) ---
 def render_v101_insights():
     st.markdown("### 🧠 Sayar Gyi's Strategic Intelligence")
-    st.caption("Right-bottom ရှိ Robot Icon ကိုနှိပ်၍ Notion-style AI ဖြင့် အချိန်မရွေး ဆွေးနွေးနိုင်ပါသည်။")
+    st.caption("Right-bottom ရှိ Robot Icon 🤖 ကိုနှိပ်၍ Notion-style AI ဖြင့် အချိန်မရွေး ဆွေးနွေးနိုင်ပါသည်။")
     
     col1, col2 = st.columns(2)
     with col1:
@@ -114,16 +118,7 @@ Report ID: SG-2026-FEB-02
 
 # --- 5. EXECUTION ---
 def main():
-    apply_v105_styles()
-    
-    # ---------------------------------------------------------
-    # RENDER THE FLOATING ROBOT BUTTON
-    # Wrapping st.button inside the targeted CSS class to make it float and swap its background
-    st.markdown('<div class="floating-robot-wrapper">', unsafe_allow_html=True)
-    if st.button("OPEN_AI"):  # The text is hidden by CSS, only the icon shows
-        open_ai_assistant()   # This triggers the Pop-up Dialog
-    st.markdown('</div>', unsafe_allow_html=True)
-    # ---------------------------------------------------------
+    apply_v106_styles()
     
     st.markdown('<h1 style="font-weight:900;">Sayar Gyi Mastermind Suite</h1>', unsafe_allow_html=True)
     
@@ -136,6 +131,14 @@ def main():
     
     with tab_report:
         render_v101_report()
+
+    # ---------------------------------------------------------
+    # THE TRIGGER BUTTON (MUST BE AT THE VERY BOTTOM OF THE SCRIPT)
+    # CSS `:last-of-type` က ဒီ Button ကို ဖမ်းပြီး ညာဘက်အောက်ခြေကို ရွှေ့ပေးသွားပါမယ်။
+    st.write("") # Spacer
+    if st.button("🤖", key="robot_ai_btn"):
+        open_ai_assistant()
+    # ---------------------------------------------------------
 
 if __name__ == "__main__":
     main()
