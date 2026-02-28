@@ -114,4 +114,10 @@ def render_intelligence():
 
 # --- MAIN ---
 def main():
-    apply_v8
+    apply_v88_styles()
+    if 'page' not in st.session_state: st.session_state.page = "dashboard"
+    render_sidebar()
+    if st.session_state.page == "dashboard": render_dashboard()
+    else: render_intelligence()
+
+if __name__ == "__main__": main()
