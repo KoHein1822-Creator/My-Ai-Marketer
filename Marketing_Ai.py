@@ -207,6 +207,7 @@ def render_deep_insights():
             <b>💡 CEO လုပ်ဆောင်ရန်:</b> Telegram နှင့် Viber Community ကို 'VIP Loyalty Space' အဖြစ် အမြန်ဆုံး အကောင်အထည်ဖော်ပါ။ Facebook သည် 'Traffic' အတွက်သာဖြစ်ပြီး Community သည် 'Sales' အတွက်ဖြစ်ရပါမည်။
         </div>
     </div>""", unsafe_allow_html=True)
+    
     # --- 3. BURMESE REPORT GENERATOR ---
 def generate_burmese_report():
     today = datetime.now().strftime("%d-%m-%Y")
@@ -254,4 +255,5 @@ if __name__ == "__main__":
     else:
         st.markdown(f'<h1 style="font-weight:900; margin:0; font-size:38px;">{st.session_state.page}</h1>', unsafe_allow_html=True)
         st.info(f"{st.session_state.page} Module syncing...")
+
 
