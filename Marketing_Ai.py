@@ -167,79 +167,79 @@ def render_intelligence_hub():
         """
         st.markdown(local_table_html, unsafe_allow_html=True)
 
-    # --- TAB 3: DEEP INSIGHTS ---
-    with tab3:
-        st.markdown('<h3 style="margin-top: 15px; margin-bottom: 5px;">🧠 AI Deep Strategic Insights</h3>', unsafe_allow_html=True)
-        st.caption("Auto-generated based on Global & Local Pulse Data")
-        
-        st.markdown("""
-        <div class="report-box">
-            <div class="report-header">🎯 Market Vulnerability & Opportunity Analysis</div>
-            <p style="color:#e6edf3; font-size:14px; line-height: 1.6;">
-                လက်ရှိ <strong>Myanmar Market</strong> တွင် Facebook Algorithm အပြောင်းအလဲကြောင့် Organic Reach သိသိသာသာ ကျဆင်းနေသော်လည်း၊ 
-                <strong>Telegram Channels</strong> နှင့် <strong>Conversational Marketing (Messenger Bots)</strong> ဘက်သို့ ပြောင်းလဲအသုံးပြုသူ (Early Adopters) များမှာ 
-                Engagement Rate <strong>45% ပိုမိုမြင့်တက်</strong> နေသည်ကို တွေ့ရပါသည်။ 
-            </p>
-            <ul style="color:#8b949e; font-size:14px;">
-                <li><strong style="color:#58a6ff">Actionable Advice:</strong> လက်ရှိ Facebook Content များကို Information သက်သက်မဟုတ်ဘဲ, User များကို Messenger ထဲသို့ ခေါ်ဆောင်နိုင်မည့် CTA မျိုး ပြောင်းလဲအသုံးပြုရန် လိုအပ်ပါသည်။</li>
-                <li><strong style="color:#58a6ff">Risk Alert:</strong> Competitor များသည် AI Copywriting ကို တွင်ကျယ်စွာ သုံးလာပြီဖြစ်ရာ, Brand Voice သီးသန့်မရှိသော Content များမှာ Scroll ကျော်ခံရရန် 80% သေချာနေပါသည်။</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        c1, c2 = st.columns(2)
-        with c1:
-            st.markdown("""
-            <div class="report-box">
-                <div class="report-header">📈 Suggested Content Pillars</div>
-                <ol style="color:#e6edf3; font-size:14px; padding-left: 15px;">
-                    <li><strong>Behind-The-Scenes:</strong> Reali-Tea Trend အရ လုပ်ငန်းလည်ပတ်ပုံ (Authentic) ဗီဒီယိုများ။</li>
-                    <li><strong>Value-First Tutorials:</strong> ကြော်ငြာမဆန်ဘဲ တိုက်ရိုက်အကျိုးရှိစေမည့် Tips & Tricks များ။</li>
-                    <li><strong>Community Polling:</strong> Telegram တွင် User များနှင့် တိုက်ရိုက်မေးခွန်းမေးမြန်းခြင်း။</li>
-                </ol>
-            </div>
-            """, unsafe_allow_html=True)
-        with c2:
-            st.markdown("""
-            <div class="report-box">
-                <div class="report-header">⚙️ Recommended Tools Integration</div>
-                <ul style="color:#e6edf3; font-size:14px; padding-left: 15px;">
-                    <li><strong>ManyChat / Chatfuel:</strong> For advanced Messenger Bot flows.</li>
-                    <li><strong>KPay Direct Link:</strong> One-click payment setup inside content.</li>
-                    <li><strong>Midjourney V6:</strong> For hyper-realistic local lifestyle imagery.</li>
-                </ul>
-            </div>
-            """, unsafe_allow_html=True)
+    # --- 2. THE DEEP INSIGHT ENGINE ---
+def render_deep_insights():
+    st.markdown("### 🧠 Sayar Gyi's Strategic Intelligence (February 2026 Edition)")
+    st.info("Industry အပြောင်းအလဲများအပေါ် အခြေခံထားသော အသေးစိတ် ဗျူဟာမြောက် သုံးသပ်ချက်များ")
 
-    # --- TAB 4: WEEKLY REPORT ---
-    with tab4:
-        st.markdown('<div style="display:flex; justify-content:space-between; align-items:center;">'
-                    '<h3 style="margin-top: 15px; margin-bottom: 5px;">📄 Executive Weekly Summary</h3>'
-                    '</div>', unsafe_allow_html=True)
-                    
-        # Button data converted to byte-string to ensure Streamlit safety
-        st.download_button(label="📥 Download Full PDF Report", data=b"Sayar Gyi PDF Dummy Data", file_name="Sayar_Gyi_Weekly_Report.pdf", mime="application/pdf")
-        
-        st.markdown("""
-        <div class="report-box">
-            <div class="report-header">📊 Performance vs KPI (Week 42)</div>
-            <table class="intel-table" style="margin-top:0;">
-                <tr><th>Metric</th><th>Target</th><th>Actual</th><th>Status</th></tr>
-                <tr><td>Total Reach</td><td>100,000</td><td style="color:#ffffff; font-weight:bold;">112,450</td><td><span class="impact-badge" style="background:rgba(63, 185, 80, 0.15); color:#3fb950;">Exceeded</span></td></tr>
-                <tr><td>Cost Per Message (CPM)</td><td>$0.50</td><td style="color:#ffffff; font-weight:bold;">$0.42</td><td><span class="impact-badge" style="background:rgba(63, 185, 80, 0.15); color:#3fb950;">Optimized</span></td></tr>
-                <tr><td>Link Clicks</td><td>2,000</td><td style="color:#ffffff; font-weight:bold;">1,850</td><td><span class="impact-badge" style="background:rgba(210, 153, 34, 0.15); color:#d29922; border-color:rgba(210, 153, 34, 0.3);">Needs Work</span></td></tr>
-            </table>
+    # PERSPECTIVE 1: CONTENT & AEO
+    st.markdown("""<div class="perspective-card">
+        <div class="perspective-header">🖋️ Content Strategy: From SEO to AEO (Answer Engine Optimization)</div>
+        <p style="color:#adbac7;">
+            <b>အခြေအနေ:</b> ၂၀၂၆ မှာ Google Search ထက် SearchGPT နဲ့ Gemini တို့လို Answer Engines တွေက နေရာယူလာပါပြီ။ User တွေက Website ထဲကို ဝင်မကြည့်တော့ဘဲ AI ရဲ့ အဖြေကိုပဲ တိုက်ရိုက်ဖတ်တော့မှာပါ။<br><br>
+            <b>Business Impact:</b> ကိုယ့်ရဲ့ Content တွေဟာ 'Keywords' ပေါ်မှာ အခြေမခံဘဲ AI က 'နားလည်နိုင်တဲ့' <b>Structured Data</b> ဖြစ်ဖို့ လိုပါတယ်။ Generic ဆန်တဲ့ AI Content တွေဟာ Algorithm ရဲ့ ဒဏ်ခတ်မှုကို ခံရပါလိမ့်မယ်။
+        </p>
+        <div class="action-point">
+            <b>💡 CEO လုပ်ဆောင်ရန်:</b> ကိုယ့်လုပ်ငန်းရဲ့ Expert Opinion ပါတဲ့ Case Studies တွေကို အားဖြည့်ပါ။ AI က မပေးနိုင်တဲ့ 'ကိုယ်တွေ့ အတွေ့အကြုံ' (First-hand Experience) ကသာ ၂၀၂၆ ရဲ့ အဖိုးတန်ဆုံး Content ဖြစ်ပါတယ်။
         </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="report-box">
-            <div class="report-header">📝 AI Auditor Notes</div>
-            <p style="color:#8b949e; font-size:14px; line-height: 1.6;">
-                "ဒီအပတ် Campaign တွေမှာ Video Content တွေက Graphic Post တွေထက် Engagement <strong>3ဆ ပိုရ</strong> တာကို တွေ့ရပါတယ်။ ဒါပေမယ့် Video အစပိုင်း ၃ စက္ကန့်မှာ Hook မမိတဲ့ Video တွေက Retention အရမ်းကျနေပါတယ်။ နောက်အပတ်အတွက် Video Hook တွေကို Emotionally Trigger ဖြစ်စေမယ့် စာသားတွေနဲ့ စတင်ဖို့ အကြံပြုပါတယ်။"
-            </p>
+    </div>""", unsafe_allow_html=True)
+
+    # PERSPECTIVE 2: MEDIA BUYING & AI SIGNALS
+    st.markdown("""<div class="perspective-card" style="border-left-color: #f85149;">
+        <div class="perspective-header">🎯 Media Buying: The Creative-Led AI Era</div>
+        <p style="color:#adbac7;">
+            <b>အခြေအနေ:</b> Facebook နဲ့ Google တို့ရဲ့ Targeting စနစ်တွေက 'Black-box' ဖြစ်သွားပါပြီ။ လူကိုယ်တိုင် Audience ရွေးစရာမလိုဘဲ AI ကပဲ အကုန်လုပ်ပေးနေတာပါ။ <br><br>
+            <b>Business Impact:</b> အခုခေတ်မှာ Target ရွေးတာထက် <b>'Creative Quality'</b> က ပိုအရေးကြီးလာပါတယ်။ Creative မကောင်းရင် AI က Target မှားရှာပေးတတ်ပါတယ်။
+        </p>
+        <div class="action-point">
+            <b>💡 CEO လုပ်ဆောင်ရန်:</b> Media Buying Budget ရဲ့ ၄၀% ကို Creative Testing (Video variations များများစမ်းခြင်း) မှာ သုံးခိုင်းပါ။ Targeting ထက် Hook နဲ့ Visual အပေါ်မှာပဲ အာရုံစိုက်ခိုင်းပါ။
         </div>
-        """, unsafe_allow_html=True)
+    </div>""", unsafe_allow_html=True)
+
+    # PERSPECTIVE 3: COMMUNITY & BRAND SAFETY
+    st.markdown("""<div class="perspective-card" style="border-left-color: #d2a8ff;">
+        <div class="perspective-header">📱 Social & Community: Digital Resilience</div>
+        <p style="color:#adbac7;">
+            <b>အခြေအနေ:</b> မြန်မာပြည်မှာ Facebook ရဲ့ Reach က ပိုပြီးခန့်မှန်းရခက်လာပါတယ်။ Algorithm က User တွေရဲ့ <b>'Dwell Time'</b> (တစ်နေရာတည်းမှာ ကြာကြာနေမှု) ကိုပဲ ဦးစားပေးနေပါတယ်။ <br><br>
+            <b>Business Impact:</b> Facebook ပေါ်မှာပဲ ပုံအောထားရင် လုပ်ငန်းက အန္တရာယ်ရှိပါတယ်။ Community ကို ပိုင်ဆိုင်ဖို့ (Own your audience) လိုအပ်ပါတယ်။
+        </p>
+        <div class="action-point">
+            <b>💡 CEO လုပ်ဆောင်ရန်:</b> Telegram နှင့် Viber Community ကို 'VIP Loyalty Space' အဖြစ် အမြန်ဆုံး အကောင်အထည်ဖော်ပါ။ Facebook သည် 'Traffic' အတွက်သာဖြစ်ပြီး Community သည် 'Sales' အတွက်ဖြစ်ရပါမည်။
+        </div>
+    </div>""", unsafe_allow_html=True)
+    # --- 3. BURMESE REPORT GENERATOR ---
+def generate_burmese_report():
+    today = datetime.now().strftime("%d-%m-%Y")
+    report = f"""
+    SAYAR GYI EXECUTIVE WEEKLY REPORT (မြန်မာဘာသာ)
+    ထုတ်ပြန်သည့်ရက်စွဲ - {today}
+    
+    ၁။ အမှုဆောင်အနှစ်ချုပ် (EXECUTIVE SUMMARY)
+    ယခုအပတ်တွင် AI လောက၌ SearchGPT ၏ ကြော်ငြာစနစ်သစ်နှင့် Meta ၏ Algorithm အပြောင်းအလဲများမှာ အဓိကဖြစ်သည်။ 
+    ပြည်တွင်းဈေးကွက်တွင်လည်း Telegram Commerce အားကောင်းလာသည်ကို တွေ့ရပါသည်။
+    
+    ၂။ ကဏ္ဍအလိုက် ဗျူဟာမြောက် ညွှန်ကြားချက်များ
+    
+    [CONTENT MARKETING]
+    - AI-generated content သက်သက်ထက် လူသားဆန်သော (Authentic) Content များကို ဦးစားပေးပါ။
+    - Answer Engine Optimization (AEO) အတွက် ပြင်ဆင်ပါ။
+    
+    [MEDIA BUYING]
+    - Creative is the new Targeting. ကြော်ငြာ၏ Creative ကောင်းမွန်မှုအပေါ် မူတည်၍ AI က Audience ရှာပေးပါလိမ့်မည်။
+    - Signal Efficiency ကို မြှင့်တင်ရန် First-party data များကို စနစ်တကျသုံးပါ။
+    
+    [COMMUNITY & SOCIAL]
+    - Facebook တစ်ခုတည်းကို မကိုးစားဘဲ Telegram Community ကို အရန်အဖြစ် တည်ဆောက်ပါ။
+    - Dwell Time မြှင့်တင်ရန် Video hooks များကို အားဖြည့်ပါ။
+    
+    ၃။ အရေးကြီးသော သတိပေးချက် (CRITICAL ALERT)
+    လက်ရှိ Algorithm များသည် User ၏ စိတ်ဝင်စားမှု (Interest) ကို အချိန်နှင့်အမျှ ပြောင်းလဲခန့်မှန်းနေသောကြောင့် 
+    Content များကို ပုံသေ (Static) မထားဘဲ Dynamic ဖြစ်အောင် ပြင်ဆင်ရန် လိုအပ်ပါသည်။
+    
+    SAYAR GYI AI STRATEGY ENGINE (v100.0) မှ အတည်ပြုပြီး။
+    ----------------------------------------------------------------------
+    """
+    return report
 
 # --- 7. EXECUTION ROUTER ---
 if __name__ == "__main__":
@@ -254,3 +254,4 @@ if __name__ == "__main__":
     else:
         st.markdown(f'<h1 style="font-weight:900; margin:0; font-size:38px;">{st.session_state.page}</h1>', unsafe_allow_html=True)
         st.info(f"{st.session_state.page} Module syncing...")
+
