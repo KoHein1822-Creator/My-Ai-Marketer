@@ -183,4 +183,29 @@ def render_dashboard():
     p1, p2, p3, p4 = st.columns(4)
     pipeline = [("Drafting", "12"), ("Pending", "5"), ("Scheduled", "18"), ("Published", "145")]
     for i, (label, val) in enumerate(pipeline):
-        with [p1, p2
+        with [p1, p2, p3, p4][i]:
+            st.markdown(f'<div class="status-box-v88"><div class="m-label-v88">{label}</div><div style="font-size:42px; font-weight:900; color:#58a6ff; margin-top:10px;">{val}</div></div>', unsafe_allow_html=True)
+
+    # Analytics Cards
+    st.write("")
+    st.markdown(f'<p class="main-header">{platform} Deep Insights</p>', unsafe_allow_html=True)
+    
+    col_group = st.columns(3)
+    for i in range(3):
+        with col_group[i]:
+            st.markdown(f'<div class="insight-card-v88"><div class="m-label-v88">Metric {i+1}</div><div class="header-flex"><span class="m-value-v88">{(i+1)*25.4}K</span><span class="m-delta-v88">↑12%</span></div>', unsafe_allow_html=True)
+            st.line_chart(np.random.randn(20, 1), height=150)
+            st.markdown('</div>', unsafe_allow_html=True)
+
+# --- 7. MAIN EXECUTION ---
+if __name__ == "__main__":
+    apply_master_styles()
+    render_sidebar()
+    
+    if st.session_state.page == "Intelligence":
+        render_intelligence_hub()
+    elif st.session_state.page == "📊 Interactive Dashboard":
+        render_dashboard()
+    else:
+        st.markdown(f'<h1 style="font-weight:900; margin:0; font-size:38px;">{st.session_state.page}</h1>', unsafe_allow_html=True)
+        st.info(f"{st.session_state.page} Module syncing...")
