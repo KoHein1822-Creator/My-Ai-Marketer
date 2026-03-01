@@ -146,4 +146,39 @@ def render_intelligence_hub():
                 <b>အခြေအနေ:</b> Targeting စနစ်တွေက 'Black-box' ဖြစ်သွားပါပြီ။ Creative မကောင်းရင် AI က Target မှားရှာပေးတတ်ပါတယ်။
             </p>
             <div class="action-point">
-                <b>💡 CEO လုပ်ဆောင်ရန်:</b> Media Buying Budget ရဲ့ ၄၀% ကို Creative Testing
+                <b>💡 CEO လုပ်ဆောင်ရန်:</b> Media Buying Budget ရဲ့ ၄၀% ကို Creative Testing (Video variations) မှာ သုံးခိုင်းပါ။
+            </div>
+        </div>
+        
+        <div class="perspective-card" style="border-left-color: #d2a8ff;">
+            <div class="perspective-header">📱 Social & Community: Resilience</div>
+            <p style="color:#adbac7;">
+                <b>အခြေအနေ:</b> Facebook ရဲ့ Reach က ခန့်မှန်းရခက်လာပါတယ်။ Dwell Time ကိုပဲ Algorithm က ကြည့်ပါတော့တယ်။
+            </p>
+            <div class="action-point">
+                <b>💡 CEO လုပ်ဆောင်ရန်:</b> Telegram နှင့် Viber Community ကို 'VIP Loyalty Space' အဖြစ် အမြန်ဆုံး အကောင်အထည်ဖော်ပါ။
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # --- TAB 4: WEEKLY REPORT (V100 RESTORED) ---
+    with t4:
+        st.markdown("### 📄 Professional Weekly Report (Burmese)")
+        if st.button("Generate & Preview Executive Report"):
+            report_text = generate_executive_report()
+            st.markdown(f"""
+            <div class="report-paper">
+                <pre style="white-space: pre-wrap; color:#1e293b; font-size:15px; font-family:inherit;">{report_text}</pre>
+            </div>
+            """, unsafe_allow_html=True)
+            st.download_button("📥 Download Official Report", report_text, file_name=f"Executive_Report_{datetime.now().strftime('%Y%m%d')}.txt")
+
+# --- 7. MAIN ---
+if __name__ == "__main__":
+    apply_styles()
+    render_sidebar()
+    if st.session_state.page == "Intelligence":
+        render_intelligence_hub()
+    else:
+        st.title(st.session_state.page)
+        st.info("Module loading...")
