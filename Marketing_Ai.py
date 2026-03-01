@@ -1,127 +1,156 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from datetime import datetime
 
-# --- 1. CONFIG & STYLES (အုတ်မြစ် - လုံးဝမပြင်ပါနှင့်) ---
-st.set_page_config(layout="wide", page_title="SAYAR GYI v151.0", page_icon="⚖️")
+# --- 1. GLOBAL CONFIGURATION ---
+st.set_page_config(
+    layout="wide", 
+    page_title="SAYAR GYI v88.0 | Balanced Executive",
+    page_icon="⚖️"
+)
 
-def apply_fixed_styles():
+# --- 2. PREMIUM CSS ---
+def apply_v88_styles():
     st.markdown("""
         <style>
-        /* Base Layout */
         .block-container { padding-top: 1.5rem; max-width: 96%; padding-bottom: 5rem; }
         [data-testid="stSidebar"] { background-color: #0d1117; border-right: 1px solid #30363d; }
         
-        /* Dashboard & Intelligence Cards */
-        .main-header { color: #58a6ff; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border-left: 5px solid #58a6ff; padding-left: 15px; margin-bottom: 15px; }
-        .status-box-v88 { background: #161b22; border: 1px solid #30363d; padding: 30px 15px; border-radius: 12px; text-align: center; }
-        .insight-card-v88 { background: #161b22; border: 1px solid #30363d; padding: 22px; border-radius: 15px; margin-bottom: 15px; }
-        .perspective-card { background: #0d1117; border: 1px solid #30363d; border-radius: 12px; padding: 25px; margin-bottom: 25px; border-left: 5px solid #58a6ff; }
+        .main-header {
+            color: #58a6ff; font-size: 13px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 2px;
+            margin-bottom: 15px; border-left: 5px solid #58a6ff; padding-left: 15px;
+        }
+
+        .status-box-v88 {
+            background: #161b22; border: 1px solid #30363d;
+            padding: 30px 15px; border-radius: 12px; text-align: center;
+        }
         
-        /* Values & Deltas */
+        .insight-card-v88 {
+            background: #161b22; border: 1px solid #30363d;
+            padding: 22px; border-radius: 15px; margin-bottom: 15px;
+        }
+        
+        .m-label-v88 { color: #8b949e; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px; }
         .m-value-v88 { color: #ffffff; font-size: 34px; font-weight: 800; line-height: 1.1; }
         .m-delta-v88 { color: #3fb950; font-size: 14px; font-weight: 700; background: rgba(63, 185, 80, 0.1); padding: 3px 8px; border-radius: 5px; }
-        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         
-        /* Sidebar Buttons (Screenshot 26 Style) */
-        div.stButton > button {
-            background-color: #161b22; color: #adbac7; border: 1px solid #30363d;
-            text-align: left; padding: 10px 15px; width: 100%; border-radius: 8px; margin-bottom: -10px;
+        .header-flex {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 18px;
         }
-        div.stButton > button:hover { border-color: #58a6ff; color: white; background-color: #21262d; }
-        
-        /* Weekly Report Paper */
-        .report-paper { background: #ffffff; color: #1e293b; padding: 50px; border-radius: 4px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); line-height: 1.8; font-family: sans-serif; }
         </style>
     """, unsafe_allow_html=True)
 
-# --- 2. SIDEBAR LOGIC (SCREENSHOT 26) ---
+# --- 3. MASTER SIDE PANEL (FIXED STATE LOGIC) ---
 def render_sidebar():
+    # Session State စတင်သတ်မှတ်ခြင်း
     if 'page' not in st.session_state:
-        st.session_state.page = "Dashboard"
+        st.session_state.page = "📊 Interactive Dashboard"
 
     with st.sidebar:
-        st.markdown('<h2 style="color:white; margin-bottom:0;">SAYAR GYI\'S</h2>', unsafe_allow_html=True)
+        st.markdown('<h2 style="margin-bottom:0; color:white;">SAYAR GYI\'S</h2>', unsafe_allow_html=True)
         st.markdown('<p style="color:#58a6ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">AI Marketing Agency</p>', unsafe_allow_html=True)
         st.write("")
         
         st.markdown("### SAYAR GYI'S INTELLIGENCE")
-        if st.button("🧠 Deep Strategy & Reports"):
+        # Intelligence Button နှိပ်လျှင် State ပြောင်းရန် Logic
+        if st.button("🧠 Deep Strategy & Reports", use_container_width=True):
             st.session_state.page = "Intelligence"
         
         st.divider()
         st.markdown("### MENU")
-        if st.button("📊 Interactive Dashboard"): st.session_state.page = "Dashboard"
-        if st.button("🧬 Brand DNA"): st.session_state.page = "Brand DNA"
-        if st.button("📂 Project Archive"): st.session_state.page = "Archive"
-        if st.button("🎨 Asset Library"): st.session_state.page = "Library"
         
+        nav_options = ["📊 Interactive Dashboard", "🧬 Brand DNA", "📂 Project Archive", "🎨 Asset Library"]
+        
+        # FIX: အကယ်၍ Intelligence Page ရောက်နေလျှင် Menu Radio ကို Unselect လုပ်ထားမည် (index=None)
+        # သို့မှသာ Button နှင့် Radio အချင်းချင်း ငြိခြင်း (Conflict) ဖြစ်မည်မဟုတ်ပါ။
+        current_idx = nav_options.index(st.session_state.page) if st.session_state.page in nav_options else None
+        
+        def on_nav_change():
+            st.session_state.page = st.session_state.menu_radio
+
+        # Callback သုံးပြီး Radio ရဲ့ အပြောင်းအလဲကို ဖမ်းယူခြင်း
+        st.radio("Nav", nav_options, index=current_idx, key="menu_radio", on_change=on_nav_change, label_visibility="collapsed")
+
         st.divider()
         st.markdown("### MY AGENTS")
-        st.button("🔥 Switch to Creator Mode")
+        st.caption("🤖 Intel | 🎨 Creative | ⚖️ Auditor | ⚙️ Ops")
         st.write("")
+        st.button("🔥 Switch to Creator Mode", use_container_width=True)
+        st.divider()
         st.success("Core Engine: Online")
-        st.radio("Engine", ["Gemini 1.5 Pro", "GPT-4o"], horizontal=True, label_visibility="collapsed")
+        st.write("")
+        st.markdown("### MODEL")
+        st.radio("Engine", ["Gemini 1.5 Pro", "GPT-4o", "Claude 3.5"], horizontal=True, label_visibility="collapsed")
 
-# --- 3. PAGE: DASHBOARD (V143 LOGIC) ---
-def show_dashboard():
+# --- 4. BALANCED DASHBOARD ENGINE ---
+def render_dashboard():
     h_col, f_col = st.columns([1.5, 1])
-    with h_col: st.markdown('<h1 style="font-weight:900; font-size:38px;">Strategic Dashboard</h1>', unsafe_allow_html=True)
+    with h_col:
+        st.markdown('<h1 style="font-weight:900; margin:0; font-size:38px;">Strategic Dashboard</h1>', unsafe_allow_html=True)
     with f_col:
         c1, c2, c3 = st.columns(3)
         with c1: platform = st.selectbox("Platform", ["Facebook", "TikTok", "YouTube"])
         with c2: timeframe = st.selectbox("Timeframe", ["Weekly", "Monthly", "Yearly"])
         with c3: chart_style = st.selectbox("View Style", ["Line Chart", "Area Chart", "Bar Chart"])
 
-    # Content Pipeline
     st.markdown('<p class="main-header" style="margin-top:20px;">Content Creation Status</p>', unsafe_allow_html=True)
-    p_cols = st.columns(4)
-    status = [("Drafting", "12"), ("Pending", "5"), ("Scheduled", "18"), ("Published", "145")]
-    for i, (label, val) in enumerate(status):
-        with p_cols[i]:
-            st.markdown(f'<div class="status-box-v88"><div style="color:#8b949e; font-size:12px;">{label}</div>'
-                        f'<div style="font-size:40px; font-weight:900; color:#58a6ff;">{val}</div></div>', unsafe_allow_html=True)
+    p1, p2, p3, p4 = st.columns(4)
+    pipeline = [("Drafting", "12"), ("Pending", "5"), ("Scheduled", "18"), ("Published", "145")]
+    for i, (label, val) in enumerate(pipeline):
+        with [p1, p2, p3, p4][i]:
+            st.markdown(f'<div class="status-box-v88"><div class="m-label-v88">{label}</div>'
+                        f'<div style="font-size:42px; font-weight:900; color:#58a6ff; margin-top:10px;">{val}</div></div>', unsafe_allow_html=True)
 
-    # Metrics
     st.write("")
-    st.markdown(f'<p class="main-header">{platform} Trends</p>', unsafe_allow_html=True)
-    m_cols = st.columns(3)
+    st.write("")
+    st.markdown(f'<p class="main-header">{platform} Deep Insights & Trends</p>', unsafe_allow_html=True)
+
+    def render_balanced_card(label, value, delta):
+        st.markdown(f"""
+            <div class="insight-card-v88">
+                <div class="m-label-v88">{label}</div>
+                <div class="header-flex">
+                    <span class="m-value-v88">{value}</span>
+                    <span class="m-delta-v88">{delta}</span>
+                </div>
+        """, unsafe_allow_html=True)
+        data = pd.DataFrame(np.random.randn(25, 1), columns=['Val'])
+        if chart_style == "Line Chart": st.line_chart(data, height=170, use_container_width=True)
+        elif chart_style == "Area Chart": st.area_chart(data, height=170, use_container_width=True)
+        else: st.bar_chart(data, height=170, use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    metrics = {
+        "Facebook": [("Views", "85.2K", "↑12%"), ("Interactions", "3.2K", "↑8%"), ("Followers", "12.4K", "↑1%"), ("Page Visits", "4.5K", "↑15%"), ("Link Clicks", "920", "↑22%"), ("Conversations", "128", "↑5%")],
+        "TikTok": [("Video Views", "1.2M", "↑45%"), ("Shares", "12K", "↑30%"), ("Saves", "4.5K", "↑18%"), ("Profile Visits", "25K", "↑10%"), ("Bio Clicks", "1.5K", "↑25%"), ("Completion", "65%", "↑5%")],
+        "YouTube": [("Impressions", "2.5M", "↑5%"), ("Watch Time", "14K h", "↑12%"), ("Subscribers", "420", "↑2%"), ("Avg Duration", "4:32", "↑0:45"), ("CTR", "8.5%", "↑1.2%"), ("Comments", "850", "↑15%")]
+    }
+    selected_metrics = metrics[platform]
+
+    col_group1 = st.columns(3)
     for i in range(3):
-        with m_cols[i]:
-            st.markdown(f'<div class="insight-card-v88"><div class="header-flex"><div><small style="color:#8b949e;">METRIC {i+1}</small><div class="m-value-v88">{20+i}.5K</div></div><span class="m-delta-v88">↑12%</span></div>', unsafe_allow_html=True)
-            st.line_chart(np.random.randn(15, 1), height=150)
-            st.markdown('</div>', unsafe_allow_html=True)
+        with col_group1[i]: render_balanced_card(selected_metrics[i][0], selected_metrics[i][1], selected_metrics[i][2])
+    col_group2 = st.columns(3)
+    for i in range(3, 6):
+        with col_group2[i-3]: render_balanced_card(selected_metrics[i][0], selected_metrics[i][1], selected_metrics[i][2])
 
-# --- 4. PAGE: INTELLIGENCE (TAB 4 ခု) ---
-def show_intelligence():
-    st.markdown('<h1 style="font-weight:900; font-size:38px;">Intelligence Suite</h1>', unsafe_allow_html=True)
-    t1, t2, t3, t4 = st.tabs(["🌐 Global Pulse", "🇲🇲 Local Pulse", "🧠 Deep Insights", "📄 Weekly Report"])
+# --- 5. EXECUTION ---
+if __name__ == "__main__":
+    apply_v88_styles()
+    render_sidebar()
     
-    with t1:
-        st.info("Global Marketing & AI Trends Loading...")
-        st.table(pd.DataFrame({"Trend": ["AEO", "Agentic Ads"], "Impact": ["High", "Critical"]}))
-    
-    with t2:
-        st.warning("Myanmar Digital Ecosystem: Telegram & VPN usage rising.")
-
-    with t3:
-        st.markdown("""<div class="perspective-card"><h3>🖋️ Content: SEO to AEO</h3><p>AI Answer Engines တွေအတွက် အသင့်ဖြစ်ဖို့ Structured Data နဲ့ Case Studies တွေ အားဖြည့်ပါ။</p></div>""", unsafe_allow_html=True)
-        st.markdown("""<div class="perspective-card" style="border-left-color: #f85149;"><h3>🎯 Media Buying: Creative-Led</h3><p>AI Targeting ကို စိတ်မချပါနဲ့။ Creative Variation များများနဲ့ AI ကို လမ်းပြပါ။</p></div>""", unsafe_allow_html=True)
-
-    with t4:
-        if st.button("Generate Executive Report"):
-            report_date = datetime.now().strftime("%d %B %Y")
-            st.markdown(f'<div class="report-paper"><h2>EXECUTIVE REPORT</h2><p>Date: {report_date}</p><hr><p><b>Summary:</b> ယခုအပတ်တွင် Content Engagement 12% တက်လာသော်လည်း Reach မှာ ပုံမှန်သာ ရှိပါသည်။</p><p><b>Action:</b> Short-form Video Hook များကို ပြန်လည်စစ်ဆေးရန်။</p></div>', unsafe_allow_html=True)
-
-# --- 5. EXECUTION (အဓိက မောင်းနှင်ချက်) ---
-apply_fixed_styles()
-render_sidebar()
-
-if st.session_state.page == "Dashboard":
-    show_dashboard()
-elif st.session_state.page == "Intelligence":
-    show_intelligence()
-else:
-    st.markdown(f"<h1>{st.session_state.page}</h1>", unsafe_allow_html=True)
-    st.info("Module Syncing in progress...")
+    # ရှင်းလင်းပြတ်သားသော Page Display Logic
+    if st.session_state.page == "📊 Interactive Dashboard":
+        render_dashboard()
+    elif st.session_state.page == "Intelligence":
+        st.markdown('<h1 style="font-weight:900; margin:0; font-size:38px;">Sayar Gyi\'s Intelligence</h1>', unsafe_allow_html=True)
+        st.divider()
+        st.info("Ready for Deep Insights & Weekly Reports Integration...")
+    else:
+        # အခြား Menu များ (Brand DNA, Project Archive, etc.)
+        st.markdown(f'<h1 style="font-weight:900; margin:0; font-size:38px;">{st.session_state.page}</h1>', unsafe_allow_html=True)
+        st.write("")
+        st.info(f"{st.session_state.page} Module syncing...")
