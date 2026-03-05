@@ -103,4 +103,15 @@ with tab_dash:
             cur_val = d_cur['value'].sum()
             
             st.markdown(f"""
-                <div style="background:{C['card']
+                <div style="background:{C['card']}; padding:20px; border-radius:15px; border-left: 5px solid {PLATFORMS[p_select]['color']};">
+                    <h5 style="color:{C['muted']}; margin:0;">{m['label']}</h5>
+                    <h1 style="color:{C['head']}; margin:0;">{cur_val:,}</h1>
+                </div>
+            """, unsafe_allow_html=True)
+            st.plotly_chart(draw_chart(d_cur, d_prev, PLATFORMS[p_select]["color"]), use_container_width=True)
+
+with tab_news:
+    for cat, items in NEWS_DATA.items():
+        st.subheader(cat)
+        for item in items:
+            st.info(f"**[{item['tag']}]** {item['title']} \n\n *{item['src']} • {item['time']}*")
